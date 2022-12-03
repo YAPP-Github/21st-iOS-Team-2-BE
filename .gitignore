@@ -1,0 +1,45 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea/*
+!.idea/codeStyles/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### VS Code ###
+.vscode/
+
+### macOS ###
+.DS_Store
+
+### secrete.yml ###
+/src/main/resources/secret.yml
+/src/main/resources/application-secret.yml
+/src/main/resources/application-secret.env
+
+target
+
+### ACT Secret file ###
+### See https://github.com/nektos/act ###
+.secret
