@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class HelloController {
+
     private final HelloService helloService;
 
     @GetMapping("/hello")
-    public String printHello(
-            @RequestParam(name = "id", required = false) String id
-    ) {
+    public String printHello(@RequestParam(name = "id", required = false) String id) {
         log.info("GET /hello HTTP/1.1");
 
         return helloService.getHello(id);
