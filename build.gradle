@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.6'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'jacoco'
 }
 
 group = 'com.yapp.ios2'
@@ -23,13 +24,79 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation 'com.vladmihalcea:hibernate-types-55:2.20.0'
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-collections'
+	implementation 'com.querydsl:querydsl-core'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+	implementation group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.9.0'
+
 	compileOnly 'org.projectlombok:lombok'
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+
 tasks.named('test') {
+	System.setProperty("spring.profiles.active", "dev")
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
+}
+
+// TestReport 추가
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"**/config/*",
+					"**/dto/*",
+					"**/entity/*",
+					"**/exception/*",
+					"**/json/*",
+					"**/repository/*",
+					"**/type/*",
+					"**/AtlasApplication.java"
+			])
+		}))
+	}
+
+	reports {
+		html.enabled true
+		xml.enabled true
+		csv.enabled false
+
+		html.destination file("$buildDir/jacocoHtml")
+		xml.destination file("$buildDir/jacoco.xml")
+		csv.destination file("$buildDir/jacoco.csv")
+	}
+}
+
+// querydsl 적용
+//def generated = 'src/main/generated'
+def generated = "$buildDir/generated/querydsl"
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets{
+	main.java.srcDirs += [generated]
+}
+
+// querydsl QClass 파일 위치로 잡아주는 설정
+tasks.withType(JavaCompile){
+	options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean{
+	delete file(generated)
 }
