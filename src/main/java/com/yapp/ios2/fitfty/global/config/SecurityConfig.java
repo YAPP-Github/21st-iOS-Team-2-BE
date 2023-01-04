@@ -56,6 +56,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
+                .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/users").permitAll()
                 .antMatchers("/api/v1/users/**").permitAll()
                 .requestMatchers(PathRequest.toH2Console())
