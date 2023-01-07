@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.global.config;
 
 import com.yapp.ios2.fitfty.global.filter.JwtFilter;
-import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.auth.Utils.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

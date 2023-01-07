@@ -1,11 +1,11 @@
 package com.yapp.ios2.fitfty.domain.auth.Utils;
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -14,8 +14,16 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
-        // TODO : Common Response 뱉도록 변경
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter()
+                .println("{ \n" +
+                                 "\t\"result\": \"FAIL\",\n" +
+                                 "  \"data\": null,\n" +
+                                 "  \"message\" : \"로그인이 필요한 요청입니다.\",\n" +
+                                 "  \"errorCode\" : \"UNAUTHORIZED\"\n" +
+                                 "}");
     }
 }

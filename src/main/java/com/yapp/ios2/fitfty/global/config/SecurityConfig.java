@@ -2,7 +2,7 @@ package com.yapp.ios2.fitfty.global.config;
 
 import com.yapp.ios2.fitfty.domain.auth.Utils.JwtAccessDeniedHandler;
 import com.yapp.ios2.fitfty.domain.auth.Utils.JwtAuthenticationEntryPoint;
-import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.auth.Utils.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

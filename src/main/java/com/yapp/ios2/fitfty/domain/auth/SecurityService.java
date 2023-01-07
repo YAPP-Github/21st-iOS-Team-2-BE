@@ -9,8 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Slf4j
 @NoArgsConstructor
-public class SecurityUtil {
-
+public class SecurityService {
     public static Optional<String> getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();

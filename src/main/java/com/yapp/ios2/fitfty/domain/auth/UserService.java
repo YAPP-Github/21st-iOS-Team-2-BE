@@ -2,6 +2,7 @@ package com.yapp.ios2.fitfty.domain.auth;
 
 
 import com.yapp.ios2.fitfty.domain.infra.auth.UserRepository;
+import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,12 +44,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getMyUser() {
         return UserDto.from(
-                SecurityUtil.getCurrentUsername()
+                SecurityService.getCurrentUsername()
                         .flatMap(userRepository::findOneByUsername)
-                        .orElseThrow(() -> new RuntimeException("MEMBER NOT FOUND"))
-                // TODO :
-//                         common exception code merge 이후 선언해서 사용 예정
-//                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+                        .orElseThrow(() -> new MemberNotFoundException())
         );
     }
 }

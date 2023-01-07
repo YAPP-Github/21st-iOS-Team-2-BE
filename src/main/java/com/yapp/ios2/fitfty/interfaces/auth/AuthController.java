@@ -1,14 +1,16 @@
 package com.yapp.ios2.fitfty.interfaces.auth;
 
-import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.auth.Utils.JwtTokenProvider;
 import com.yapp.ios2.fitfty.domain.auth.UserDto;
 import com.yapp.ios2.fitfty.domain.auth.UserService;
+import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -38,10 +40,16 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(signInDto.getUsername(),
                                                         signInDto.getPassword());
 
+        Authentication authentication;
+
         // .authenticate(authenticationtoken) 실행 시
         // 내부적으로 CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
-        Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
+        try {
+            authentication = authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+        } catch (BadCredentialsException e) {
+            throw new MemberNotFoundException();
+        }
 
         // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성해서 리턴
         SecurityContextHolder.getContext()
@@ -60,7 +68,7 @@ public class AuthController {
     // AUTH TEST API
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse getMyUserInfo(HttpServletRequest request) {
+    public CommonResponse getMyUserInfo() {
         return CommonResponse.success(userService.getMyUser());
     }
 
