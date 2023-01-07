@@ -30,8 +30,6 @@ public class User extends AbstractEntity {
     private String userName;
     private String email;
     private String statusMessage;
-    private List<String> preference;
-    private List<Bookmark> bookmarks;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
