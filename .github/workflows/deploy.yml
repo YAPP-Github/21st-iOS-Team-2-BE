@@ -33,7 +33,7 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-경      - name: Set Application.yml Property
+      - name: Set Application.yml Property
           uses: microsoft/variable-substitution@v1
           with:
             files: ./src/main/resources/application.yaml
