@@ -1,5 +1,7 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.global.config;
 
+import com.yapp.ios2.fitfty.global.filter.JwtFilter;
+import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +12,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtSecurityConfig extends
         SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void configure(HttpSecurity http) {
         http.addFilterBefore(
-                new JwtFilter(tokenProvider),
+                new JwtFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class
         );
     }

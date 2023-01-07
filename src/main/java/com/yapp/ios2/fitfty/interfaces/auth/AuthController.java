@@ -1,14 +1,13 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.interfaces.auth;
 
-import java.io.IOException;
+import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.auth.UserDto;
+import com.yapp.ios2.fitfty.domain.auth.UserService;
+import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,51 +26,47 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class AuthController {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserService userService;
 
-
     @PostMapping("/auth/sign-in")
-    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
-        log.debug("/auth/sign-in" + loginDto.toString());
+    public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
+        log.debug("/auth/sign-in" + signInDto.toString());
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
-                                                        loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(signInDto.getUsername(),
+                                                        signInDto.getPassword());
 
         // .authenticate(authenticationtoken) 실행 시
-        // soqnwjrdmfh CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
+        // 내부적으로 CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
 
-        // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성
+        // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성해서 리턴
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return CommonResponse.success(jwtTokenProvider.createToken(authentication));
     }
 
     @PostMapping("/auth/sign-up")
-    public ResponseEntity<UserDto> signup(
+    public CommonResponse signup(
             @Valid @RequestBody UserDto userDto
     ) {
-        return ResponseEntity.ok(userService.signup(userDto));
+        return CommonResponse.success(userService.signup(userDto));
     }
 
+    // AUTH TEST API
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<UserDto> getMyUserInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities());
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse getMyUserInfo(HttpServletRequest request) {
+        return CommonResponse.success(userService.getMyUser());
     }
 
     @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public CommonResponse getUserInfo(@PathVariable String username) {
+        return CommonResponse.success(userService.getUser(username));
     }
 }

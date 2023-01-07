@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.auth;
 
 
-import java.util.Collections;
+import com.yapp.ios2.fitfty.domain.infra.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,22 +16,18 @@ public class UserService {
 
     @Transactional
     public UserDto signup(UserDto userDto) {
-        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername())
+        if (userRepository.findOneByUsername(userDto.getUsername())
                 .orElse(null) != null) {
 //            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
 //            common exception code merge 이후 선언해서 사용 예정
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
-                .authorities(Collections.singleton(authority))
+                .role("ROLE_USER")
                 .activated(true)
                 .build();
 
@@ -39,17 +35,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getUserWithAuthorities(String username) {
-        return UserDto.from(userRepository.findOneWithAuthoritiesByUsername(username)
+    public UserDto getUser(String username) {
+        return UserDto.from(userRepository.findOneByUsername(username)
                                     .orElse(null));
     }
 
     @Transactional(readOnly = true)
-    public UserDto getMyUserWithAuthorities() {
+    public UserDto getMyUser() {
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
-                        .flatMap(userRepository::findOneWithAuthoritiesByUsername)
+                        .flatMap(userRepository::findOneByUsername)
                         .orElseThrow(() -> new RuntimeException("MEMBER NOT FOUND"))
+                // TODO :
 //                         common exception code merge 이후 선언해서 사용 예정
 //                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );

@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.domain.auth.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +15,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
+        // TODO : Common Response 뱉도록 변경
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

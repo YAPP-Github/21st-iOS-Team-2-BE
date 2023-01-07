@@ -5,9 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.*;
 
@@ -36,12 +33,9 @@ public class User {
     @Column(name = "nickname", length = 50)
     private String nickname;
 
+    @Column(name = "role")
+    private String role;
+
     @Column(name = "activated")
     private boolean activated;
-
-    @ManyToMany
-    @JoinTable(name = "user_authority", joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "user_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-    private Set<Authority> authorities;
 }

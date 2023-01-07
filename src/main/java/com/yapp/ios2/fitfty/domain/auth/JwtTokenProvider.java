@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class TokenProvider implements InitializingBean {
+public class JwtTokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
 
-    public TokenProvider(
+    public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.secret = secret;

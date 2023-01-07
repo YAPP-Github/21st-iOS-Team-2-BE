@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.domain.auth.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,8 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException {
-        //필요한 권한이 없이 접근하려 할때 403
+        // 필요한 권한이 없이 접근하려 할때 403
+        // TODO : Common Response 뱉도록 변경
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }

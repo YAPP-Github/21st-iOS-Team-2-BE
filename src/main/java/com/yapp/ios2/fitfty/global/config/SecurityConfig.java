@@ -1,9 +1,8 @@
 package com.yapp.ios2.fitfty.global.config;
 
-import com.yapp.ios2.fitfty.domain.auth.JwtAccessDeniedHandler;
-import com.yapp.ios2.fitfty.domain.auth.JwtAuthenticationEntryPoint;
-import com.yapp.ios2.fitfty.domain.auth.JwtSecurityConfig;
-import com.yapp.ios2.fitfty.domain.auth.TokenProvider;
+import com.yapp.ios2.fitfty.domain.auth.Utils.JwtAccessDeniedHandler;
+import com.yapp.ios2.fitfty.domain.auth.Utils.JwtAuthenticationEntryPoint;
+import com.yapp.ios2.fitfty.domain.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -65,7 +64,7 @@ public class SecurityConfig {
                 .authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(jwtTokenProvider));
 
         return httpSecurity.build();
     }

@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.interfaces.auth;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LoginDto {
+public class SignInDto {
 
     @NotNull
     @Size(min = 3, max = 50)
