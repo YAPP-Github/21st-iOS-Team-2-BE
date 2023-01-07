@@ -34,13 +34,13 @@ jobs:
         shell: bash
 
       - name: Set Application.yml Property
-          uses: microsoft/variable-substitution@v1
-          with:
-            files: ./src/main/resources/application.yaml
-          env:
-            spring.datasource.username: ${{ secrets.DATASOURCE_NAME }}
-            spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
-            spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application-prod.yaml
+        env:
+          spring.datasource.username: ${{ secrets.DATASOURCE_NAME }}
+          spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
+          spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
 
       - name: Build with Gradle
         run: ./gradlew clean build
