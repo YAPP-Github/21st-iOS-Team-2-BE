@@ -77,4 +77,9 @@ public class AuthController {
     public CommonResponse getUserInfo(@PathVariable String username) {
         return CommonResponse.success(userService.getUser(username));
     }
+
+    @GetMapping("/auth/kakao/callback")
+    public CommonResponse HandleKakakoOAuth(String code) {
+        return CommonResponse.success(code);
+    }
 }
