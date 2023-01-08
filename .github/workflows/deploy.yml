@@ -33,7 +33,14 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      - name: Set Application.yml Property
+      - name: Set application.yaml Property
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application.yaml
+        env:
+          spring.datasource.username: ${{ secrets.RUN_MODE }}
+
+      - name: Set application-dev.yaml Property
         uses: microsoft/variable-substitution@v1
         with:
           files: ./src/main/resources/application-prod.yaml
