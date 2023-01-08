@@ -7,3 +7,18 @@ spring:
   config:
     activate:
       on-profile: prod
+
+  datasource:
+    url: ${{ secrets.DATASOURCE_URL }}
+    username: ${{ secrets.DATASOURCE_NAME }}
+    password: ${{ secrets.DATASOURCE_PASSWORD }}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    sql-script-encoding: UTF-8
+
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL8Dialect
+      properties:
+        hibernate:
+          ddl-auto: validate
+          format_sql: true
+          show_sql: true
