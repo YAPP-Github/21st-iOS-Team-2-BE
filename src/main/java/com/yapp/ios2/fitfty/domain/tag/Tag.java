@@ -1,7 +1,6 @@
-package com.yapp.ios2.fitfty.domain.picture.tag;
+package com.yapp.ios2.fitfty.domain.tag;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
-import com.yapp.ios2.fitfty.domain.picture.taggroup.TagGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
