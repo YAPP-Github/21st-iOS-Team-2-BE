@@ -1,11 +1,6 @@
 package com.yapp.ios2.fitfty.domain.user;
 
-import com.yapp.ios2.fitfty.domain.AbstractEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,23 +8,45 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@Slf4j
-@Getter
 @Entity
+@Table(name = "`user`")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-public class User extends AbstractEntity {
-    private static final String PREFIX_USER = "user_";
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userToken;
-    private String userName;
+
+    @Column(name = "email", length = 50, unique = true)
     private String email;
-    private String statusMessage;
+
+    @Column(name = "password", length = 100)
+    private String password;
+
+    @Column(name = "nickname", length = 50)
+    private String nickname;
+
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "Type")
+    @Enumerated(EnumType.STRING)
+    private LoginType type;
+
+    @Column(name = "activated")
+    private boolean activated;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -43,4 +60,16 @@ public class User extends AbstractEntity {
         private final String description;
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum LoginType {
+        KAKAO("KAKAO"),
+        APPLE("APPLE"),
+        CUSTOM("CUSTOM");
+
+        private final String description;
+    }
+
+    // bookmark 관련 mapping 추가로 필요. LisT<Bookmakr> + One to Many
+    // 그 외에도 필요한 개인 선호 설정 관련 컬럼 필요
 }

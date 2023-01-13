@@ -1,9 +1,9 @@
-package com.yapp.ios2.fitfty.domain.auth.Utils;
+package com.yapp.ios2.fitfty.domain.user.auth.Utils;
 
-import com.yapp.ios2.fitfty.domain.auth.User;
-import com.yapp.ios2.fitfty.domain.infra.auth.UserRepository;
+import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.global.exception.MemberNotActivated;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
+import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(final String username) {
-        return userRepository.findOneByUsername(username)
-                .map(user -> createUser(username, user))
+    public UserDetails loadUserByUsername(final String email) {
+        return userRepository.findOneByEmail(email)
+                .map(user -> createUser(email, user))
                 .orElseThrow(MemberNotFoundException::new);
     }
 
@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
                 new SimpleGrantedAuthority(user.getRole()));
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
                                                                       user.getPassword(),
                                                                       grantedAuthorities);
     }

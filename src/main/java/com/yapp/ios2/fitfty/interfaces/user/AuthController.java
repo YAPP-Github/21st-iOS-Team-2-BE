@@ -2,9 +2,9 @@ package com.yapp.ios2.fitfty.interfaces.user;
 
 import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
-import com.yapp.ios2.fitfty.domain.auth.Utils.JwtTokenProvider;
-import com.yapp.ios2.fitfty.domain.auth.UserDto;
-import com.yapp.ios2.fitfty.domain.auth.UserService;
+import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.user.auth.UserDto;
+import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import javax.validation.Valid;
@@ -34,19 +34,19 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(API_PREFIX + "/users")
+@RequestMapping(API_PREFIX + "/auth")
 public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final UserService userService;
+    private final OldUserServiceImpl userService;
 
     @PostMapping("/sign-in")
     public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
         log.debug("/auth/sign-in" + signInDto.toString());
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(signInDto.getUsername(),
+                new UsernamePasswordAuthenticationToken(signInDto.getEmail(),
                                                         signInDto.getPassword());
 
         Authentication authentication;
@@ -118,9 +118,9 @@ public class AuthController {
         return CommonResponse.success(userService.getMyUser());
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/user/{email}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public CommonResponse getUserInfo(@PathVariable String username) {
-        return CommonResponse.success(userService.getUser(username));
+    public CommonResponse getUserInfo(@PathVariable String email) {
+        return CommonResponse.success(userService.getUser(email));
     }
 }

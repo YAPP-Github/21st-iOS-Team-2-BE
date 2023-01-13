@@ -1,8 +1,8 @@
-package com.yapp.ios2.fitfty.domain.auth;
+package com.yapp.ios2.fitfty.domain.user.auth;
 
-
-import com.yapp.ios2.fitfty.domain.infra.auth.UserRepository;
+import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
+import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class OldUserServiceImpl {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDto signup(UserDto userDto) {
-        if (userRepository.findOneByUsername(userDto.getUsername())
+        if (userRepository.findOneByEmail(userDto.getEmail())
                 .orElse(null) != null) {
 //            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
 //            common exception code merge 이후 선언해서 사용 예정
@@ -25,7 +25,7 @@ public class UserService {
         }
 
         User user = User.builder()
-                .username(userDto.getUsername())
+                .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
                 .role("ROLE_USER")
@@ -36,8 +36,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getUser(String username) {
-        return UserDto.from(userRepository.findOneByUsername(username)
+    public UserDto getUser(String email) {
+        return UserDto.from(userRepository.findOneByEmail(email)
                                     .orElse(null));
     }
 
@@ -45,8 +45,8 @@ public class UserService {
     public UserDto getMyUser() {
         return UserDto.from(
                 SecurityService.getCurrentUsername()
-                        .flatMap(userRepository::findOneByUsername)
-                        .orElseThrow(() -> new MemberNotFoundException())
+                        .flatMap(userRepository::findOneByEmail)
+                        .orElseThrow(MemberNotFoundException::new)
         );
     }
 }
