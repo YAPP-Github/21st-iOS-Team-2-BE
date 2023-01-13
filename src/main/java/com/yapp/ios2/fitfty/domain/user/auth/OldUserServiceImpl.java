@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
 import com.yapp.ios2.fitfty.domain.user.User;
+import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class OldUserServiceImpl {
                 .orElse(null) != null) {
 //            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
 //            common exception code merge 이후 선언해서 사용 예정
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new MemberAlreadyExistException();
         }
 
         User user = User.builder()

@@ -136,24 +136,8 @@ public class CommonControllerAdvice {
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(value = {ForbiddenException.class})
-    public CommonResponse ForbiddenException(ForbiddenException e) {
-        String eventId = MDC.get(CommonHttpRequestInterceptor.HEADER_REQUEST_UUID_KEY);
-        log.error("eventId = {} ", eventId, e);
-        return CommonResponse.fail(ErrorCode.FORBIDDEN.getErrorMsg(),
-                                   ErrorCode.FORBIDDEN.name());
-    }
-
-    /**
-     * http status: 403 AND result: FAIL FORBIDDEN 에러
-     *
-     * @param e
-     * @return
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(value = {AccessDeniedException.class})
-    public CommonResponse ForbiddenException(AccessDeniedException e) {
+    @ExceptionHandler(value = {AccessDeniedException.class, ForbiddenException.class})
+    public CommonResponse ForbiddenException(BaseException e) {
         String eventId = MDC.get(CommonHttpRequestInterceptor.HEADER_REQUEST_UUID_KEY);
         log.error("eventId = {} ", eventId, e);
         return CommonResponse.fail(ErrorCode.FORBIDDEN.getErrorMsg(),

@@ -2,13 +2,13 @@ package com.yapp.ios2.fitfty.global.exception;
 
 import com.yapp.ios2.fitfty.global.response.ErrorCode;
 
-public class MemberNotActivated extends BaseException {
+public class MemberNotActivatedException extends BaseException {
 
-    public MemberNotActivated() {
+    public MemberNotActivatedException() {
         super(ErrorCode.MEMBER_NOT_ACTIVATED);
     }
 
-    public MemberNotActivated(String message) {
+    public MemberNotActivatedException(String message) {
         super(message, ErrorCode.MEMBER_NOT_ACTIVATED);
     }
 }

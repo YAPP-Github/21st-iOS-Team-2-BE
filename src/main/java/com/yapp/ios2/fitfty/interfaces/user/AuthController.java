@@ -2,6 +2,7 @@ package com.yapp.ios2.fitfty.interfaces.user;
 
 import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
 import com.yapp.ios2.fitfty.domain.user.auth.UserDto;
 import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
@@ -108,7 +109,45 @@ public class AuthController {
                 String.class
         );
 
-        return CommonResponse.success(responseEntity.getBody());
+        ObjectMapper objectMapper = new ObjectMapper();
+        KakaoOAuthTokenDto kakaoOAuthTokenDto = null;
+        try{
+            kakaoOAuthTokenDto = objectMapper.readValue(responseEntity.getBody(),
+                                                        KakaoOAuthTokenDto.class);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println("kakao access token : " + kakaoOAuthTokenDto.getAccess_token());
+
+
+        RestTemplate rt2 = new RestTemplate();
+        HttpHeaders headers2 = new HttpHeaders();
+        headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers2.add("Authorization", "Bearer " + kakaoOAuthTokenDto.getAccess_token());
+
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest2 = new HttpEntity<>(headers2);
+
+        ResponseEntity<String> responseEntity2 = rt2.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                kakaoTokenRequest2,
+                String.class
+        );
+
+        ObjectMapper objectMapper2 = new ObjectMapper();
+        KakaoProfileDto kakaoProfileDto = null;
+        try{
+            kakaoProfileDto = objectMapper2.readValue(responseEntity2.getBody(),
+                                                        KakaoProfileDto.class);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+//        System.out.println(responseEntity2.getBody());
+//        System.out.println(kakaoProfileDto);
+
+        return CommonResponse.success(kakaoProfileDto);
     }
 
     // AUTH TEST API

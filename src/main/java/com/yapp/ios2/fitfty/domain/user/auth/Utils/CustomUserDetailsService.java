@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth.Utils;
 
 import com.yapp.ios2.fitfty.domain.user.User;
-import com.yapp.ios2.fitfty.global.exception.MemberNotActivated;
+import com.yapp.ios2.fitfty.global.exception.MemberNotActivatedException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
         if (!user.isActivated()) {
-            throw new MemberNotActivated();
+            throw new MemberNotActivatedException();
         }
 
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
