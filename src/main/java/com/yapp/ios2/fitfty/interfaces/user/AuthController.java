@@ -8,6 +8,9 @@ import com.yapp.ios2.fitfty.domain.user.auth.UserDto;
 import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -143,9 +146,9 @@ public class AuthController {
         } catch (Exception e){
             e.printStackTrace();
         }
-        
-//        System.out.println(responseEntity2.getBody());
-//        System.out.println(kakaoProfileDto);
+
+        System.out.println(kakaoProfileDto.properties.nickname);
+        System.out.println(kakaoProfileDto.kakaoAccount.email);
 
         return CommonResponse.success(kakaoProfileDto);
     }
