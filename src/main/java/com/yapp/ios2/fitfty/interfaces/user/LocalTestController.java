@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.interfaces.auth;
+package com.yapp.ios2.fitfty.interfaces.user;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

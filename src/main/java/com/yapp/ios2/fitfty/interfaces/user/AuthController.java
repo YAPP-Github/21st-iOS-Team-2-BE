@@ -1,4 +1,6 @@
-package com.yapp.ios2.fitfty.interfaces.auth;
+package com.yapp.ios2.fitfty.interfaces.user;
+
+import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.yapp.ios2.fitfty.domain.auth.Utils.JwtTokenProvider;
 import com.yapp.ios2.fitfty.domain.auth.UserDto;
@@ -20,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +34,14 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(API_PREFIX + "/users")
 public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserService userService;
 
-    @PostMapping("/auth/sign-in")
+    @PostMapping("/sign-in")
     public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
         log.debug("/auth/sign-in" + signInDto.toString());
 
@@ -64,27 +67,26 @@ public class AuthController {
         return CommonResponse.success(jwtTokenProvider.createToken(authentication));
     }
 
-    @PostMapping("/auth/sign-up")
+    @PostMapping("/sign-up")
     public CommonResponse signup(
             @Valid @RequestBody UserDto userDto
     ) {
         return CommonResponse.success(userService.signup(userDto));
     }
 
-    // AUTH TEST API
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse getMyUserInfo() {
-        return CommonResponse.success(userService.getMyUser());
+    @PostMapping("/logout")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public CommonResponse logout() {
+        return CommonResponse.success("LOGOUT");
     }
 
-    @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public CommonResponse getUserInfo(@PathVariable String username) {
-        return CommonResponse.success(userService.getUser(username));
+    @DeleteMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public CommonResponse deleteAccount() {
+        return CommonResponse.success("/auth/delete");
     }
 
-    @GetMapping("/auth/kakao/callback")
+    @GetMapping("/kakao/callback")
     public CommonResponse HandleKakakoOAuth(String code) {
 
         RestTemplate rt = new RestTemplate();
@@ -106,6 +108,19 @@ public class AuthController {
                 String.class
         );
 
-        return CommonResponse.success(responseEntity);
+        return CommonResponse.success(responseEntity.getBody());
+    }
+
+    // AUTH TEST API
+    @GetMapping("/user")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse getMyUserInfo() {
+        return CommonResponse.success(userService.getMyUser());
+    }
+
+    @GetMapping("/user/{username}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public CommonResponse getUserInfo(@PathVariable String username) {
+        return CommonResponse.success(userService.getUser(username));
     }
 }
