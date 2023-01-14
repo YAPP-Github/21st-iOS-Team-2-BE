@@ -21,7 +21,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
                 .println("{ \n" +
                                  "\t\"result\": \"FAIL\",\n" +
                                  "  \"data\": null,\n" +
-                                 "  \"message\" : 자원에 접근할 권한이 없습니다.\n" +
+                                 "  \"message\" : \"자원에 접근할 권한이 없습니다.\",\n" +
                                  "  \"errorCode\" : \"FORBIDDEN\"\n" +
                                  "}");
     }

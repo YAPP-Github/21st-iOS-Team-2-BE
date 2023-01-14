@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.user.auth;
+package com.yapp.ios2.fitfty.domain.user.auth.Utils;
 
 import java.util.Optional;
 import lombok.NoArgsConstructor;

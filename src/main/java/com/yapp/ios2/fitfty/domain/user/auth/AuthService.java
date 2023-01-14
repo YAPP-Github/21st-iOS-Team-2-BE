@@ -4,5 +4,7 @@ import com.yapp.ios2.fitfty.domain.user.UserCommand;
 
 public interface AuthService {
 
-    String authorize(UserCommand.SignIn command);
+    String login(UserCommand.SignIn command);
+
+    String loginWithKakao(String code);
 }

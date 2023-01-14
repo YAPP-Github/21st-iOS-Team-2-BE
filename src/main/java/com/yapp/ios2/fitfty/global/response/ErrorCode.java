@@ -10,7 +10,7 @@ public enum ErrorCode {
     COMMON_INVALID_PARAMETER("요청한 값이 올바르지 않습니다."),
     COMMON_ENTITY_NOT_FOUND("존재하지 않는 엔티티입니다."),
     COMMON_ILLEGAL_STATUS("잘못된 상태값입니다."),
-    MEMBER_NOT_FOUND("등록되지 않은 회원입니다."),
+    MEMBER_NOT_FOUND("등록되지 않은 회원이거나, 해당 정보로 로그인에 실패하였습니다."),
     MEMBER_ALREADY_EXIST("이미 등록된 회원입니다."),
     MEMBER_NOT_ACTIVATED("비활성화 상태의 회원입니다."),
     FORBIDDEN("자원에 접근할 권한이 없습니다."),
