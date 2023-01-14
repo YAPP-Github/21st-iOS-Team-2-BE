@@ -27,12 +27,11 @@ import lombok.Setter;
 @Table(name = "`user`")
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
     private static final String USER_PREFIX = "usr_";
-    private static final String TEMP_PASS = "$2a$10$CcRzHQiejRUKVy.P1SjCjOj9FximOzAeIHC69DaiaoTGabQ6Sxfa2";
+    private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,6 +88,7 @@ public class User {
         if (StringUtils.isNullOrEmpty(email)) throw new InvalidParamException("User.partnerId");
         if (type == null) throw new InvalidParamException("User.type");
 
+        this.email = email;
         this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
         this.password = TEMP_PASS;
         this.nickname = userToken;

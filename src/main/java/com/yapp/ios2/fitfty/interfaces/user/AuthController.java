@@ -4,15 +4,14 @@ import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
+import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
-import com.yapp.ios2.fitfty.domain.user.auth.UserDto;
 import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
-import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,49 +37,21 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping(API_PREFIX + "/auth")
 public class AuthController {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final OldUserServiceImpl userService;
+    private final OldUserServiceImpl oldUserService;
+    private final UserService userService;
     private final AuthService authService;
 
     @PostMapping("/sign-in")
     public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
         log.debug("/auth/sign-in" + signInDto.toString());
 
-        return CommonResponse.success(authService.authorize(UserCommand.from(signInDto)));
+        return CommonResponse.success(authService.authorize(UserCommand.toSignIn(signInDto)));
     }
 
-//    @PostMapping("/sign-in")
-//    public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
-//        log.debug("/auth/sign-in" + signInDto.toString());
-//
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(signInDto.getEmail(),
-//                                                        signInDto.getPassword());
-//
-//        Authentication authentication;
-//
-//        // .authenticate(authenticationtoken) 실행 시
-//        // 내부적으로 CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
-//        try {
-//            authentication = authenticationManagerBuilder.getObject()
-//                    .authenticate(authenticationToken);
-//        } catch (BadCredentialsException e) {
-//            throw new MemberNotFoundException();
-//        }
-//
-//        // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성해서 리턴
-//        SecurityContextHolder.getContext()
-//                .setAuthentication(authentication);
-//
-//        return CommonResponse.success(jwtTokenProvider.createToken(authentication));
-//    }
-
     @PostMapping("/sign-up")
-    public CommonResponse signup(
-            @Valid @RequestBody UserDto userDto
+    public CommonResponse signup(@Valid @RequestBody SignUpDto signUpDto
     ) {
-        return CommonResponse.success(userService.signup(userDto));
+        return CommonResponse.success(userService.registerUser(UserCommand.toSignUp(signUpDto)));
     }
 
     @PostMapping("/logout")
@@ -124,15 +90,14 @@ public class AuthController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         KakaoOAuthTokenDto kakaoOAuthTokenDto = null;
-        try{
+        try {
             kakaoOAuthTokenDto = objectMapper.readValue(responseEntity.getBody(),
                                                         KakaoOAuthTokenDto.class);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         System.out.println("kakao access token : " + kakaoOAuthTokenDto.getAccess_token());
-
 
         RestTemplate rt2 = new RestTemplate();
         HttpHeaders headers2 = new HttpHeaders();
@@ -150,10 +115,10 @@ public class AuthController {
 
         ObjectMapper objectMapper2 = new ObjectMapper();
         KakaoProfileDto kakaoProfileDto = null;
-        try{
+        try {
             kakaoProfileDto = objectMapper2.readValue(responseEntity2.getBody(),
-                                                        KakaoProfileDto.class);
-        } catch (Exception e){
+                                                      KakaoProfileDto.class);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -167,12 +132,12 @@ public class AuthController {
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse getMyUserInfo() {
-        return CommonResponse.success(userService.getMyUser());
+        return CommonResponse.success(oldUserService.getMyUser());
     }
 
     @GetMapping("/user/{email}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public CommonResponse getUserInfo(@PathVariable String email) {
-        return CommonResponse.success(userService.getUser(email));
+        return CommonResponse.success(oldUserService.getUser(email));
     }
 }

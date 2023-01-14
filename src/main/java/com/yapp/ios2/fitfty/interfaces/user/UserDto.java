@@ -81,6 +81,21 @@ public class UserDto {
         @NotNull
         @Size(min = 3, max = 100)
         private String password;
+    }
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ToString
+    public static class SignUpDto {
+
+        @NotNull
+        @Email
+        private String email;
+
+        @NotNull
+        @Size(min = 3, max = 100)
+        private String password;
 
         private LoginType type = LoginType.CUSTOM;
     }
