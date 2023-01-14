@@ -1,8 +1,21 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 import com.google.common.collect.Lists;
+import com.querydsl.core.util.StringUtils;
+import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import java.util.List;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +31,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    private static final String USER_PREFIX = "usr_";
+    private static final String TEMP_PASS = "$2a$10$CcRzHQiejRUKVy.P1SjCjOj9FximOzAeIHC69DaiaoTGabQ6Sxfa2";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,5 +82,18 @@ public class User {
         CUSTOM("CUSTOM");
 
         private final String description;
+    }
+
+    @Builder
+    public User(String email, LoginType type) {
+        if (StringUtils.isNullOrEmpty(email)) throw new InvalidParamException("User.partnerId");
+        if (type == null) throw new InvalidParamException("User.type");
+
+        this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
+        this.password = TEMP_PASS;
+        this.nickname = userToken;
+        this.role = "ROLE_USER";
+        this.type = type;
+        this.activated = true;
     }
 }

@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth.Utils;
 
 import com.yapp.ios2.fitfty.domain.user.User;
+import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.MemberNotActivatedException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
@@ -17,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("userDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserReader userReader;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String email) {
-        return userRepository.findOneByEmail(email)
+        return userReader.findOneByEmail(email)
                 .map(user -> createUser(email, user))
                 .orElseThrow(MemberNotFoundException::new);
     }

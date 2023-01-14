@@ -2,6 +2,7 @@ package com.yapp.ios2.fitfty.interfaces.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -80,6 +81,8 @@ public class UserDto {
         @NotNull
         @Size(min = 3, max = 100)
         private String password;
+
+        private LoginType type = LoginType.CUSTOM;
     }
 
 }

@@ -3,6 +3,8 @@ package com.yapp.ios2.fitfty.interfaces.user;
 import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yapp.ios2.fitfty.domain.user.UserCommand;
+import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
 import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
 import com.yapp.ios2.fitfty.domain.user.auth.UserDto;
 import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
@@ -44,32 +46,40 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final OldUserServiceImpl userService;
+    private final AuthService authService;
 
     @PostMapping("/sign-in")
     public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
         log.debug("/auth/sign-in" + signInDto.toString());
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(signInDto.getEmail(),
-                                                        signInDto.getPassword());
-
-        Authentication authentication;
-
-        // .authenticate(authenticationtoken) 실행 시
-        // 내부적으로 CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
-        try {
-            authentication = authenticationManagerBuilder.getObject()
-                    .authenticate(authenticationToken);
-        } catch (BadCredentialsException e) {
-            throw new MemberNotFoundException();
-        }
-
-        // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성해서 리턴
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
-
-        return CommonResponse.success(jwtTokenProvider.createToken(authentication));
+        return CommonResponse.success(authService.authorize(UserCommand.from(signInDto)));
     }
+
+//    @PostMapping("/sign-in")
+//    public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
+//        log.debug("/auth/sign-in" + signInDto.toString());
+//
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(signInDto.getEmail(),
+//                                                        signInDto.getPassword());
+//
+//        Authentication authentication;
+//
+//        // .authenticate(authenticationtoken) 실행 시
+//        // 내부적으로 CustomUserDetailsService -> @Overload loadUserByUserName Method 실행 됨
+//        try {
+//            authentication = authenticationManagerBuilder.getObject()
+//                    .authenticate(authenticationToken);
+//        } catch (BadCredentialsException e) {
+//            throw new MemberNotFoundException();
+//        }
+//
+//        // 생성된 Authentication 객체를 이용하여 1) SecurityContextHolder, 2)jwt Token 생성해서 리턴
+//        SecurityContextHolder.getContext()
+//                .setAuthentication(authentication);
+//
+//        return CommonResponse.success(jwtTokenProvider.createToken(authentication));
+//    }
 
     @PostMapping("/sign-up")
     public CommonResponse signup(
