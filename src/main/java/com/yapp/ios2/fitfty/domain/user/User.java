@@ -1,13 +1,8 @@
 package com.yapp.ios2.fitfty.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.google.common.collect.Lists;
+import java.util.List;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +46,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<Bookmark> bookmarkList = Lists.newArrayList();
+
+
     @Getter
     @RequiredArgsConstructor
     public enum Gender {
@@ -69,7 +68,4 @@ public class User {
 
         private final String description;
     }
-
-    // bookmark 관련 mapping 추가로 필요. LisT<Bookmakr> + One to Many
-    // 그 외에도 필요한 개인 선호 설정 관련 컬럼 필요
 }

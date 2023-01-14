@@ -1,9 +1,10 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
 import com.yapp.ios2.fitfty.domain.user.User;
+import com.yapp.ios2.fitfty.domain.user.UserReader;
+import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
-import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OldUserServiceImpl {
 
-    private final UserRepository userRepository;
+    private final UserReader userReader;
+    private final UserStore userStore;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDto signup(UserDto userDto) {
-        if (userRepository.findOneByEmail(userDto.getEmail())
+        if (userReader.findOneByEmail(userDto.getEmail())
                 .orElse(null) != null) {
 //            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
 //            common exception code merge 이후 선언해서 사용 예정
@@ -33,12 +35,12 @@ public class OldUserServiceImpl {
                 .activated(true)
                 .build();
 
-        return UserDto.from(userRepository.save(user));
+        return UserDto.from(userStore.store(user));
     }
 
     @Transactional(readOnly = true)
     public UserDto getUser(String email) {
-        return UserDto.from(userRepository.findOneByEmail(email)
+        return UserDto.from(userReader.findOneByEmail(email)
                                     .orElse(null));
     }
 
@@ -46,7 +48,7 @@ public class OldUserServiceImpl {
     public UserDto getMyUser() {
         return UserDto.from(
                 SecurityService.getCurrentUsername()
-                        .flatMap(userRepository::findOneByEmail)
+                        .flatMap(userReader::findOneByEmail)
                         .orElseThrow(MemberNotFoundException::new)
         );
     }
