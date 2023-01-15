@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Builder;
@@ -35,4 +36,12 @@ public class UserInfo {
                 .build();
     }
 
+    @Getter
+    @Setter
+    @Builder
+    public static class CustomOption {
+        private String nickname;
+        private String gender;
+        private List<String> style;
+    }
 }
