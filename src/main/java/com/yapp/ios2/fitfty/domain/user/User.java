@@ -2,11 +2,14 @@ package com.yapp.ios2.fitfty.domain.user;
 
 import com.google.common.collect.Lists;
 import com.querydsl.core.util.StringUtils;
+import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,7 +32,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends AbstractEntity {
     private static final String USER_PREFIX = "user_";
     private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
 
@@ -59,6 +62,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Convert(converter = StringListConverter.class)
+    private List<String> style;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Bookmark> bookmarkList = Lists.newArrayList();
@@ -95,5 +101,6 @@ public class User {
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;
+        this.style = new ArrayList<>();
     }
 }

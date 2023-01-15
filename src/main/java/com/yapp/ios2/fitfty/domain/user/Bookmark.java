@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 
+import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bookmark {
+public class Bookmark extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

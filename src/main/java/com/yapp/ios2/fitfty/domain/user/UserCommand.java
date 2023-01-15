@@ -3,6 +3,7 @@ package com.yapp.ios2.fitfty.domain.user;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,15 @@ public class UserCommand {
         private final LoginType type;
     }
 
+    @Getter
+    @Builder
+    @ToString
+    public static class CustomOption {
+        private String nickname;
+        private String gender;
+        private List<String> style;
+    }
+
     public static SignIn toSignIn(SignInDto signInDto) {
         return SignIn.builder()
                 .email(signInDto.getEmail())
@@ -41,5 +51,4 @@ public class UserCommand {
                 .type(signUpDto.getType())
                 .build();
     }
-
 }
