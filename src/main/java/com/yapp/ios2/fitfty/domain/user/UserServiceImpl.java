@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,4 +27,16 @@ public class UserServiceImpl implements UserService {
 
         return userStore.store(user).getUserToken();
     }
+
+    @Override
+    public String findNickname(String nickname) {
+
+        Optional<User> result = userReader.findOneByNickname(nickname);
+
+        if (result.orElse(null) == null) {
+            return null;
+        }
+        return result.get().getNickname();
+    }
+
 }
