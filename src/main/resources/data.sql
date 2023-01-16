@@ -1,0 +1,3 @@
+insert into "user" (email, password, nickname, role, activated, gender, type) values ('admin@kakao.com', '$2a$10$CcRzHQiejRUKVy.P1SjCjOj9FximOzAeIHC69DaiaoTGabQ6Sxfa2', 'nick_admin', 'ROLE_ADMIN','1','FEMALE','CUSTOM');
+insert into "user" (email, password, nickname, role, activated, gender, type) values ('user1@kakao.com', '$2a$10$xFl2pNPg6/g4Z30M9gFNleui6c1JsMLFfeFjgPGvEz962npRauIC.', 'nick_user', 'ROLE_USER','1','MALE','CUSTOM');
+insert into "user" (email, password, nickname, role, activated, gender, type) values ('user2_unact@kakao.com', '$2a$10$xFl2pNPg6/g4Z30M9gFNleui6c1JsMLFfeFjgPGvEz962npRauIC.', 'nick_user2', 'ROLE_USER','0','FEMALE','CUSTOM');

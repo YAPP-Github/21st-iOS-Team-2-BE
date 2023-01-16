@@ -28,6 +28,7 @@ public class CommonResponse<T> {
     }
 
     public static CommonResponse fail(String message, String errorCode) {
+
         return CommonResponse.builder()
                 .result(Result.FAIL)
                 .message(message)
