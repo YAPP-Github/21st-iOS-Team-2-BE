@@ -65,7 +65,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CustomOption updateUserDetails(UserCommand.CustomOption command) {
-        return null;
+        String userToken = getCurrentUserToken();
+        User userInit = userReader.findOneByUserToken(userToken).orElseThrow(()-> new MemberNotFoundException());
+        userInit.updateCustomOption(command);
+        return UserInfo.toCustomOption(userStore.store(userInit));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.user.User.Gender;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,7 +28,7 @@ public class UserInfo {
         private String nickname;
     }
 
-    public static Login from(User user) {
+    public static Login toLogin(User user) {
         if(user == null) return null;
 
         return Login.builder()
@@ -40,8 +41,20 @@ public class UserInfo {
     @Setter
     @Builder
     public static class CustomOption {
+        private String email;
         private String nickname;
-        private String gender;
+        private Gender gender;
         private List<String> style;
+    }
+
+    public static CustomOption toCustomOption(User user) {
+        if(user == null) return null;
+
+        return CustomOption.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .gender(user.getGender())
+                .style(user.getStyle())
+                .build();
     }
 }

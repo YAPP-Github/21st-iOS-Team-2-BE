@@ -2,18 +2,20 @@ package com.yapp.ios2.fitfty.interfaces.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
+import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 public class UserDto {
-
     @Data
     public static class KakaoOAuthTokenDto {
         private String access_token;
@@ -67,7 +69,7 @@ public class UserDto {
         }
     }
 
-    @Data
+    @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -82,7 +84,7 @@ public class UserDto {
         @Size(min = 3, max = 100)
         private String password;
     }
-    @Data
+    @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -98,6 +100,21 @@ public class UserDto {
         private String password;
 
         private LoginType type = LoginType.CUSTOM;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CustomOption {
+        @NotNull
+        private String nickname;
+
+        @NotNull
+        private User.Gender gender;
+
+        private List<String> style;
     }
 
 }

@@ -7,8 +7,6 @@ import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
 import com.yapp.ios2.fitfty.domain.user.auth.OldUserServiceImpl;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
-import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
-import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +30,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public CommonResponse authorize(@Valid @RequestBody SignInDto signInDto) {
+    public CommonResponse authorize(@Valid @RequestBody UserDto.SignInDto signInDto) {
         log.debug("/auth/sign-in" + signInDto.toString());
 
         return CommonResponse.success(authService.login(UserCommand.toSignIn(signInDto)));
     }
 
     @PostMapping("/sign-up")
-    public CommonResponse signup(@Valid @RequestBody SignUpDto signUpDto
+    public CommonResponse signup(@Valid @RequestBody UserDto.SignUpDto signUpDto
     ) {
         return CommonResponse.success(userService.registerUser(UserCommand.toSignUp(signUpDto)));
     }

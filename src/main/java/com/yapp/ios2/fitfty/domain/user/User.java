@@ -103,4 +103,10 @@ public class User extends AbstractEntity {
         this.activated = true;
         this.style = new ArrayList<>();
     }
+
+    public void updateCustomOption(UserCommand.CustomOption command ) {
+        this.nickname = command.getNickname();
+        this.gender = command.getGender();
+        this.style = command.getStyle();
+    }
 }
