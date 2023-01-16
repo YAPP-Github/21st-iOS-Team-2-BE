@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class OldUserDto {
 
     @NotNull
     @Size(min = 3, max = 50)
@@ -26,10 +26,10 @@ public class UserDto {
     @Size(min = 3, max = 50)
     private String nickname;
 
-    public static UserDto from(User user) {
+    public static OldUserDto from(User user) {
         if(user == null) return null;
 
-        return UserDto.builder()
+        return OldUserDto.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .build();
