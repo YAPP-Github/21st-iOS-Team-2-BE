@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/nickname/{nickname}")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse findNickname(@PathVariable String nickname) {
-        // System.out.println("CURRENT USER : " + userService.getCurrentUserToken());
+        System.out.println("CURRENT USER : " + userService.getCurrentUserToken());
         return CommonResponse.success(userService.findNickname(nickname));
     }
 
