@@ -1,9 +1,12 @@
 package com.yapp.ios2.fitfty.domain.tag;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
+import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +20,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "tags")
+@Table(name = "tag")
 public class Tag extends AbstractEntity {
 
     @Id
@@ -27,5 +30,18 @@ public class Tag extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "tag_group_id")
     private TagGroup tagGroup;
-    private String tagName;
+    private String tagValue;
+
+    @Builder
+    public Tag(TagGroup tagGroup, String tagValue) {
+        if (tagGroup == null) {
+            throw new InvalidParamException("Tag.tagGroup");
+        }
+        if (StringUtils.isBlank(tagValue)) {
+            throw new InvalidParamException("Tag.tagValue");
+        }
+
+        this.tagGroup = tagGroup;
+        this.tagValue = tagValue;
+    }
 }
