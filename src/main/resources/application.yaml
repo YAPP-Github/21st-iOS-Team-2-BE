@@ -13,3 +13,9 @@ spring:
   web:
     resources:
       add-mappings: false
+
+jwt:
+  header: Authorization
+  secret: eWFwcC1maXRmdHktc3ByaW5nLWJvb3QtYmFja2VuZC1zZWNyZXQteWFwcC1maXRmdHktc3ByaW5nLWJvb3QtYmFja2VuZC1zZWNyZXQK
+  # expire : 365 * 24 * 60 * 60
+  token-validity-in-seconds: 3153600
