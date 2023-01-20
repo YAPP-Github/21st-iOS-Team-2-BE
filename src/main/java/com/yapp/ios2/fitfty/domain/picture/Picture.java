@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "picture")
+@Table(name = "`picture`")
 public class Picture extends AbstractEntity {
     private static final String ITEM_PREFIX = "pic_";
 
@@ -33,7 +33,7 @@ public class Picture extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String pictureToken;
-    private Long userId;
+    private String userToken;
     private String filePath;
     private Integer bookmarkCnt;
 
@@ -41,8 +41,8 @@ public class Picture extends AbstractEntity {
     private List<TagGroup> tagGroupList = Lists.newArrayList();
 
     @Builder
-    public Picture(Long userId, String filePath) {
-        if (userId == null) {
+    public Picture(String userToken, String filePath) {
+        if (StringUtils.isBlank(userToken)) {
             throw new InvalidParamException("Picture.userId");
         }
         if (StringUtils.isBlank(filePath)) {
@@ -50,7 +50,7 @@ public class Picture extends AbstractEntity {
         }
 
         this.pictureToken = TokenGenerator.randomCharacterWithPrefix(ITEM_PREFIX);
-        this.userId = userId;
+        this.userToken = userToken;
         this.filePath = filePath;
         this.bookmarkCnt = 0;
     }

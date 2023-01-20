@@ -25,9 +25,9 @@ public class PictureCommand {
         private final ZonedDateTime photoTakenTime;
         private final List<RegisterTagGroupRequest> registerTagGroupRequestList; //ex) 날씨, 스타일
 
-        public Board toEntity(Long userId, Picture picture) {
+        public Board toEntity(String userToken, Picture picture) {
             return Board.builder()
-                    .userId(userId)
+                    .userToken(userToken)
                     .picture(picture)
                     .content(content)
                     .location(location)
@@ -37,9 +37,9 @@ public class PictureCommand {
                     .build();
         }
 
-        public Picture toPictureEntity(Long userId) {
+        public Picture toPictureEntity(String userToken) {
             return Picture.builder()
-                    .userId(userId)
+                    .userToken(userToken)
                     .filePath(filePath)
                     .build();
         }

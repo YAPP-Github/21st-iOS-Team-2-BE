@@ -18,9 +18,8 @@ public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
     private final TagStore tagStore;
 
     @Override
-    public Picture store(PictureCommand.RegisterBoardRequest request) {
-        Long userId = 1234L;
-        var picture = boardStore.pictureStore(request.toPictureEntity(userId));
+    public Picture store(PictureCommand.RegisterBoardRequest request, String userToken) {
+        var picture = boardStore.pictureStore(request.toPictureEntity(userToken));
         var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
         if (CollectionUtils.isEmpty(registerTagGroupRequestList)) {
             return picture;
