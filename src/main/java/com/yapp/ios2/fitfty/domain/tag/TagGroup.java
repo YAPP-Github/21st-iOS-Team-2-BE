@@ -26,7 +26,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "tag_group")
+@Table(name = "`tag_group`")
 public class TagGroup extends AbstractEntity {
 
     @Id

@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "tag")
+@Table(name = "`tag`")
 public class Tag extends AbstractEntity {
 
     @Id
