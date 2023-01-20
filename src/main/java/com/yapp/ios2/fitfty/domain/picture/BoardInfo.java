@@ -40,7 +40,7 @@ public class BoardInfo {
     @ToString
     public static class TagGroupInfo {
         private final String tagGroupName;
-        private final List<TagInfo> tagList;
+        private final String tagValue;
     }
 
     @Getter

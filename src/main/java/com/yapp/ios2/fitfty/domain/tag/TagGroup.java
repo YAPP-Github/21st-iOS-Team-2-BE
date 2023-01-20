@@ -1,26 +1,22 @@
 package com.yapp.ios2.fitfty.domain.tag;
 
-import com.google.common.collect.Lists;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.domain.picture.Picture;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @Slf4j
 @Getter
@@ -34,15 +30,14 @@ public class TagGroup extends AbstractEntity {
     private Long id;
 
     @ManyToOne
+    @Setter
     @JoinColumn(name = "picture_id")
     private Picture picture;
     private String tagGroupName;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tagGroup", cascade = CascadeType.PERSIST)
-    private List<Tag> tagList = Lists.newArrayList();
+    private String tagValue;
 
     @Builder
-    public TagGroup(Picture picture, String tagGroupName) {
+    public TagGroup(Picture picture, String tagGroupName, String tagValue) {
         if (picture == null) {
             throw new InvalidParamException("TagGroup.picture");
         }
@@ -52,10 +47,6 @@ public class TagGroup extends AbstractEntity {
 
         this.picture = picture;
         this.tagGroupName = tagGroupName;
-    }
-
-    public TagGroup addTag(Tag tag) {
-        this.tagList.add(tag);
-        return this;
+        this.tagValue = tagValue;
     }
 }
