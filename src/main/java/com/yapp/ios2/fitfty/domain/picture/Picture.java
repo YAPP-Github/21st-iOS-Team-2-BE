@@ -20,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -36,7 +37,7 @@ public class Picture extends AbstractEntity {
     private String userToken;
     private String filePath;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "picture", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "picture", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TagGroup> tagGroupList = Lists.newArrayList();
 
     @Builder
@@ -53,4 +54,14 @@ public class Picture extends AbstractEntity {
         this.filePath = filePath;
     }
 
+    public void update(PictureCommand.RegisterBoardRequest request) {
+        this.filePath = request.getFilePath();
+        var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
+
+        tagGroupList.clear();
+        tagGroupList.addAll(registerTagGroupRequestList.stream()
+                                    .map(requestTagGroup -> requestTagGroup.toEntity(this))
+                                    .collect(Collectors.toList()));
+
+    }
 }

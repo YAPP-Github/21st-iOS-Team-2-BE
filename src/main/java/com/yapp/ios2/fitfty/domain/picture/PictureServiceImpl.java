@@ -32,9 +32,9 @@ public class PictureServiceImpl implements PictureService {
     public BoardInfo.Main changeBoardInfo(PictureCommand.RegisterBoardRequest request,
                                           String boardToken) {
         String userToken = userService.getCurrentUserToken();
-        var picture = pictureSeriesFactory.store(request, userToken);
         var board = boardReader.getBoard(boardToken);
-//        var updatedBoard = pictureStore.store(board.update(request, picture));
+        var picture = board.getPicture();
+        picture.update(request);
         board.update(request, picture);
 
         return boardInfoMapper.of(board);
