@@ -25,15 +25,6 @@ public class BoardDto {
         private List<RegisterTagGroupRequest> tagGroupList;
     }
 
-//    @Getter
-//    @Setter
-//    @ToString
-//    public static class RegisterPictureRequest {
-//        private String userToken;
-//        private String filePath;
-//        private List<RegisterTagGroupRequest> tagGroupList;
-//    }
-
     @Getter
     @Setter
     @ToString
@@ -61,20 +52,13 @@ public class BoardDto {
         private Picture picture;
     }
 
-//    @Getter
-//    @Setter
-//    @ToString
-//    public static class ChangeStatusPictureRequest {
-//        private String pictureToken;
-//    }
-
     @Getter
     @Builder
     @ToString
     public static class Main {
         private final String boardToken;
-        private final Long userId;
-        private final Picture picture;
+        private final String userToken;
+        private final String filePath;
         private final String content;
         private final String location;
         private final Float temperature;
@@ -87,7 +71,7 @@ public class BoardDto {
     @ToString
     public static class PictureInfo {
         private final String pictureToken;
-        private final Long userId;
+        private final String userToken;
         private final String pictureName;
         private final Long picturePrice;
         private final List<TagGroupInfo> itemOptionGroupList;

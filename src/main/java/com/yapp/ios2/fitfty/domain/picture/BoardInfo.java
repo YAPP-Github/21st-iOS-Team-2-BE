@@ -15,8 +15,8 @@ public class BoardInfo {
     public static class Main {
         private final Long boardId;
         private final String boardToken;
-        private final Long userId;
-        private final Picture picture;
+        private final String userToken;
+        private String filePath;
         private final String content;
         private final String location;
         private final Float temperature;
@@ -29,7 +29,7 @@ public class BoardInfo {
     @ToString
     public static class PictureInfo {
         private final String pictureToken;
-        private final Long userId;
+        private final String userToken;
         private final String filePath;
         private final Integer bookmarkCnt;
         private final List<TagGroupInfo> tagGroupList;

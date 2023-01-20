@@ -16,7 +16,7 @@ import org.mapstruct.ReportingPolicy;
 public interface BoardInfoMapper {
     @Mappings({
             @Mapping(source = "board.id", target = "boardId"),
-            @Mapping(source = "board.picture", target = "picture"),
+            @Mapping(expression = "java(board.getPicture().getFilePath())", target = "filePath")
     })
     BoardInfo.Main of(Board board);
 
