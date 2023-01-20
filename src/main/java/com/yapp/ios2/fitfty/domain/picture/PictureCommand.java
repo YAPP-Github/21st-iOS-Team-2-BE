@@ -3,7 +3,6 @@ package com.yapp.ios2.fitfty.domain.picture;
 import com.yapp.ios2.fitfty.domain.tag.Tag;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import com.yapp.ios2.fitfty.domain.picture.Board.WeatherType;
-import com.yapp.ios2.fitfty.interfaces.picture.BoardDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
