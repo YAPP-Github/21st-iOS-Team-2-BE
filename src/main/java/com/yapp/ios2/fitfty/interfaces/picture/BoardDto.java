@@ -64,6 +64,7 @@ public class BoardDto {
         private final Float temperature;
         private final Board.WeatherType weather;
         private final ZonedDateTime photoTakenTime;
+        private final Integer bookmarkCnt;
     }
 
     @Getter
@@ -72,8 +73,6 @@ public class BoardDto {
     public static class PictureInfo {
         private final String pictureToken;
         private final String userToken;
-        private final String pictureName;
-        private final Long picturePrice;
         private final List<TagGroupInfo> itemOptionGroupList;
     }
 

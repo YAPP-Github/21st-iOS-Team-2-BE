@@ -35,7 +35,6 @@ public class Picture extends AbstractEntity {
     private String pictureToken;
     private String userToken;
     private String filePath;
-    private Integer bookmarkCnt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "picture", cascade = CascadeType.PERSIST)
     private List<TagGroup> tagGroupList = Lists.newArrayList();
@@ -52,11 +51,6 @@ public class Picture extends AbstractEntity {
         this.pictureToken = TokenGenerator.randomCharacterWithPrefix(ITEM_PREFIX);
         this.userToken = userToken;
         this.filePath = filePath;
-        this.bookmarkCnt = 0;
-    }
-
-    public void increaseBookmarkCnt() {
-        this.bookmarkCnt += 1;
     }
 
 }
