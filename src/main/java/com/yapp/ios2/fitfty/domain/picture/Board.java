@@ -2,13 +2,16 @@ package com.yapp.ios2.fitfty.domain.picture;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,7 +29,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "board")
+@Table(name = "`board`")
 public class Board extends AbstractEntity {
     private static final String BOARD_PREFIX = "brd_";
 
@@ -34,7 +37,7 @@ public class Board extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String boardToken;
-    private Long userId;
+    private String userToken;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "picture_id")
@@ -49,24 +52,28 @@ public class Board extends AbstractEntity {
     private WeatherType weather;
     private ZonedDateTime photoTakenTime; //data 형식 변경 여부 확인
 
+    @Convert(converter = BooleanToYNConverter.class)
+    private boolean status;
+
     @Builder
-    public Board(Long userId, Picture picture, String content, String location,
+    public Board(String userToken, Picture picture, String content, String location,
                  Float temperature, WeatherType weather, ZonedDateTime photoTakenTime) {
-        if (userId == null) {
-            throw new InvalidParamException("Board.userId");
+        if (StringUtils.isBlank(userToken)) {
+            throw new InvalidParamException("Board.userToken");
         }
         if (picture == null) {
             throw new InvalidParamException("Board.picture");
         }
 
         this.boardToken = TokenGenerator.randomCharacterWithPrefix(BOARD_PREFIX);
-        this.userId = userId;
+        this.userToken = userToken;
         this.picture = picture;
         this.content = content;
         this.location = location;
         this.temperature = temperature;
         this.weather = weather;
         this.photoTakenTime = photoTakenTime;
+        this.status = true;
     }
 
     public void changePicture(Picture picture) {
@@ -91,6 +98,10 @@ public class Board extends AbstractEntity {
 
     public void changePhotoTakenTime(ZonedDateTime photoTakenTime) {
         this.photoTakenTime = photoTakenTime;
+    }
+
+    public void deleteBoard() {
+        this.status = false;
     }
 
     @Getter
