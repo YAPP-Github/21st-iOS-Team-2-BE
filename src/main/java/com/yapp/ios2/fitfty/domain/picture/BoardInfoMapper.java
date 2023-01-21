@@ -24,5 +24,5 @@ public interface BoardInfoMapper {
 
     BoardInfo.TagGroupInfo of(TagGroup tagGroup);
 
-    BoardInfo.TagInfo of(Tag tag);
+    BoardInfo.PicturePathInfo toPicturePathInfo(Picture picture);
 }
