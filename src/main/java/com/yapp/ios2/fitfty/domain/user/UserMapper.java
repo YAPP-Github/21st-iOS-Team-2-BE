@@ -17,6 +17,7 @@ public interface UserMapper {
     UserInfo.Login toLogin(User user);
 
     UserCommand.SignIn toSignIn(SignInDto signInDto);
-
     UserCommand.SignUp toSignUp(SignUpDto signUpDto);
+
+    UserInfo.UserFeed toUserFeed(Feed feed);
 }

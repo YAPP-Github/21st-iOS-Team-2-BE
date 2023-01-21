@@ -5,7 +5,9 @@ import com.yapp.ios2.fitfty.domain.user.UserInfo.UserFeed;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,8 +75,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFeed getUserFeed(String userToken) {
-        return null;
+    public List<UserFeed> getUserFeed(String userToken) {
+        List<Feed> feed = userReader.findByUserToken(userToken);
+        return feed.stream().map(x -> userMapper.toUserFeed(x)).collect(Collectors.toList());
     }
 
     @Override

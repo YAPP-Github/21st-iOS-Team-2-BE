@@ -1,5 +1,8 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.user.UserInfo.UserFeed;
+import java.util.List;
+
 public interface UserService {
 
     String getCurrentUserToken();
@@ -16,7 +19,7 @@ public interface UserService {
 //    UserInfo.Bookmark addBookmark(String userToken, UserCommand.Bookmark bookmark);
 //    UserInfo.Bookmark removeBookmakr(String userToken, UserCommand.Bookmark bookmark);
 
-    UserInfo.UserFeed getUserFeed(String userToken);
+    List<UserInfo.UserFeed> getUserFeed(String userToken);
     UserInfo.UserFeed addUserFeed(UserCommand.UserFeed userFeed);
     UserInfo.UserFeed removeUserFeed(UserCommand.UserFeed userFeed);
 
