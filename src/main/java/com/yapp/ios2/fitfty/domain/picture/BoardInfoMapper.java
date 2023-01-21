@@ -1,6 +1,5 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
-import com.yapp.ios2.fitfty.domain.tag.Tag;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
