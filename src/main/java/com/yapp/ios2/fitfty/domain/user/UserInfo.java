@@ -18,23 +18,9 @@ public class UserInfo {
         @Size(min = 3, max = 50)
         private String email;
 
-//        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//        @NotNull
-//        @Size(min = 3, max = 100)
-//        private String password;
-
         @NotNull
         @Size(min = 3, max = 50)
         private String nickname;
-    }
-
-    public static Login toLogin(User user) {
-        if(user == null) return null;
-
-        return Login.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .build();
     }
 
     @Getter
@@ -47,14 +33,11 @@ public class UserInfo {
         private List<String> style;
     }
 
-    public static CustomOption toCustomOption(User user) {
-        if(user == null) return null;
-
-        return CustomOption.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .gender(user.getGender())
-                .style(user.getStyle())
-                .build();
+    @Getter
+    @Setter
+    @Builder
+    public static class UserFeed {
+        private Long pictureId;
+        private String pictureToken;
     }
 }

@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 import com.yapp.ios2.fitfty.domain.user.UserInfo.CustomOption;
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.SecurityService;
+import com.yapp.ios2.fitfty.domain.user.UserInfo.UserFeed;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserReader userReader;
     private final UserStore userStore;
+    private final UserMapper userMapper;
 
     @Override
     public String getCurrentUserToken() {
@@ -68,7 +69,21 @@ public class UserServiceImpl implements UserService {
         String userToken = getCurrentUserToken();
         User userInit = userReader.findOneByUserToken(userToken).orElseThrow(()-> new MemberNotFoundException());
         userInit.updateCustomOption(command);
-        return UserInfo.toCustomOption(userStore.store(userInit));
+        return userMapper.toCustomOption(userStore.store(userInit));
     }
 
+    @Override
+    public UserFeed getUserFeed(String userToken) {
+        return null;
+    }
+
+    @Override
+    public UserFeed addUserFeed(UserCommand.UserFeed userFeed) {
+        return null;
+    }
+
+    @Override
+    public UserFeed removeUserFeed(UserCommand.UserFeed userFeed) {
+        return null;
+    }
 }

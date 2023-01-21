@@ -15,6 +15,11 @@ public interface UserService {
 //    UserInfo.Bookmark getBookmark(String userToken);
 //    UserInfo.Bookmark addBookmark(String userToken, UserCommand.Bookmark bookmark);
 //    UserInfo.Bookmark removeBookmakr(String userToken, UserCommand.Bookmark bookmark);
+
+    UserInfo.UserFeed getUserFeed(String userToken);
+    UserInfo.UserFeed addUserFeed(UserCommand.UserFeed userFeed);
+    UserInfo.UserFeed removeUserFeed(UserCommand.UserFeed userFeed);
+
 }
 
 

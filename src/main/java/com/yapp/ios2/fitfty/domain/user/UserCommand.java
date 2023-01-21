@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
@@ -38,18 +39,13 @@ public class UserCommand {
         private List<String> style;
     }
 
-    public static SignIn toSignIn(SignInDto signInDto) {
-        return UserCommand.SignIn.builder()
-                .email(signInDto.getEmail())
-                .password(signInDto.getPassword())
-                .build();
-    }
+    @Getter
+    @Builder
+    @ToString
+    public static class UserFeed {
 
-    public static SignUp toSignUp(SignUpDto signUpDto) {
-        return UserCommand.SignUp.builder()
-                .email(signUpDto.getEmail())
-                .password(signUpDto.getPassword())
-                .type(signUpDto.getType())
-                .build();
+        private String userToken;
+        private Long pictureId;
+        private String pictureToken;
     }
 }

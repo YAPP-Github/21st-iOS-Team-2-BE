@@ -23,7 +23,7 @@ public class Feed extends AbstractEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_token")
     private User user;
 
     private Long pictureId;
