@@ -55,7 +55,12 @@ public class PictureServiceImpl implements PictureService {
     @Override
     @Transactional
     public void deleteBoard(String boardToken) {
+        String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
+        userService.deleteUserFeed(UserFeed.builder()
+                                           .userToken(userToken)
+                                           .boardToken(boardToken)
+                                           .build());
         board.deleteBoard();
     }
 
