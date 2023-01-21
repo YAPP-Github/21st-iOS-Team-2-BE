@@ -40,4 +40,12 @@ public class UserInfo {
         private String userToken;
         private String boardToken;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Bookmark {
+        private String userToken;
+        private String boardToken;
+    }
 }

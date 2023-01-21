@@ -26,6 +26,6 @@ public class Bookmark extends AbstractEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long boardId;
+    private String userToken;
     private String boardToken;
 }
