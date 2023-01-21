@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.querydsl.core.util.StringUtils;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,9 @@ public class User extends AbstractEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
+    @Convert(converter = BooleanToYNConverter.class)
+    private boolean status;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Bookmark> bookmarkList = Lists.newArrayList();
 
@@ -104,11 +108,16 @@ public class User extends AbstractEntity {
         this.type = type;
         this.activated = true;
         this.style = new ArrayList<>();
+        this.status = true;
     }
 
     public void updateCustomOption(UserCommand.CustomOption command ) {
         this.nickname = command.getNickname();
         this.gender = command.getGender();
         this.style = command.getStyle();
+    }
+
+    public void deleteUser() {
+        this.status = false;
     }
 }

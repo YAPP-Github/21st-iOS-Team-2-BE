@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
+import com.yapp.ios2.fitfty.domain.user.UserCommand.UserFeed;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,10 @@ public class PictureServiceImpl implements PictureService {
         var picture = pictureSeriesFactory.store(request, userToken);
         var initBoard = request.toEntity(userToken, picture);
         var board = pictureStore.store(initBoard);
+        userService.addUserFeed(UserFeed.builder()
+                                        .userToken(userToken)
+                                        .boardToken(board.getBoardToken())
+                                        .build());
 
         return board;
     }
