@@ -27,6 +27,11 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public Bookmark store(Bookmark bookmark) {
+        if (bookmarkRepository.findOneByUserTokenAndBoardToken(bookmark.getUserToken(),
+                                                           bookmark.getBoardToken())
+                .orElse(null) != null) {
+            throw new DuplicateException();
+        }
         return bookmarkRepository.save(bookmark);
     }
 
@@ -41,9 +46,16 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
-    public void deleteByUserTokenAndBoardToken(String userToken, String boardToken) {
+    public void deleteFeedByUserTokenAndBoardToken(String userToken, String boardToken) {
         var feed = feedRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
                 .orElseThrow(EntityNotFoundException::new);
         feedRepository.delete(feed);
+    }
+
+    @Override
+    public void deleteBookmarkByUserTokenAndBoardToken(String userToken, String boardToken) {
+        var bookmark = bookmarkRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
+                .orElseThrow(EntityNotFoundException::new);
+        bookmarkRepository.delete(bookmark);
     }
 }

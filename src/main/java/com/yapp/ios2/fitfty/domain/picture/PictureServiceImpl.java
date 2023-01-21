@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
+import com.yapp.ios2.fitfty.domain.user.UserCommand.Bookmark;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.UserFeed;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -71,8 +72,11 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.increaseBookmarkCnt();
 
-        // 유저 북마크 리스트에 보드 추가
-
+        userService.addBookmark(Bookmark.builder()
+                                        .boardToken(boardToken)
+                                        .userToken(userToken)
+                                        .build());
+        // return 은 소미가 보고 원하는 형태로
     }
 
     @Override
@@ -82,7 +86,9 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.decreaseBookmarkCnt();
 
-        // 유저 북마크 리스트에 보드 추가
-
+        userService.deleteBookmark(Bookmark.builder()
+                                        .boardToken(boardToken)
+                                        .userToken(userToken)
+                                        .build());
     }
 }

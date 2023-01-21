@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.infrastructure.user;
 
+import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.user.Feed;
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
@@ -16,6 +17,7 @@ public class UserReaderImpl implements UserReader {
 
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Override
     public Optional<User> findOneByEmail(String email) {
@@ -33,7 +35,12 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
-    public List<Feed> findByUserToken(String userToken) {
+    public List<Feed> findFeedByUserToken(String userToken) {
         return feedRepository.findByUserToken(userToken);
+    }
+
+    @Override
+    public List<Bookmark> findBookmarkByUserToken(String userToken) {
+        return bookmarkRepository.findByUserToken(userToken);
     }
 }

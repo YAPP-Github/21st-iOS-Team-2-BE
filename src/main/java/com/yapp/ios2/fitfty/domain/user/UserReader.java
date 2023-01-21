@@ -9,5 +9,7 @@ public interface UserReader {
 
     Optional<User> findOneByNickname(String nickname);
 
-    List<Feed> findByUserToken(String userToken);
+    List<Feed> findFeedByUserToken(String userToken);
+
+    List<Bookmark> findBookmarkByUserToken(String userToken);
 }

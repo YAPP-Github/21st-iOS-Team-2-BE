@@ -49,4 +49,14 @@ public class UserCommand {
         private String userToken;
         private String boardToken;
     }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Bookmark {
+        private String userToken;
+        private String boardToken;
+    }
 }

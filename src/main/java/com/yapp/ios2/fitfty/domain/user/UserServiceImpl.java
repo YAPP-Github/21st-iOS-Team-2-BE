@@ -1,7 +1,5 @@
 package com.yapp.ios2.fitfty.domain.user;
 
-import com.yapp.ios2.fitfty.domain.user.UserInfo.CustomOption;
-import com.yapp.ios2.fitfty.domain.user.UserInfo.UserFeed;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CustomOption updateUserDetails(UserCommand.CustomOption command) {
+    public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
         String userToken = getCurrentUserToken();
         User userInit = userReader.findOneByUserToken(userToken).orElseThrow(()-> new MemberNotFoundException());
         userInit.updateCustomOption(command);
@@ -75,9 +73,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<String> getBookmark(String userToken) {
+        List<Bookmark> bookmark = userReader.findBookmarkByUserToken(userToken);
+        return bookmark.stream().map(Bookmark::getBoardToken).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserInfo.Bookmark addBookmark(UserCommand.Bookmark command) {
+        var initBookmark = Bookmark.builder()
+                .boardToken(command.getBoardToken())
+                .userToken(command.getUserToken())
+                .build();
+
+        var bookmark = userStore.store(initBookmark);
+
+        return UserInfo.Bookmark.builder()
+                .boardToken(bookmark.getBoardToken())
+                .userToken(bookmark.getUserToken())
+                .build();
+    }
+
+    @Override
+    public void deleteBookmark(UserCommand.Bookmark command) {
+        userStore.deleteBookmarkByUserTokenAndBoardToken(command.getUserToken(),
+                                                     command.getBoardToken());
+    }
+
+    @Override
     public List<String> getUserFeed(String userToken) {
-        List<Feed> feed = userReader.findByUserToken(userToken);
-        return feed.stream().map(x -> x.getBoardToken()).collect(Collectors.toList());
+        List<Feed> feed = userReader.findFeedByUserToken(userToken);
+        return feed.stream().map(Feed::getBoardToken).collect(Collectors.toList());
     }
 
     @Override
@@ -88,7 +113,8 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         var feed = userStore.store(initFeed);
-        return UserFeed.builder()
+
+        return UserInfo.UserFeed.builder()
                 .boardToken(feed.getBoardToken())
                 .userToken(feed.getUserToken())
                 .build();
@@ -96,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserFeed(UserCommand.UserFeed command) {
-        userStore.deleteByUserTokenAndBoardToken(command.getUserToken(),
-                                                 command.getBoardToken());
+        userStore.deleteFeedByUserTokenAndBoardToken(command.getUserToken(),
+                                                     command.getBoardToken());
     }
 }
