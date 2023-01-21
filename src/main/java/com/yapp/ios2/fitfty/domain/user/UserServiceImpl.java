@@ -75,18 +75,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserFeed> getUserFeed(String userToken) {
+    public List<String> getUserFeed(String userToken) {
         List<Feed> feed = userReader.findByUserToken(userToken);
-        return feed.stream().map(x -> userMapper.toUserFeed(x)).collect(Collectors.toList());
+        return feed.stream().map(x -> x.getPictureToken()).collect(Collectors.toList());
     }
 
     @Override
-    public UserFeed addUserFeed(UserCommand.UserFeed userFeed) {
-        return null;
+    public UserInfo.UserFeed addUserFeed(UserCommand.UserFeed command) {
+        var initFeed = Feed.builder()
+                .pictureToken(command.getPictureToken())
+                .userToken(command.getUserToken())
+                .build();
+
+        var feed = userStore.store(initFeed);
+        return UserFeed.builder()
+                .pictureToken(feed.getPictureToken())
+                .userToken(feed.getUserToken())
+                .build();
     }
 
     @Override
-    public UserFeed removeUserFeed(UserCommand.UserFeed userFeed) {
-        return null;
+    public void deleteUserFeed(UserCommand.UserFeed command) {
+        userStore.deleteByUserTokenAndPictureToken(command.getUserToken(),
+                                                   command.getPictureToken());
     }
 }

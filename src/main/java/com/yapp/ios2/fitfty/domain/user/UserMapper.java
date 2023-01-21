@@ -4,6 +4,7 @@ import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -19,5 +20,9 @@ public interface UserMapper {
     UserCommand.SignIn toSignIn(SignInDto signInDto);
     UserCommand.SignUp toSignUp(SignUpDto signUpDto);
 
-    UserInfo.UserFeed toUserFeed(Feed feed);
+//    UserInfo.UserFeed toUserFeed(Feed feed);
+
+//    @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "user", ignore = true)
+//    Feed toFeedEntity(UserCommand.UserFeed command);
 }

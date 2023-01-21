@@ -69,7 +69,7 @@ public class User extends AbstractEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Bookmark> bookmarkList = Lists.newArrayList();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userToken", cascade = CascadeType.PERSIST)
     private List<Feed> feedList = Lists.newArrayList();
 
     @Getter

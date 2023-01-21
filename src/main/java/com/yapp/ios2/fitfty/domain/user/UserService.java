@@ -1,6 +1,5 @@
 package com.yapp.ios2.fitfty.domain.user;
 
-import com.yapp.ios2.fitfty.domain.user.UserInfo.UserFeed;
 import java.util.List;
 
 public interface UserService {
@@ -17,11 +16,11 @@ public interface UserService {
 
 //    UserInfo.Bookmark getBookmark(String userToken);
 //    UserInfo.Bookmark addBookmark(String userToken, UserCommand.Bookmark bookmark);
-//    UserInfo.Bookmark removeBookmakr(String userToken, UserCommand.Bookmark bookmark);
+//    void removeBookmakr(String userToken, UserCommand.Bookmark bookmark);
 
-    List<UserInfo.UserFeed> getUserFeed(String userToken);
+    List<String> getUserFeed(String userToken);
     UserInfo.UserFeed addUserFeed(UserCommand.UserFeed userFeed);
-    UserInfo.UserFeed removeUserFeed(UserCommand.UserFeed userFeed);
+    void deleteUserFeed(UserCommand.UserFeed userFeed);
 
 }
 

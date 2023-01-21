@@ -37,7 +37,7 @@ public class UserInfo {
     @Setter
     @Builder
     public static class UserFeed {
-        private Long pictureId;
+        private String userToken;
         private String pictureToken;
     }
 }

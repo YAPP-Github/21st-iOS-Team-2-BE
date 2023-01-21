@@ -5,6 +5,7 @@ import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,10 +43,10 @@ public class UserCommand {
     @Getter
     @Builder
     @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UserFeed {
-
         private String userToken;
-        private Long pictureId;
         private String pictureToken;
     }
 }
