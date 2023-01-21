@@ -1,15 +1,19 @@
 package com.yapp.ios2.fitfty.infrastructure.picture;
 
+import com.yapp.ios2.fitfty.domain.picture.BoardStore;
 import com.yapp.ios2.fitfty.domain.picture.Picture;
 import com.yapp.ios2.fitfty.domain.picture.PictureCommand;
 import com.yapp.ios2.fitfty.domain.picture.PictureSeriesFactory;
-import com.yapp.ios2.fitfty.domain.picture.BoardStore;
 import com.yapp.ios2.fitfty.domain.tag.TagGroupStore;
 import com.yapp.ios2.fitfty.domain.tag.TagStore;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.stream.Collectors;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
@@ -20,6 +24,12 @@ public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
     @Override
     public Picture store(PictureCommand.RegisterBoardRequest request, String userToken) {
         var picture = boardStore.pictureStore(request.toPictureEntity(userToken));
+        storeTagSeries(request, picture);
+        return picture;
+    }
+
+    @Override
+    public Picture storeTagSeries(PictureCommand.RegisterBoardRequest request, Picture picture) {
         var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
         if (CollectionUtils.isEmpty(registerTagGroupRequestList)) {
             return picture;
@@ -31,14 +41,9 @@ public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
                     var initTagGroup = requestTagGroup.toEntity(picture);
                     var tagGroup = tagGroupStore.store(initTagGroup);
 
-                    // tag store
-                    requestTagGroup.getRegisterTagRequestList()
-                            .forEach(requestTag -> {
-                                var initTag = requestTag.toEntity(tagGroup);
-                                tagStore.store(initTag);
-                            });
-                    return picture;
-                });
+                    return initTagGroup;
+                })
+                .collect(Collectors.toList());
         return picture;
     }
 }

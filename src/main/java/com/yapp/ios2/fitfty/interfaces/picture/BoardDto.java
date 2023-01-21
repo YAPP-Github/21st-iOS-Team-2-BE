@@ -1,8 +1,8 @@
 package com.yapp.ios2.fitfty.interfaces.picture;
 
 import com.yapp.ios2.fitfty.domain.picture.Board;
-import com.yapp.ios2.fitfty.domain.picture.Picture;
 import com.yapp.ios2.fitfty.domain.picture.Board.WeatherType;
+import com.yapp.ios2.fitfty.domain.picture.Picture;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,13 +30,6 @@ public class BoardDto {
     @ToString
     public static class RegisterTagGroupRequest {
         private String tagGroupName;
-        private List<RegisterTagRequest> tagList;
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    public static class RegisterTagRequest {
         private String tagValue;
     }
 
@@ -64,6 +57,7 @@ public class BoardDto {
         private final Float temperature;
         private final Board.WeatherType weather;
         private final ZonedDateTime photoTakenTime;
+        private final Integer bookmarkCnt;
     }
 
     @Getter
@@ -72,8 +66,6 @@ public class BoardDto {
     public static class PictureInfo {
         private final String pictureToken;
         private final String userToken;
-        private final String pictureName;
-        private final Long picturePrice;
         private final List<TagGroupInfo> itemOptionGroupList;
     }
 
@@ -82,14 +74,6 @@ public class BoardDto {
     @ToString
     public static class TagGroupInfo {
         private final String tagGroupType;
-        private final List<TagInfo> tagList;
-    }
-
-    @Getter
-    @Builder
-    @ToString
-    public static class TagInfo {
         private final String tagValue;
     }
-
 }

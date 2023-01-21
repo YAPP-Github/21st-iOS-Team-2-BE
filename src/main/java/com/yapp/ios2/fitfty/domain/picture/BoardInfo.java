@@ -16,12 +16,13 @@ public class BoardInfo {
         private final Long boardId;
         private final String boardToken;
         private final String userToken;
-        private String filePath;
+        private final String filePath;
         private final String content;
         private final String location;
         private final Float temperature;
         private final Board.WeatherType weather;
         private final ZonedDateTime photoTakenTime;
+        private final Integer bookmarkCnt;
     }
 
     @Getter
@@ -31,7 +32,6 @@ public class BoardInfo {
         private final String pictureToken;
         private final String userToken;
         private final String filePath;
-        private final Integer bookmarkCnt;
         private final List<TagGroupInfo> tagGroupList;
     }
 
@@ -40,7 +40,7 @@ public class BoardInfo {
     @ToString
     public static class TagGroupInfo {
         private final String tagGroupName;
-        private final List<TagInfo> tagList;
+        private final String tagValue;
     }
 
     @Getter

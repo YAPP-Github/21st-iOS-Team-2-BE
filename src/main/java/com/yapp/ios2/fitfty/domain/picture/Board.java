@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,7 +40,7 @@ public class Board extends AbstractEntity {
     private String boardToken;
     private String userToken;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "picture_id")
     private Picture picture;
 
@@ -51,6 +52,7 @@ public class Board extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private WeatherType weather;
     private ZonedDateTime photoTakenTime; //data 형식 변경 여부 확인
+    private Integer bookmarkCnt;
 
     @Convert(converter = BooleanToYNConverter.class)
     private boolean status;
@@ -73,43 +75,36 @@ public class Board extends AbstractEntity {
         this.temperature = temperature;
         this.weather = weather;
         this.photoTakenTime = photoTakenTime;
+        this.bookmarkCnt = 0;
         this.status = true;
     }
 
-    public void changePicture(Picture picture) {
+    public void update(PictureCommand.RegisterBoardRequest request,
+                       Picture picture) {
         this.picture = picture;
-    }
-
-    public void changeContent(String content) {
-        this.content = content;
-    }
-
-    public void changeLocation(String location) {
-        this.location = location;
-    }
-
-    public void changeTemperature(Float temperature) {
-        this.temperature = temperature;
-    }
-
-    public void changeWeatherType(WeatherType weather) {
-        this.weather = weather;
-    }
-
-    public void changePhotoTakenTime(ZonedDateTime photoTakenTime) {
-        this.photoTakenTime = photoTakenTime;
+        this.content = request.getContent();
+        this.location = request.getLocation();
+        this.temperature = request.getTemperature();
+        this.weather = request.getWeather();
+        this.photoTakenTime = request.getPhotoTakenTime();
     }
 
     public void deleteBoard() {
         this.status = false;
     }
 
+    public void increaseBookmarkCnt() {
+        this.bookmarkCnt += 1;
+    }
+
+    public void decreaseBookmarkCnt() {
+        this.bookmarkCnt -= 1;
+    }
+
     @Getter
     @RequiredArgsConstructor
     public enum WeatherType {
-        SUNNY("맑음"),
-        CLOUDY("구름많음"),
-        GRAY("흐림");
+        SUNNY("맑음"), CLOUDY("구름많음"), GRAY("흐림");
         private final String description;
     }
 

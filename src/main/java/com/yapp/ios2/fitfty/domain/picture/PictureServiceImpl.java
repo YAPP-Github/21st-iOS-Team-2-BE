@@ -29,9 +29,15 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     @Transactional
-    public void deleteBoard(String boardToken) {
+    public BoardInfo.Main changeBoardInfo(PictureCommand.RegisterBoardRequest request,
+                                          String boardToken) {
+        String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
-        board.deleteBoard();
+        var picture = board.getPicture();
+        picture.update(request);
+        board.update(request, picture);
+
+        return boardInfoMapper.of(board);
     }
 
     @Override
@@ -39,5 +45,34 @@ public class PictureServiceImpl implements PictureService {
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
         var board = boardReader.getBoard(boardToken);
         return boardInfoMapper.of(board);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(String boardToken) {
+        var board = boardReader.getBoard(boardToken);
+        board.deleteBoard();
+    }
+
+    @Override
+    @Transactional
+    public void addBookmark(String boardToken) {
+        String userToken = userService.getCurrentUserToken();
+        var board = boardReader.getBoard(boardToken);
+        board.increaseBookmarkCnt();
+
+        // 유저 북마크 리스트에 보드 추가
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteBookmark(String boardToken) {
+        String userToken = userService.getCurrentUserToken();
+        var board = boardReader.getBoard(boardToken);
+        board.decreaseBookmarkCnt();
+
+        // 유저 북마크 리스트에 보드 추가
+
     }
 }

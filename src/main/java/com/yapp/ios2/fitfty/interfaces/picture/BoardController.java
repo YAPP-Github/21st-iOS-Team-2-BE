@@ -33,17 +33,12 @@ public class BoardController {
         return CommonResponse.success(response);
     }
 
-//    @PutMapping("/{boardToken}")
-//    public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken, @RequestBody @Valid BoardDto.ChangeBoardInfoRequest request) {
-//        var userToken = request.getUserToken();
-//        pictureFacade.changeBoardInfo(boardToken);
-//        return CommonResponse.success("OK");
-//    }
-//
-    @DeleteMapping("/{boardToken}")
-    public CommonResponse deleteBoard(@PathVariable("boardToken") String boardToken) {
-        pictureService.deleteBoard(boardToken);
-        return CommonResponse.success("OK");
+    @PutMapping("/{boardToken}")
+    public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken, @RequestBody @Valid BoardDto.RegisterBoardRequest request) {
+        var pictureCommand = pictureDtoMapper.of(request);
+        var boardInfo = pictureService.changeBoardInfo(pictureCommand, boardToken);
+        var response = pictureDtoMapper.of(boardInfo);
+        return CommonResponse.success(response);
     }
 
     @GetMapping("/{boardToken}")
@@ -52,4 +47,23 @@ public class BoardController {
         var response = pictureDtoMapper.of(boardInfo);
         return CommonResponse.success(response);
     }
+
+    @DeleteMapping("/{boardToken}")
+    public CommonResponse deleteBoard(@PathVariable("boardToken") String boardToken) {
+        pictureService.deleteBoard(boardToken);
+        return CommonResponse.success("OK");
+    }
+
+    @PostMapping("/bookmark/{boardToken}")
+    public CommonResponse addBookmark(@PathVariable("boardToken") String boardToken) {
+        pictureService.addBookmark(boardToken);
+        return CommonResponse.success("OK");
+    }
+
+    @DeleteMapping("/bookmark/{boardToken}")
+    public CommonResponse deleteBookmark(@PathVariable("boardToken") String boardToken) {
+        pictureService.deleteBookmark(boardToken);
+        return CommonResponse.success("OK");
+    }
+
 }
