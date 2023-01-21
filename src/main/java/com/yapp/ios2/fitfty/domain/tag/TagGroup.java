@@ -1,12 +1,14 @@
-package com.yapp.ios2.fitfty.domain.picture.taggroup;
+package com.yapp.ios2.fitfty.domain.tag;
 
 import com.google.common.collect.Lists;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.domain.picture.Picture;
-import com.yapp.ios2.fitfty.domain.picture.tag.Tag;
+import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,7 +26,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "tag_groups")
+@Table(name = "`tag_group`")
 public class TagGroup extends AbstractEntity {
 
     @Id
@@ -37,5 +39,23 @@ public class TagGroup extends AbstractEntity {
     private String tagGroupName;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tagGroup", cascade = CascadeType.PERSIST)
-    private List<Tag> TagList = Lists.newArrayList();
+    private List<Tag> tagList = Lists.newArrayList();
+
+    @Builder
+    public TagGroup(Picture picture, String tagGroupName) {
+        if (picture == null) {
+            throw new InvalidParamException("TagGroup.picture");
+        }
+        if (StringUtils.isBlank(tagGroupName)) {
+            throw new InvalidParamException("TagGroup.tagGroupName");
+        }
+
+        this.picture = picture;
+        this.tagGroupName = tagGroupName;
+    }
+
+    public TagGroup addTag(Tag tag) {
+        this.tagList.add(tag);
+        return this;
+    }
 }

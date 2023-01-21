@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/users/**").permitAll()
+                .antMatchers("/api/v1/boards/**").permitAll()
+                .antMatchers("/swagger-ui/index.html").permitAll()
                 .requestMatchers(PathRequest.toH2Console())
                 .permitAll()
                 .anyRequest()
