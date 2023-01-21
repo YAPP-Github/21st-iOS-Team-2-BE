@@ -6,5 +6,5 @@ public interface UserStore {
 
     Feed store(Feed feed);
 
-    void deleteByUserTokenAndPictureToken(String userToken, String pictureToken);
+    void deleteByUserTokenAndBoardToken(String userToken, String pictureToken);
 }

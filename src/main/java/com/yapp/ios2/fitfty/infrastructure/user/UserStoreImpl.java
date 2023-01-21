@@ -6,7 +6,6 @@ import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.global.exception.DuplicateException;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
-import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,8 +32,8 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public Feed store(Feed feed) {
-        if (feedRepository.findOneByUserTokenAndPictureToken(feed.getUserToken(),
-                                                             feed.getPictureToken())
+        if (feedRepository.findOneByUserTokenAndBoardToken(feed.getUserToken(),
+                                                           feed.getBoardToken())
                 .orElse(null) != null) {
             throw new DuplicateException();
         }
@@ -42,8 +41,8 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
-    public void deleteByUserTokenAndPictureToken(String userToken, String pictureToken) {
-        var feed = feedRepository.findOneByUserTokenAndPictureToken(userToken, pictureToken)
+    public void deleteByUserTokenAndBoardToken(String userToken, String boardToken) {
+        var feed = feedRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
                 .orElseThrow(EntityNotFoundException::new);
         feedRepository.delete(feed);
     }

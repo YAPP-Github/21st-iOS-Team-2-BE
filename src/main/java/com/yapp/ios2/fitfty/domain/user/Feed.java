@@ -23,5 +23,5 @@ public class Feed extends AbstractEntity {
     private Long id;
 
     private String userToken;
-    private String pictureToken;
+    private String boardToken;
 }

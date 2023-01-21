@@ -47,6 +47,6 @@ public class UserCommand {
     @NoArgsConstructor
     public static class UserFeed {
         private String userToken;
-        private String pictureToken;
+        private String boardToken;
     }
 }
