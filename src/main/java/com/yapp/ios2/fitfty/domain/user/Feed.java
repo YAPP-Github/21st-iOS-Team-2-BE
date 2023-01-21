@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "`bookmark`")
+@Table(name = "`feed`")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bookmark extends AbstractEntity {
+public class Feed extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,6 @@ public class Bookmark extends AbstractEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long boardId;
-    private String boardToken;
+    private Long pictureId;
+    private String pictureToken;
 }
