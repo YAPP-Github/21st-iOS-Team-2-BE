@@ -65,9 +65,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String findUserToken(String nickname) {
+        Optional<User> result = userReader.findOneByNickname(nickname);
+
+        if (result.orElse(null) == null) {
+            return null;
+        }
+        return result.get()
+                .getUserToken();
+    }
+
+    @Override
     public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
         String userToken = getCurrentUserToken();
-        User userInit = userReader.findOneByUserToken(userToken).orElseThrow(()-> new MemberNotFoundException());
+        User userInit = userReader.findOneByUserToken(userToken);
         userInit.updateCustomOption(command);
         return userMapper.toCustomOption(userStore.store(userInit));
     }
@@ -79,15 +90,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfo.Bookmark addBookmark(UserCommand.Bookmark command) {
+    @Transactional
+    public UserInfo.ImageInfo addBookmark(UserCommand.Bookmark command) {
+        var user = userReader.findOneByUserToken(command.getUserToken());
         var initBookmark = Bookmark.builder()
                 .boardToken(command.getBoardToken())
                 .userToken(command.getUserToken())
+                .user(user)
                 .build();
 
         var bookmark = userStore.store(initBookmark);
 
-        return UserInfo.Bookmark.builder()
+        return UserInfo.ImageInfo.builder()
                 .boardToken(bookmark.getBoardToken())
                 .userToken(bookmark.getUserToken())
                 .build();
@@ -106,15 +120,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfo.UserFeed addUserFeed(UserCommand.UserFeed command) {
+    @Transactional
+    public UserInfo.ImageInfo addUserFeed(UserCommand.UserFeed command) {
+        var user = userReader.findOneByUserToken(command.getUserToken());
         var initFeed = Feed.builder()
                 .boardToken(command.getBoardToken())
                 .userToken(command.getUserToken())
+                .user(user)
                 .build();
 
         var feed = userStore.store(initFeed);
 
-        return UserInfo.UserFeed.builder()
+        return UserInfo.ImageInfo.builder()
                 .boardToken(feed.getBoardToken())
                 .userToken(feed.getUserToken())
                 .build();
@@ -124,5 +141,22 @@ public class UserServiceImpl implements UserService {
     public void deleteUserFeed(UserCommand.UserFeed command) {
         userStore.deleteFeedByUserTokenAndBoardToken(command.getUserToken(),
                                                      command.getBoardToken());
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.UserProfile retrieveProfile(String nickname) {
+        String userToken = (nickname == null) ? getCurrentUserToken() : findUserToken(nickname);
+        var user = userReader.findOneByUserToken(userToken);
+        var userFeed = user.getFeedList();
+        var userBookmark = user.getBookmarkList();
+
+        return UserInfo.UserProfile.builder()
+                .nickname(user.getNickname())
+                .profilePictureUrl(user.getProfilePictureUrl())
+                .message(user.getMessage())
+                .bookmarkList(userBookmark.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
+                .codiList(userFeed.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
+                .build();
     }
 }

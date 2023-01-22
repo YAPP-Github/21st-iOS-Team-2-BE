@@ -4,6 +4,7 @@ import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.user.Feed;
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
+import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
-    public Optional<User> findOneByUserToken(String userToken) {
-        return userRepository.findOneByUserToken(userToken);
+    public User findOneByUserToken(String userToken) {
+        return userRepository.findOneByUserToken(userToken)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

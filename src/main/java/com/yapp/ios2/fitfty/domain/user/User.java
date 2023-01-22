@@ -7,7 +7,9 @@ import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -26,11 +28,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "`user`")
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends AbstractEntity {
@@ -50,6 +53,9 @@ public class User extends AbstractEntity {
 
     @Column(name = "nickname", length = 50)
     private String nickname;
+
+    private String profilePictureUrl;
+    private String message;
 
     @Column(name = "role")
     private String role;
@@ -71,10 +77,10 @@ public class User extends AbstractEntity {
     private boolean status;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
-    private List<Bookmark> bookmarkList = Lists.newArrayList();
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
-    private List<Feed> feedList = Lists.newArrayList();
+    private List<Feed> feedList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
@@ -104,6 +110,8 @@ public class User extends AbstractEntity {
         this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
         this.password = TEMP_PASS;
         this.nickname = userToken;
+        this.profilePictureUrl = null;
+        this.message = null;
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;

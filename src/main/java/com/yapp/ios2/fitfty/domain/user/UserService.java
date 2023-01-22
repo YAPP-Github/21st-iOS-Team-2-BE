@@ -8,6 +8,7 @@ public interface UserService {
     String registerUser(UserCommand.SignUp command);
 
     String findNickname(String nickname);
+    String findUserToken(String nickname);
 
     UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command);
 
@@ -15,13 +16,14 @@ public interface UserService {
 //    UserInfo.Profile updateProfile(UserCommand.Profile command);
 
     List<String> getBookmark(String userToken);
-    UserInfo.Bookmark addBookmark(UserCommand.Bookmark bookmark);
+    UserInfo.ImageInfo addBookmark(UserCommand.Bookmark bookmark);
     void deleteBookmark(UserCommand.Bookmark bookmark);
 
     List<String> getUserFeed(String userToken);
-    UserInfo.UserFeed addUserFeed(UserCommand.UserFeed userFeed);
+    UserInfo.ImageInfo addUserFeed(UserCommand.UserFeed userFeed);
     void deleteUserFeed(UserCommand.UserFeed userFeed);
 
+    UserInfo.UserProfile retrieveProfile(String nickname);
 }
 
 

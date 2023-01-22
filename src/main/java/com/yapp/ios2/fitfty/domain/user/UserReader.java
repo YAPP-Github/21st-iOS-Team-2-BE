@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface UserReader {
     Optional<User> findOneByEmail(String email);
-    Optional<User> findOneByUserToken(String userToken);
+    User findOneByUserToken(String userToken);
 
     Optional<User> findOneByNickname(String nickname);
 

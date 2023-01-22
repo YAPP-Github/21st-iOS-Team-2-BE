@@ -36,7 +36,7 @@ public class UserInfo {
     @Getter
     @Setter
     @Builder
-    public static class UserFeed {
+    public static class ImageInfo {
         private String userToken;
         private String boardToken;
     }
@@ -44,8 +44,12 @@ public class UserInfo {
     @Getter
     @Setter
     @Builder
-    public static class Bookmark {
-        private String userToken;
-        private String boardToken;
+    public static class UserProfile {
+
+        private String nickname;
+        private String profilePictureUrl;
+        private String message;
+        private List<ImageInfo> codiList;
+        private List<ImageInfo> bookmarkList;
     }
 }
