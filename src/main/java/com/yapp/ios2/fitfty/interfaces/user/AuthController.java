@@ -61,6 +61,13 @@ public class AuthController {
         return CommonResponse.success(authService.loginWithKakao(code));
     }
 
+    @DeleteMapping("/me")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse unActivateUser() {
+        authService.unActivateUser();
+        return CommonResponse.success("OK");
+    }
+
     // AUTH TEST API
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")

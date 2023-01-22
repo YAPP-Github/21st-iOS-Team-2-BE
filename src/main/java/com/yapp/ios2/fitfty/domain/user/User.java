@@ -73,9 +73,6 @@ public class User extends AbstractEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
-    @Convert(converter = BooleanToYNConverter.class)
-    private boolean status;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
@@ -116,7 +113,6 @@ public class User extends AbstractEntity {
         this.type = type;
         this.activated = true;
         this.style = new ArrayList<>();
-        this.status = true;
     }
 
     public void updateCustomOption(UserCommand.CustomOption command ) {
@@ -126,6 +122,6 @@ public class User extends AbstractEntity {
     }
 
     public void deleteUser() {
-        this.status = false;
+        this.activated = false;
     }
 }

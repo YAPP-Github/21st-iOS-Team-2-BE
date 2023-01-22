@@ -4,6 +4,7 @@ import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignUp;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
+import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.OAuth.KakaoOAuth;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -27,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final KakaoOAuth kakaoOAuth;
     private final UserReader userReader;
     private final UserService userService;
+    private final UserStore userStore;
 
     @Override
 
@@ -73,5 +76,14 @@ public class AuthServiceImpl implements AuthService {
                           .email(signUp.getEmail())
                           .password(signUp.getPassword())
                           .build());
+    }
+
+    @Override
+    @Transactional
+    public void unActivateUser() {
+        var userToken = userService.getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        user.deleteUser();
+        userStore.store(user);
     }
 }

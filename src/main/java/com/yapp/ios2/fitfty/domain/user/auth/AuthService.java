@@ -7,4 +7,6 @@ public interface AuthService {
     String login(UserCommand.SignIn command);
 
     String loginWithKakao(String code);
+
+    void unActivateUser();
 }
