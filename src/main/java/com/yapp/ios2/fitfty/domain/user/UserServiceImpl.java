@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public String getCurrentUserToken() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String findNickname(String nickname) {
 
         Optional<User> result = userReader.findOneByNickname(nickname);
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public String findUserToken(String nickname) {
         Optional<User> result = userReader.findOneByNickname(nickname);
 
@@ -78,6 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
         String userToken = getCurrentUserToken();
         User userInit = userReader.findOneByUserToken(userToken);
@@ -86,6 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<String> getBookmark(String userToken) {
         List<Bookmark> bookmark = userReader.findBookmarkByUserToken(userToken);
         return bookmark.stream().map(Bookmark::getBoardToken).collect(Collectors.toList());
@@ -110,12 +115,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteBookmark(UserCommand.Bookmark command) {
         userStore.deleteBookmarkByUserTokenAndBoardToken(command.getUserToken(),
                                                      command.getBoardToken());
     }
 
     @Override
+    @Transactional
     public List<String> getUserFeed(String userToken) {
         List<Feed> feed = userReader.findFeedByUserToken(userToken);
         return feed.stream().map(Feed::getBoardToken).collect(Collectors.toList());
@@ -140,6 +147,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUserFeed(UserCommand.UserFeed command) {
         userStore.deleteFeedByUserTokenAndBoardToken(command.getUserToken(),
                                                      command.getBoardToken());
@@ -163,6 +171,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ProfileInfo updateProfile(Profile command) {
         String userToken = getCurrentUserToken();
         var user = userReader.findOneByUserToken(userToken);

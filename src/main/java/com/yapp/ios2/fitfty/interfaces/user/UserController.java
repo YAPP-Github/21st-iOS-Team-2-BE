@@ -55,7 +55,6 @@ public class UserController {
     }
 
     @GetMapping("/profile/{nickname}")
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse getProfile(@PathVariable String nickname) {
         return CommonResponse.success(userService.retrieveProfile(nickname));
     }
