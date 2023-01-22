@@ -44,6 +44,14 @@ public class UserInfo {
     @Getter
     @Setter
     @Builder
+    public static class ProfileInfo {
+        private String profilePictureUrl;
+        private String message;
+    }
+
+    @Getter
+    @Setter
+    @Builder
     public static class UserProfile {
 
         private String nickname;

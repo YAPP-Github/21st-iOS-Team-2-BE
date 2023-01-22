@@ -16,8 +16,8 @@ public interface UserMapper {
     UserInfo.CustomOption toCustomOption(User user);
     UserInfo.Login toLogin(User user);
 
+    UserInfo.ProfileInfo toProfileInfo(User user);
     UserInfo.ImageInfo toImageInfo(Bookmark bookmark);
-
     UserInfo.ImageInfo toImageInfo(Feed feed);
 
     UserCommand.SignIn toSignIn(SignInDto signInDto);

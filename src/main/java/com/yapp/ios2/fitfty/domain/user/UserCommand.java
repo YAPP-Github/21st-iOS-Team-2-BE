@@ -59,4 +59,14 @@ public class UserCommand {
         private String userToken;
         private String boardToken;
     }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Profile {
+        private String profilePictureUrl;
+        private String message;
+    }
 }

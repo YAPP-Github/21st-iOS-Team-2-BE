@@ -121,6 +121,19 @@ public class User extends AbstractEntity {
         this.style = command.getStyle();
     }
 
+    public void updateProfile(UserCommand.Profile command ) {
+        if (command.getProfilePictureUrl() == null && command.getMessage() == null) {
+            throw new InvalidParamException("모든 파라미터가 null 입니다.");
+        }
+        if (command.getMessage() != null) {
+            this.message = command.getMessage();
+        }
+
+        if (command.getProfilePictureUrl() != null) {
+            this.profilePictureUrl = command.getProfilePictureUrl();
+        }
+    }
+
     public void deleteUser() {
         this.activated = false;
     }

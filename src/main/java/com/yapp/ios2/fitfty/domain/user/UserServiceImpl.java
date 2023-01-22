@@ -1,5 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
+import com.yapp.ios2.fitfty.domain.user.UserInfo.ProfileInfo;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
@@ -158,5 +160,13 @@ public class UserServiceImpl implements UserService {
                 .bookmarkList(userBookmark.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
                 .codiList(userFeed.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public ProfileInfo updateProfile(Profile command) {
+        String userToken = getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        user.updateProfile(command);
+        return userMapper.toProfileInfo(userStore.store(user));
     }
 }

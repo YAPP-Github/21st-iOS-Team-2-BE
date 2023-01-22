@@ -50,8 +50,8 @@ public class UserController {
 
     @PutMapping("/profile")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse updateMyProfile() {
-        return CommonResponse.success("/users/profile");
+    public CommonResponse updateMyProfile(@RequestBody UserCommand.Profile command) {
+        return CommonResponse.success(userService.updateProfile(command));
     }
 
     @GetMapping("/profile/{nickname}")

@@ -24,6 +24,8 @@ public interface UserService {
     void deleteUserFeed(UserCommand.UserFeed userFeed);
 
     UserInfo.UserProfile retrieveProfile(String nickname);
+
+    UserInfo.ProfileInfo updateProfile(UserCommand.Profile command);
 }
 
 
