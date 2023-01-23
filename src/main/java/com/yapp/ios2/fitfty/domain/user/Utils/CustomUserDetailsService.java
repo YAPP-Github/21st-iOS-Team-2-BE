@@ -1,10 +1,9 @@
-package com.yapp.ios2.fitfty.domain.user.auth.Utils;
+package com.yapp.ios2.fitfty.domain.user.Utils;
 
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.MemberNotActivatedException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
-import com.yapp.ios2.fitfty.infrastructure.user.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

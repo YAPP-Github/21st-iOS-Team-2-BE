@@ -46,7 +46,9 @@ public class BoardInfo {
     @Getter
     @Builder
     @ToString
-    public static class TagInfo {
-        private final String tagValue;
+    public static class PicturePathInfo {
+        private final String pictureToken;
+        private final String userToken;
+        private final String filePath;
     }
 }

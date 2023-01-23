@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.user.auth.Utils;
+package com.yapp.ios2.fitfty.domain.user.Utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

@@ -16,8 +16,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.OAS_30)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.yapp.ios2"))
-                // .paths(PathSelectors.ant("/api/v1/**"))
-                .paths(PathSelectors.ant("/**"))
+                 .paths(PathSelectors.ant("/api/v1/**"))
                 .build()
                 .apiInfo(apiInfo());
     }

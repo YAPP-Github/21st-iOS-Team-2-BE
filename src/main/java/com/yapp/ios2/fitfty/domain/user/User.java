@@ -1,9 +1,10 @@
 package com.yapp.ios2.fitfty.domain.user;
 
-import com.google.common.collect.Lists;
 import com.querydsl.core.util.StringUtils;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
+import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
+import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "`user`")
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends AbstractEntity {
+
     private static final String USER_PREFIX = "user_";
     private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
 
@@ -50,14 +50,13 @@ public class User extends AbstractEntity {
     @Column(name = "nickname", length = 50)
     private String nickname;
 
-    @Column(name = "role")
+    private String profilePictureUrl;
+    private String message;
     private String role;
 
-    @Column(name = "Type")
     @Enumerated(EnumType.STRING)
     private LoginType type;
-
-    @Column(name = "activated")
+    @Convert(converter = BooleanToYNConverter.class)
     private boolean activated;
 
     @Enumerated(EnumType.STRING)
@@ -67,8 +66,10 @@ public class User extends AbstractEntity {
     private List<String> style;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
-    private List<Bookmark> bookmarkList = Lists.newArrayList();
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<Feed> feedList = new ArrayList<>();
 
     @Getter
     @RequiredArgsConstructor
@@ -91,22 +92,45 @@ public class User extends AbstractEntity {
 
     @Builder
     public User(String email, LoginType type) {
-        if (StringUtils.isNullOrEmpty(email)) throw new InvalidParamException("User.partnerId");
-        if (type == null) throw new InvalidParamException("User.type");
+        if (StringUtils.isNullOrEmpty(email)) {
+            throw new InvalidParamException("User.partnerId");
+        }
+        if (type == null) {
+            throw new InvalidParamException("User.type");
+        }
 
         this.email = email;
         this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
         this.password = TEMP_PASS;
         this.nickname = userToken;
+        this.profilePictureUrl = null;
+        this.message = null;
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;
         this.style = new ArrayList<>();
     }
 
-    public void updateCustomOption(UserCommand.CustomOption command ) {
+    public void updateCustomOption(UserCommand.CustomOption command) {
         this.nickname = command.getNickname();
         this.gender = command.getGender();
         this.style = command.getStyle();
+    }
+
+    public void updateProfile(UserCommand.Profile command) {
+        if (command.getProfilePictureUrl() == null && command.getMessage() == null) {
+            throw new InvalidParamException("모든 파라미터가 null 입니다.");
+        }
+        if (command.getMessage() != null) {
+            this.message = command.getMessage();
+        }
+
+        if (command.getProfilePictureUrl() != null) {
+            this.profilePictureUrl = command.getProfilePictureUrl();
+        }
+    }
+
+    public void deleteUser() {
+        this.activated = false;
     }
 }

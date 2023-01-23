@@ -1,8 +1,11 @@
 package com.yapp.ios2.fitfty.infrastructure.user;
 
 import com.yapp.ios2.fitfty.domain.user.Bookmark;
+import com.yapp.ios2.fitfty.domain.user.Feed;
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
+import com.yapp.ios2.fitfty.global.exception.DuplicateException;
+import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,6 +17,7 @@ public class UserStoreImpl implements UserStore {
 
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final FeedRepository feedRepository;
 
 
     @Override
@@ -23,6 +27,35 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public Bookmark store(Bookmark bookmark) {
+        if (bookmarkRepository.findOneByUserTokenAndBoardToken(bookmark.getUserToken(),
+                                                           bookmark.getBoardToken())
+                .orElse(null) != null) {
+            throw new DuplicateException();
+        }
         return bookmarkRepository.save(bookmark);
+    }
+
+    @Override
+    public Feed store(Feed feed) {
+        if (feedRepository.findOneByUserTokenAndBoardToken(feed.getUserToken(),
+                                                           feed.getBoardToken())
+                .orElse(null) != null) {
+            throw new DuplicateException();
+        }
+        return feedRepository.save(feed);
+    }
+
+    @Override
+    public void deleteFeedByUserTokenAndBoardToken(String userToken, String boardToken) {
+        var feed = feedRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
+                .orElseThrow(EntityNotFoundException::new);
+        feedRepository.delete(feed);
+    }
+
+    @Override
+    public void deleteBookmarkByUserTokenAndBoardToken(String userToken, String boardToken) {
+        var bookmark = bookmarkRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
+                .orElseThrow(EntityNotFoundException::new);
+        bookmarkRepository.delete(bookmark);
     }
 }

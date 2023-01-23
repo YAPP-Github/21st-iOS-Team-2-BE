@@ -1,6 +1,5 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
-import com.yapp.ios2.fitfty.domain.tag.Tag;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -24,5 +23,5 @@ public interface BoardInfoMapper {
 
     BoardInfo.TagGroupInfo of(TagGroup tagGroup);
 
-    BoardInfo.TagInfo of(Tag tag);
+    BoardInfo.PicturePathInfo toPicturePathInfo(Picture picture);
 }

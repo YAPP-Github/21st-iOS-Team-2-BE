@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
+import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ public class PictureServiceImpl implements PictureService {
     private final PictureSeriesFactory pictureSeriesFactory;
     private final BoardInfoMapper boardInfoMapper;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -23,6 +25,7 @@ public class PictureServiceImpl implements PictureService {
         var picture = pictureSeriesFactory.store(request, userToken);
         var initBoard = request.toEntity(userToken, picture);
         var board = pictureStore.store(initBoard);
+        userService.addUserFeed(userMapper.toUserFeedCommand(userToken, board.getBoardToken()));
 
         return board;
     }
@@ -31,7 +34,6 @@ public class PictureServiceImpl implements PictureService {
     @Transactional
     public BoardInfo.Main changeBoardInfo(PictureCommand.RegisterBoardRequest request,
                                           String boardToken) {
-        String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
         var picture = board.getPicture();
         picture.update(request);
@@ -50,7 +52,9 @@ public class PictureServiceImpl implements PictureService {
     @Override
     @Transactional
     public void deleteBoard(String boardToken) {
+        String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
+        userService.deleteUserFeed(userMapper.toUserFeedCommand(userToken, boardToken));
         board.deleteBoard();
     }
 
@@ -61,8 +65,7 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.increaseBookmarkCnt();
 
-        // 유저 북마크 리스트에 보드 추가
-
+        userService.addBookmark(userMapper.toBookmarkCommand(userToken, boardToken));
     }
 
     @Override
@@ -72,7 +75,6 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.decreaseBookmarkCnt();
 
-        // 유저 북마크 리스트에 보드 추가
-
+        userService.deleteBookmark(userMapper.toBookmarkCommand(userToken, boardToken));
     }
 }
