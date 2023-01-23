@@ -1,10 +1,11 @@
-package com.yapp.ios2.fitfty.domain.user;
+package com.yapp.ios2.fitfty.domain.user.Utils;
 
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.AttributeConverter;
 
 public class StringListConverter implements AttributeConverter<List<String>, String> {
+
     private static final String SPLIT_CHAR = ";";
 
     @Override

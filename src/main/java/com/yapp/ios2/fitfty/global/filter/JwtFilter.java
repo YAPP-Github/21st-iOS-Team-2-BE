@@ -1,6 +1,6 @@
 package com.yapp.ios2.fitfty.global.filter;
 
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.user.Utils.JwtTokenProvider;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;

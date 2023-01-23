@@ -1,7 +1,6 @@
 package com.yapp.ios2.fitfty.domain.picture;
 
-import com.yapp.ios2.fitfty.domain.user.UserCommand.Bookmark;
-import com.yapp.ios2.fitfty.domain.user.UserCommand.UserFeed;
+import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +16,7 @@ public class PictureServiceImpl implements PictureService {
     private final PictureSeriesFactory pictureSeriesFactory;
     private final BoardInfoMapper boardInfoMapper;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -25,10 +25,7 @@ public class PictureServiceImpl implements PictureService {
         var picture = pictureSeriesFactory.store(request, userToken);
         var initBoard = request.toEntity(userToken, picture);
         var board = pictureStore.store(initBoard);
-        userService.addUserFeed(UserFeed.builder()
-                                        .userToken(userToken)
-                                        .boardToken(board.getBoardToken())
-                                        .build());
+        userService.addUserFeed(userMapper.toUserFeedCommand(userToken, board.getBoardToken()));
 
         return board;
     }
@@ -37,7 +34,6 @@ public class PictureServiceImpl implements PictureService {
     @Transactional
     public BoardInfo.Main changeBoardInfo(PictureCommand.RegisterBoardRequest request,
                                           String boardToken) {
-        String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
         var picture = board.getPicture();
         picture.update(request);
@@ -58,10 +54,7 @@ public class PictureServiceImpl implements PictureService {
     public void deleteBoard(String boardToken) {
         String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
-        userService.deleteUserFeed(UserFeed.builder()
-                                           .userToken(userToken)
-                                           .boardToken(boardToken)
-                                           .build());
+        userService.deleteUserFeed(userMapper.toUserFeedCommand(userToken, boardToken));
         board.deleteBoard();
     }
 
@@ -72,11 +65,7 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.increaseBookmarkCnt();
 
-        userService.addBookmark(Bookmark.builder()
-                                        .boardToken(boardToken)
-                                        .userToken(userToken)
-                                        .build());
-        // return 은 소미가 보고 원하는 형태로
+        userService.addBookmark(userMapper.toBookmarkCommand(userToken, boardToken));
     }
 
     @Override
@@ -86,9 +75,6 @@ public class PictureServiceImpl implements PictureService {
         var board = boardReader.getBoard(boardToken);
         board.decreaseBookmarkCnt();
 
-        userService.deleteBookmark(Bookmark.builder()
-                                        .boardToken(boardToken)
-                                        .userToken(userToken)
-                                        .build());
+        userService.deleteBookmark(userMapper.toBookmarkCommand(userToken, boardToken));
     }
 }

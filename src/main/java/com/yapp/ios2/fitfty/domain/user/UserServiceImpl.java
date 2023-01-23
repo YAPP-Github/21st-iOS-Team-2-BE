@@ -6,7 +6,6 @@ import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -34,7 +33,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return userReader.findOneByEmail(authentication.getName())
-                .orElseThrow(() -> new MemberNotFoundException())
+                .orElseThrow(MemberNotFoundException::new)
                 .getUserToken();
     }
 
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String findNickname(String nickname) {
 
-        Optional<User> result = userReader.findOneByNickname(nickname);
+        var result = userReader.findOneByNickname(nickname);
 
         if (result.orElse(null) == null) {
             return null;
@@ -71,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String findUserToken(String nickname) {
-        Optional<User> result = userReader.findOneByNickname(nickname);
+        var result = userReader.findOneByNickname(nickname);
 
         if (result.orElse(null) == null) {
             return null;
@@ -83,17 +82,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
-        String userToken = getCurrentUserToken();
-        User userInit = userReader.findOneByUserToken(userToken);
-        userInit.updateCustomOption(command);
-        return userMapper.toCustomOption(userStore.store(userInit));
+        var userToken = getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        user.updateCustomOption(command);
+        return userMapper.toCustomOption(user);
     }
 
     @Override
     @Transactional
     public List<String> getBookmark(String userToken) {
         List<Bookmark> bookmark = userReader.findBookmarkByUserToken(userToken);
-        return bookmark.stream().map(Bookmark::getBoardToken).collect(Collectors.toList());
+        return bookmark.stream()
+                .map(Bookmark::getBoardToken)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -108,24 +109,23 @@ public class UserServiceImpl implements UserService {
 
         var bookmark = userStore.store(initBookmark);
 
-        return UserInfo.ImageInfo.builder()
-                .boardToken(bookmark.getBoardToken())
-                .userToken(bookmark.getUserToken())
-                .build();
+        return userMapper.toImageInfo(bookmark);
     }
 
     @Override
     @Transactional
     public void deleteBookmark(UserCommand.Bookmark command) {
         userStore.deleteBookmarkByUserTokenAndBoardToken(command.getUserToken(),
-                                                     command.getBoardToken());
+                                                         command.getBoardToken());
     }
 
     @Override
     @Transactional
     public List<String> getUserFeed(String userToken) {
         List<Feed> feed = userReader.findFeedByUserToken(userToken);
-        return feed.stream().map(Feed::getBoardToken).collect(Collectors.toList());
+        return feed.stream()
+                .map(Feed::getBoardToken)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -140,10 +140,7 @@ public class UserServiceImpl implements UserService {
 
         var feed = userStore.store(initFeed);
 
-        return UserInfo.ImageInfo.builder()
-                .boardToken(feed.getBoardToken())
-                .userToken(feed.getUserToken())
-                .build();
+        return userMapper.toImageInfo(feed);
     }
 
     @Override
@@ -158,16 +155,17 @@ public class UserServiceImpl implements UserService {
     public UserInfo.UserProfile retrieveProfile(String nickname) {
         String userToken = (nickname == null) ? getCurrentUserToken() : findUserToken(nickname);
         var user = userReader.findOneByUserToken(userToken);
-        var userFeed = user.getFeedList();
-        var userBookmark = user.getBookmarkList();
+        var userFeed = user.getFeedList()
+                .stream()
+                .map(userMapper::toImageInfo)
+                .collect(Collectors.toList());
+        var userBookmark = user.getBookmarkList()
+                .stream()
+                .map(userMapper::toImageInfo)
+                .collect(Collectors.toList());
 
-        return UserInfo.UserProfile.builder()
-                .nickname(user.getNickname())
-                .profilePictureUrl(user.getProfilePictureUrl())
-                .message(user.getMessage())
-                .bookmarkList(userBookmark.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
-                .codiList(userFeed.stream().map(userMapper::toImageInfo).collect(Collectors.toList()))
-                .build();
+        return new UserInfo.UserProfile(user.getNickname(), user.getProfilePictureUrl(),
+                                        user.getMessage(), userFeed, userBookmark);
     }
 
     @Override
@@ -176,6 +174,6 @@ public class UserServiceImpl implements UserService {
         String userToken = getCurrentUserToken();
         var user = userReader.findOneByUserToken(userToken);
         user.updateProfile(command);
-        return userMapper.toProfileInfo(userStore.store(user));
+        return userMapper.toProfileInfo(user);
     }
 }

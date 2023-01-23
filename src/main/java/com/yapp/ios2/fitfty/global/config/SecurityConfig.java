@@ -1,8 +1,8 @@
 package com.yapp.ios2.fitfty.global.config;
 
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtAccessDeniedHandler;
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtAuthenticationEntryPoint;
-import com.yapp.ios2.fitfty.domain.user.auth.Utils.JwtTokenProvider;
+import com.yapp.ios2.fitfty.domain.user.Utils.JwtAccessDeniedHandler;
+import com.yapp.ios2.fitfty.domain.user.Utils.JwtAuthenticationEntryPoint;
+import com.yapp.ios2.fitfty.domain.user.Utils.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -55,14 +55,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/api/v1/users/**").permitAll()
-                .antMatchers("/api/v1/boards/**").permitAll()
-                .antMatchers("/swagger-ui/index.html").permitAll()
-                .requestMatchers(PathRequest.toH2Console())
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/api/v1/").permitAll()
+                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
