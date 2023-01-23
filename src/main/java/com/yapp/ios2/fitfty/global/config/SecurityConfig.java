@@ -55,9 +55,14 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/api/v1/").permitAll()
-                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/v1/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers(PathRequest.toH2Console())
+                .permitAll()
+                .anyRequest()
+                .authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));

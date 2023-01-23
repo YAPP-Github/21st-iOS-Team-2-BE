@@ -45,12 +45,12 @@ public class UserServiceImpl implements UserService {
             throw new MemberAlreadyExistException();
         }
 
-        User user = User.builder()
+        var initUser = User.builder()
                 .email(command.getEmail())
                 .type(command.getType())
                 .build();
 
-        return userStore.store(user)
+        return userStore.store(initUser)
                 .getUserToken();
     }
 
