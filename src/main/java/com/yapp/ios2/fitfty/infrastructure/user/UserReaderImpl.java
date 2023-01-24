@@ -1,7 +1,11 @@
 package com.yapp.ios2.fitfty.infrastructure.user;
 
+import com.yapp.ios2.fitfty.domain.user.Bookmark;
+import com.yapp.ios2.fitfty.domain.user.Feed;
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
+import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class UserReaderImpl implements UserReader {
 
     private final UserRepository userRepository;
+    private final FeedRepository feedRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Override
     public Optional<User> findOneByEmail(String email) {
@@ -20,12 +26,23 @@ public class UserReaderImpl implements UserReader {
     }
 
     @Override
-    public Optional<User> findOneByUserToken(String userToken) {
-        return userRepository.findOneByUserToken(userToken);
+    public User findOneByUserToken(String userToken) {
+        return userRepository.findOneByUserToken(userToken)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public Optional<User> findOneByNickname(String nickname) {
         return userRepository.findOneByNickname(nickname);
+    }
+
+    @Override
+    public List<Feed> findFeedByUserToken(String userToken) {
+        return feedRepository.findByUserToken(userToken);
+    }
+
+    @Override
+    public List<Bookmark> findBookmarkByUserToken(String userToken) {
+        return bookmarkRepository.findByUserToken(userToken);
     }
 }

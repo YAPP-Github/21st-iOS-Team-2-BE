@@ -15,12 +15,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "`bookmark`")
+@Table(name = "`feed`")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bookmark extends AbstractEntity {
+public class Feed extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
