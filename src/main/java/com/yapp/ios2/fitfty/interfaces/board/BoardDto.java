@@ -1,8 +1,8 @@
-package com.yapp.ios2.fitfty.interfaces.picture;
+package com.yapp.ios2.fitfty.interfaces.board;
 
-import com.yapp.ios2.fitfty.domain.picture.Board;
-import com.yapp.ios2.fitfty.domain.picture.Board.WeatherType;
-import com.yapp.ios2.fitfty.domain.picture.Picture;
+import com.yapp.ios2.fitfty.domain.board.Board;
+import com.yapp.ios2.fitfty.domain.board.Board.WeatherType;
+import com.yapp.ios2.fitfty.domain.board.Picture;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

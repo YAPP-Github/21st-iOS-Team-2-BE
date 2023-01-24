@@ -1,6 +1,6 @@
-package com.yapp.ios2.fitfty.infrastructure.picture;
+package com.yapp.ios2.fitfty.infrastructure.board;
 
-import com.yapp.ios2.fitfty.domain.picture.Picture;
+import com.yapp.ios2.fitfty.domain.board.Picture;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

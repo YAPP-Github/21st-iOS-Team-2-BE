@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.picture;
+package com.yapp.ios2.fitfty.domain.board;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.yapp.ios2.fitfty.infrastructure.picture;
+package com.yapp.ios2.fitfty.infrastructure.board;
 
-import com.yapp.ios2.fitfty.domain.picture.Board;
-import com.yapp.ios2.fitfty.domain.picture.BoardReader;
+import com.yapp.ios2.fitfty.domain.board.Board;
+import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

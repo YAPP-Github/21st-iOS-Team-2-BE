@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.tag;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
-import com.yapp.ios2.fitfty.domain.picture.Picture;
+import com.yapp.ios2.fitfty.domain.board.Picture;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import lombok.Builder;
 import lombok.Getter;

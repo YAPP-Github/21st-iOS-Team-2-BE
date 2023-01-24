@@ -1,9 +1,9 @@
-package com.yapp.ios2.fitfty.infrastructure.picture;
+package com.yapp.ios2.fitfty.infrastructure.board;
 
-import com.yapp.ios2.fitfty.domain.picture.BoardStore;
-import com.yapp.ios2.fitfty.domain.picture.Picture;
-import com.yapp.ios2.fitfty.domain.picture.PictureCommand;
-import com.yapp.ios2.fitfty.domain.picture.PictureSeriesFactory;
+import com.yapp.ios2.fitfty.domain.board.BoardCommand;
+import com.yapp.ios2.fitfty.domain.board.BoardStore;
+import com.yapp.ios2.fitfty.domain.board.Picture;
+import com.yapp.ios2.fitfty.domain.board.PictureSeriesFactory;
 import com.yapp.ios2.fitfty.domain.tag.TagGroupStore;
 import com.yapp.ios2.fitfty.domain.tag.TagStore;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
     private final TagStore tagStore;
 
     @Override
-    public Picture store(PictureCommand.RegisterBoardRequest request, String userToken) {
+    public Picture store(BoardCommand.RegisterBoardRequest request, String userToken) {
         var picture = boardStore.pictureStore(request.toPictureEntity(userToken));
         storeTagSeries(request, picture);
         return picture;
     }
 
     @Override
-    public Picture storeTagSeries(PictureCommand.RegisterBoardRequest request, Picture picture) {
+    public Picture storeTagSeries(BoardCommand.RegisterBoardRequest request, Picture picture) {
         var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
         if (CollectionUtils.isEmpty(registerTagGroupRequestList)) {
             return picture;

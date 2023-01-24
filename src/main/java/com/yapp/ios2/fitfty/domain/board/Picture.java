@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.picture;
+package com.yapp.ios2.fitfty.domain.board;
 
 import com.google.common.collect.Lists;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
@@ -54,7 +54,7 @@ public class Picture extends AbstractEntity {
         this.filePath = filePath;
     }
 
-    public void update(PictureCommand.RegisterBoardRequest request) {
+    public void update(BoardCommand.RegisterBoardRequest request) {
         this.filePath = request.getFilePath();
         var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
 
