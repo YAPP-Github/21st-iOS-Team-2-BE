@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.picture;
+package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
@@ -79,7 +79,7 @@ public class Board extends AbstractEntity {
         this.status = true;
     }
 
-    public void update(PictureCommand.RegisterBoardRequest request,
+    public void update(BoardCommand.RegisterBoardRequest request,
                        Picture picture) {
         this.picture = picture;
         this.content = request.getContent();

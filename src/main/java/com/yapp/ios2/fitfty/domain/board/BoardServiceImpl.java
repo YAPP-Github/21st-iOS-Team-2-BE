@@ -1,4 +1,4 @@
-package com.yapp.ios2.fitfty.domain.picture;
+package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PictureServiceImpl implements PictureService {
+public class BoardServiceImpl implements BoardService {
     private final BoardStore pictureStore;
     private final BoardReader boardReader;
     private final PictureSeriesFactory pictureSeriesFactory;
@@ -20,7 +20,7 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     @Transactional
-    public Board registerBoard(PictureCommand.RegisterBoardRequest request) {
+    public Board registerBoard(BoardCommand.RegisterBoardRequest request) {
         String userToken = userService.getCurrentUserToken();
         var picture = pictureSeriesFactory.store(request, userToken);
         var initBoard = request.toEntity(userToken, picture);
@@ -32,7 +32,7 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     @Transactional
-    public BoardInfo.Main changeBoardInfo(PictureCommand.RegisterBoardRequest request,
+    public BoardInfo.Main changeBoardInfo(BoardCommand.RegisterBoardRequest request,
                                           String boardToken) {
         var board = boardReader.getBoard(boardToken);
         var picture = board.getPicture();

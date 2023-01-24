@@ -1,6 +1,6 @@
-package com.yapp.ios2.fitfty.domain.picture;
+package com.yapp.ios2.fitfty.domain.board;
 
-import com.yapp.ios2.fitfty.domain.picture.Board.WeatherType;
+import com.yapp.ios2.fitfty.domain.board.Board.WeatherType;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class PictureCommand {
+public class BoardCommand {
 
     @Getter
     @Builder
