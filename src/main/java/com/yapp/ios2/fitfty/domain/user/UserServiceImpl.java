@@ -56,15 +56,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String findNickname(String nickname) {
-
-        var result = userReader.findOneByNickname(nickname);
-
-        if (result.orElse(null) == null) {
-            return null;
-        }
-        return result.get()
-                .getNickname();
+    public Boolean findNickname(String nickname) {
+        return userReader.findOneByNickname(nickname)
+                .isPresent();
     }
 
     @Override
@@ -72,11 +66,8 @@ public class UserServiceImpl implements UserService {
     public String findUserToken(String nickname) {
         var result = userReader.findOneByNickname(nickname);
 
-        if (result.orElse(null) == null) {
-            return null;
-        }
-        return result.get()
-                .getUserToken();
+        return result.map(User::getUserToken)
+                .orElse(null);
     }
 
     @Override

@@ -8,7 +8,7 @@ public interface UserService {
 
     String registerUser(UserCommand.SignUp command);
 
-    String findNickname(String nickname);
+    Boolean findNickname(String nickname);
 
     String findUserToken(String nickname);
 

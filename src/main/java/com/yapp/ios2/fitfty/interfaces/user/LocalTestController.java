@@ -11,6 +11,9 @@ public class LocalTestController {
     @ResponseBody
     public String welcomeAsHTML() {
         return "<html>\n" + "<header><title>Welcome</title></header>\n" +
-                "<body>\n" + "<a href=https://kauth.kakao.com/oauth/authorize?client_id=31e815075078c89d7505decdeed8af98&redirect_uri=http://52.79.144.104:8080/api/v1/auth/kakao/callback&response_type=code>KAKAO LOGIN BUTTON</a>\n" + "</body>\n" + "</html>";
+                "<body>\n"
+                + "<a href=https://kauth.kakao.com/oauth/authorize?client_id=31e815075078c89d7505decdeed8af98&redirect_uri=http://localhost:8080/api/v1/auth/kakao/callback&response_type=code>KAKAO LOGIN BUTTON local</a>\n"
+                + "<a href=https://kauth.kakao.com/oauth/authorize?client_id=31e815075078c89d7505decdeed8af98&redirect_uri=http://52.79.144.104:8080/api/v1/auth/kakao/callback&response_type=code>KAKAO LOGIN BUTTON public</a>\n"
+                + "</body>\n" + "</html>";
     }
 }

@@ -7,6 +7,7 @@ import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,11 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoOAuth {
 
+    @Value("${kakao.client_id}")
+    String client_id;
+    @Value("${kakao.redirect_uri}")
+    String redirect_uri;
+
     public KakaoOAuthTokenDto getOAuthToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -28,8 +34,8 @@ public class KakaoOAuth {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "31e815075078c89d7505decdeed8af98");
-        params.add("redirect_uri", "http://localhost:8080/api/v1/auth/kakao/callback");
+        params.add("client_id", client_id);
+        params.add("redirect_uri", redirect_uri);
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
@@ -72,7 +78,7 @@ public class KakaoOAuth {
         KakaoProfileDto kakaoProfileDto = null;
         try {
             kakaoProfileDto = objectMapper.readValue(responseEntity.getBody(),
-                                                      KakaoProfileDto.class);
+                                                     KakaoProfileDto.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
