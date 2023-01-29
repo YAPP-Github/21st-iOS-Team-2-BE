@@ -43,9 +43,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
         var board = boardReader.getBoard(boardToken);
+        board.increaseViews();
         return boardInfoMapper.of(board);
     }
 
