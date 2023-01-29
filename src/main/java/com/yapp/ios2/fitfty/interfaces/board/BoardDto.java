@@ -57,6 +57,7 @@ public class BoardDto {
         private final Float temperature;
         private final Board.WeatherType weather;
         private final ZonedDateTime photoTakenTime;
+        private final Integer views;
         private final Integer bookmarkCnt;
     }
 
