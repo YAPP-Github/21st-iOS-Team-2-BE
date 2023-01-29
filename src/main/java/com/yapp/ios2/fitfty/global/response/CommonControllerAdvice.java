@@ -11,6 +11,7 @@ import org.slf4j.MDC;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -142,5 +143,13 @@ public class CommonControllerAdvice {
         log.error("eventId = {} ", eventId, e);
         return CommonResponse.fail(ErrorCode.FORBIDDEN.getErrorMsg(),
                                    ErrorCode.FORBIDDEN.name());
+    }
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public CommonResponse handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
+        String eventId = MDC.get(CommonHttpRequestInterceptor.HEADER_REQUEST_UUID_KEY);
+        log.error("eventId = {} ", eventId, e);
+        return CommonResponse.fail(e.getMessage(), ErrorCode.CURRENT_CONTEXT_ERROR.getErrorMsg());
     }
 }

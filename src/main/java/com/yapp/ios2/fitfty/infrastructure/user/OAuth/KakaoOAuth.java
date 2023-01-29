@@ -29,7 +29,7 @@ public class KakaoOAuth {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "31e815075078c89d7505decdeed8af98");
-        params.add("redirect_uri", "http://localhost:8080/api/v1/auth/kakao/callback");
+        params.add("redirect_uri", "http://52.79.144.104:8080/api/v1/auth/kakao/callback");
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
