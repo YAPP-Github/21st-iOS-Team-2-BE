@@ -4,7 +4,9 @@ import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.yapp.ios2.fitfty.domain.board.BoardService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
+
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,30 +25,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(API_PREFIX + "/boards")
 public class BoardController {
     private final BoardService boardService;
-    private final BoardDtoMapper pictureDtoMapper;
+    private final BoardDtoMapper boardDtoMapper;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse registerBoard(@RequestBody @Valid BoardDto.RegisterBoardRequest request) {
-        var pictureCommand = pictureDtoMapper.of(request);
+        var pictureCommand = boardDtoMapper.of(request);
         var board = boardService.registerBoard(pictureCommand);
-        var response = pictureDtoMapper.of(board);
+        var response = boardDtoMapper.of(board);
         return CommonResponse.success(response);
     }
 
     @PutMapping("/{boardToken}")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken, @RequestBody @Valid BoardDto.RegisterBoardRequest request) {
-        var pictureCommand = pictureDtoMapper.of(request);
+    public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken,
+                                          @RequestBody @Valid BoardDto.RegisterBoardRequest request) {
+        var pictureCommand = boardDtoMapper.of(request);
         var boardInfo = boardService.changeBoardInfo(pictureCommand, boardToken);
-        var response = pictureDtoMapper.of(boardInfo);
+        var response = boardDtoMapper.of(boardInfo);
         return CommonResponse.success(response);
     }
 
     @GetMapping("/{boardToken}")
     public CommonResponse retrieve(@PathVariable("boardToken") String boardToken) {
         var boardInfo = boardService.retrieveBoardInfo(boardToken);
-        var response = pictureDtoMapper.of(boardInfo);
+        var response = boardDtoMapper.of(boardInfo);
         return CommonResponse.success(response);
     }
 

@@ -52,6 +52,7 @@ public class Board extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private WeatherType weather;
     private ZonedDateTime photoTakenTime; //data 형식 변경 여부 확인
+    private Integer views;
     private Integer bookmarkCnt;
 
     @Convert(converter = BooleanToYNConverter.class)
@@ -75,12 +76,12 @@ public class Board extends AbstractEntity {
         this.temperature = temperature;
         this.weather = weather;
         this.photoTakenTime = photoTakenTime;
+        this.views = 0;
         this.bookmarkCnt = 0;
         this.status = true;
     }
 
-    public void update(BoardCommand.RegisterBoardRequest request,
-                       Picture picture) {
+    public void update(BoardCommand.RegisterBoardRequest request, Picture picture) {
         this.picture = picture;
         this.content = request.getContent();
         this.location = request.getLocation();
@@ -92,6 +93,8 @@ public class Board extends AbstractEntity {
     public void deleteBoard() {
         this.status = false;
     }
+
+    public void increaseViews() { this.views += 1; }
 
     public void increaseBookmarkCnt() {
         this.bookmarkCnt += 1;
