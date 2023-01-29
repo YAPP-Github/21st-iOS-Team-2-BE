@@ -93,7 +93,7 @@ public class User extends AbstractEntity {
     @Builder
     public User(String email, LoginType type) {
         if (StringUtils.isNullOrEmpty(email)) {
-            throw new InvalidParamException("User.partnerId");
+            throw new InvalidParamException("User.email");
         }
         if (type == null) {
             throw new InvalidParamException("User.type");

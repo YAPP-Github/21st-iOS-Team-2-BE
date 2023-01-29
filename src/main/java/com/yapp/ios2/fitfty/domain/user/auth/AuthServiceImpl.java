@@ -6,6 +6,7 @@ import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.domain.user.Utils.JwtTokenProvider;
+import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.OAuth.KakaoOAuth;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
@@ -64,6 +65,10 @@ public class AuthServiceImpl implements AuthService {
 
         // 2. kakaoToken 으로 profile, email GET
         SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto);
+
+        if (signUp.getEmail() == null) {
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
 
         // 3. 가입 여부 확인하고, 가입안되어있으면 가입
         if (userReader.findOneByEmail(signUp.getEmail())
