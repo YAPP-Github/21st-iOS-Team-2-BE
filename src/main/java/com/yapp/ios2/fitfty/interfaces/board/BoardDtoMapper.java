@@ -3,6 +3,7 @@ package com.yapp.ios2.fitfty.interfaces.board;
 import com.yapp.ios2.fitfty.domain.board.Board;
 import com.yapp.ios2.fitfty.domain.board.BoardInfo;
 import com.yapp.ios2.fitfty.domain.board.BoardCommand;
+import com.yapp.ios2.fitfty.domain.board.PictureInfo;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,4 +28,7 @@ public interface BoardDtoMapper {
 
     // retrieve
     BoardDto.Main of(BoardInfo.Main main);
+
+    BoardDto.PictureListResponse of(PictureInfo.Main pictureInfo);
+
 }

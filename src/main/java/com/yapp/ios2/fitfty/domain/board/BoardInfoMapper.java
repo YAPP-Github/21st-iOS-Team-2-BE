@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
@@ -19,9 +21,13 @@ public interface BoardInfoMapper {
     })
     BoardInfo.Main of(Board board);
 
-    BoardInfo.PictureInfo of(Picture picture);
-
     BoardInfo.TagGroupInfo of(TagGroup tagGroup);
 
     BoardInfo.PicturePathInfo toPicturePathInfo(Picture picture);
+
+//    PictureInfo.Main toPictureInfo(List<PictureInfo.StyleInfo> styleInfoList);
+//
+//    PictureInfo.StyleInfo of(String style, List<PictureInfo.PictureDetailInfo> pictureInfoList);
+//
+//    PictureInfo.PictureDetailInfo of(String filePath)
 }

@@ -34,6 +34,20 @@ public class BoardDto {
     }
 
     @Getter
+    @Setter
+    @ToString
+    public static class GetPictureRequest {
+        private String weather;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    public static class PictureListResponse {
+        private final List<StyleInfo> styleInfoList;
+    }
+
+    @Getter
     @Builder
     @ToString
     public static class RegisterResponse {
@@ -64,17 +78,27 @@ public class BoardDto {
     @Getter
     @Builder
     @ToString
-    public static class PictureInfo {
-        private final String pictureToken;
-        private final String userToken;
-        private final List<TagGroupInfo> itemOptionGroupList;
+    public static class StyleInfo {
+        private final String style;
+        private final List<PictureDetailInfo> pictureInfoList;
     }
 
     @Getter
     @Builder
     @ToString
-    public static class TagGroupInfo {
-        private final String tagGroupType;
-        private final String tagValue;
+    public static class PictureDetailInfo {
+        private final String filePath;
+        private final String nickname;
+        private final Integer views;
+        private final Boolean bookmarked;
+//        private final List<TagGroupInfo> itemOptionGroupList;
     }
+
+//    @Getter
+//    @Builder
+//    @ToString
+//    public static class TagGroupInfo {
+//        private final String tagGroupType;
+//        private final String tagValue;
+//    }
 }

@@ -29,16 +29,6 @@ public class BoardInfo {
     @Getter
     @Builder
     @ToString
-    public static class PictureInfo {
-        private final String pictureToken;
-        private final String userToken;
-        private final String filePath;
-        private final List<TagGroupInfo> tagGroupList;
-    }
-
-    @Getter
-    @Builder
-    @ToString
     public static class TagGroupInfo {
         private final String tagGroupName;
         private final String tagValue;

@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
     private final BoardStore boardStore;
     private final TagGroupStore tagGroupStore;
-    private final TagStore tagStore;
 
     @Override
     public Picture store(BoardCommand.RegisterBoardRequest request, String userToken) {
