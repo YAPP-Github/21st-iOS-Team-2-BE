@@ -47,15 +47,24 @@ public class BoardCommand {
     @Builder
     @ToString
     public static class RegisterTagGroupRequest {
-        private final String tagGroupName;  // ex) style, weather
-        private final String tagValue;  //ex) formal, casual
+//        private final String tagGroupName;  // ex) style, weather
+//        private final String tagValue;  //ex) formal, casual
+
+        private final String weather;
+        private final List<String> style;
 
         public TagGroup toEntity(Picture picture) {
             return TagGroup.builder()
                     .picture(picture)
-                    .tagGroupName(tagGroupName)
-                    .tagValue(tagValue)
+                    .weather(weather)
+                    .style(style)
                     .build();
+
+//            return TagGroup.builder()
+//                    .picture(picture)
+//                    .tagGroupName(tagGroupName)
+//                    .tagValue(tagValue)
+//                    .build();
         }
     }
 }

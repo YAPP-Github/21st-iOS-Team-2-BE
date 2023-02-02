@@ -2,6 +2,7 @@ package com.yapp.ios2.fitfty.domain.board;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.lang.annotation.Repeatable;
@@ -26,7 +27,6 @@ public class PictureInfo {
     }
 
     @Getter
-    @Builder
     @ToString
     public static class PictureDetailInfo {
         private final String filePath;

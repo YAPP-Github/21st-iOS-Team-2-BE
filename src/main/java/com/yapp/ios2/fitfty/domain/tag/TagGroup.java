@@ -2,6 +2,7 @@ package com.yapp.ios2.fitfty.domain.tag;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.domain.board.Picture;
+import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +11,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Slf4j
 @Getter
@@ -61,5 +57,9 @@ public class TagGroup extends AbstractEntity {
         this.picture = picture;
         this.weather = weather;
         this.style = style;
+    }
+
+    public Long getPictureId() {
+        return picture.getId();
     }
 }

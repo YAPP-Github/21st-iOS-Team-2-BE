@@ -17,7 +17,7 @@ public interface BoardDtoMapper {
                         @Mapping(source = "request.photoTakenTime", target = "photoTakenTime", dateFormat = "yyyy-MM-dd HH:mm:ss") })
         BoardCommand.RegisterBoardRequest of(BoardDto.RegisterBoardRequest request);
 
-        BoardCommand.RegisterTagGroupRequest of(BoardDto.RegisterTagGroupRequest request);
+//        BoardCommand.RegisterTagGroupRequest of(BoardDto.RegisterTagGroupRequest request);
 
         @Mappings({ @Mapping(source = "board.picture", target = "picture") })
         BoardDto.RegisterResponse of(Board board);
