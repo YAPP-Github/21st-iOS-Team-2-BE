@@ -34,7 +34,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public BoardInfo.Main changeBoardInfo(BoardCommand.RegisterBoardRequest request,
-                                          String boardToken) {
+            String boardToken) {
         var board = boardReader.getBoard(boardToken);
         var picture = board.getPicture();
         picture.update(request);
@@ -83,19 +83,13 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public PictureInfo.Main getPictureList(BoardDto.GetPictureRequest request) {
-        //        1. 유저찾기 by userToken
-//        2. get user preference, bookmark list from userService
-//        3. style, weather tag로 s3 link 5개씩 찾아오기 (repository)
-//                4. picture dto로부터 board info 찾기
-//        1. user code, view, bookmark 여부 return
-//                2. bookmark list에 있는지 contains() 메서드로 확인하기
-//        3. 조회수 + 1
-//        5. return response
-
-//        var picture = pictureSeriesFactory.store(request, userToken);
-//        var initBoard = request.toEntity(userToken, picture);
-//        var board = pictureStore.store(initBoard);
-//        userService.addUserFeed(userMapper.toUserFeedCommand(userToken, board.getBoardToken()));
+        // 1. 유저찾기 by userToken
+        // 2. get user preference, bookmark list from userService
+        // 3. style, weather tag로 s3 link 5개씩 찾아오기 (repository)
+        // 4. picture dto로부터 board info 찾기
+        // 1. user code, view, bookmark 여부 return
+        // 3. 조회수 + 1
+        // 5. return response
 
         String userToken = userService.getCurrentUserToken();
         var styleInfoList = boardReader.getPictureSeries(userToken, request.getWeather());

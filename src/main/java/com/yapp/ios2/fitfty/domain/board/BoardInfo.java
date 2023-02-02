@@ -30,8 +30,10 @@ public class BoardInfo {
     @Builder
     @ToString
     public static class TagGroupInfo {
-        private final String tagGroupName;
-        private final String tagValue;
+        // private final String tagGroupName;
+        // private final String tagValue;
+        private final String weather;
+        private final List<String> style;
     }
 
     @Getter

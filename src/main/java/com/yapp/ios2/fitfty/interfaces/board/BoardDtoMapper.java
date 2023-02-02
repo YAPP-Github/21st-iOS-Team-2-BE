@@ -10,25 +10,25 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(
-        componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        unmappedTargetPolicy = ReportingPolicy.ERROR
-)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface BoardDtoMapper {
-    // register
-    @Mappings({@Mapping(source = "request.tagGroupList", target = "registerTagGroupRequestList"),
-            @Mapping(source = "request.photoTakenTime", target = "photoTakenTime", dateFormat = "yyyy-MM-dd HH:mm:ss")})
-    BoardCommand.RegisterBoardRequest of(BoardDto.RegisterBoardRequest request);
+        // register
+        @Mappings({ @Mapping(source = "request.tagGroupList", target = "registerTagGroupRequestList"),
+                        @Mapping(source = "request.photoTakenTime", target = "photoTakenTime", dateFormat = "yyyy-MM-dd HH:mm:ss") })
+        BoardCommand.RegisterBoardRequest of(BoardDto.RegisterBoardRequest request);
 
-    BoardCommand.RegisterTagGroupRequest of(BoardDto.RegisterTagGroupRequest request);
+        BoardCommand.RegisterTagGroupRequest of(BoardDto.RegisterTagGroupRequest request);
 
-    @Mappings({@Mapping(source = "board.picture", target = "picture")})
-    BoardDto.RegisterResponse of(Board board);
+        @Mappings({ @Mapping(source = "board.picture", target = "picture") })
+        BoardDto.RegisterResponse of(Board board);
 
-    // retrieve
-    BoardDto.Main of(BoardInfo.Main main);
+        // retrieve
+        BoardDto.Main of(BoardInfo.Main main);
 
-    BoardDto.PictureListResponse of(PictureInfo.Main pictureInfo);
+        BoardDto.PictureListResponse of(PictureInfo.Main pictureInfo);
+
+        BoardDto.StyleInfo of(PictureInfo.StyleInfo styleInfo);
+
+        BoardDto.PictureDetailInfo of(PictureInfo.PictureDetailInfo pictureDetailInfo);
 
 }

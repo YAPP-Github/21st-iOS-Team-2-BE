@@ -29,8 +29,10 @@ public class BoardDto {
     @Setter
     @ToString
     public static class RegisterTagGroupRequest {
-        private String tagGroupName;
-        private String tagValue;
+        // private String tagGroupName;
+        // private String tagValue;
+        private String weather;
+        private List<String> style;
     }
 
     @Getter
@@ -91,14 +93,14 @@ public class BoardDto {
         private final String nickname;
         private final Integer views;
         private final Boolean bookmarked;
-//        private final List<TagGroupInfo> itemOptionGroupList;
+        // private final List<TagGroupInfo> itemOptionGroupList;
     }
 
-//    @Getter
-//    @Builder
-//    @ToString
-//    public static class TagGroupInfo {
-//        private final String tagGroupType;
-//        private final String tagValue;
-//    }
+    // @Getter
+    // @Builder
+    // @ToString
+    // public static class TagGroupInfo {
+    // private final String tagGroupType;
+    // private final String tagValue;
+    // }
 }

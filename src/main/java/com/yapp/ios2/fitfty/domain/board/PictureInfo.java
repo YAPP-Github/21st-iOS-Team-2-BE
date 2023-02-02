@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 
 public class PictureInfo {
@@ -16,8 +17,9 @@ public class PictureInfo {
     }
 
     @Getter
-    @Builder
+    // @Builder
     @ToString
+    @RequiredArgsConstructor
     public static class StyleInfo {
         private final String style;
         private final List<PictureDetailInfo> pictureInfoList;
@@ -31,5 +33,12 @@ public class PictureInfo {
         private final String nickname;
         private final Integer views;
         private final Boolean bookmarked;
+
+        public PictureDetailInfo(Board board, String nickname, Boolean bookmarked) {
+            this.filePath = board.getPicture().getFilePath();
+            this.nickname = nickname;
+            this.views = board.getViews();
+            this.bookmarked = bookmarked;
+        }
     }
 }

@@ -33,20 +33,33 @@ public class TagGroup extends AbstractEntity {
     @Setter
     @JoinColumn(name = "picture_id")
     private Picture picture;
-    private String tagGroupName;
-    private String tagValue;
+    // private String tagGroupName;
+    private String weather;
+
+    @Convert(converter = StringListConverter.class)
+    private List<String> style;
+
+    // @Builder
+    // public TagGroup(Picture picture, String tagGroupName, String tagValue) {
+    // if (picture == null) {
+    // throw new InvalidParamException("TagGroup.picture");
+    // }
+    // if (StringUtils.isBlank(tagGroupName)) {
+    // throw new InvalidParamException("TagGroup.tagGroupName");
+    // }
+
+    // this.picture = picture;
+    // this.tagGroupName = tagGroupName;
+    // this.tagValue = tagValue;
+    // }
 
     @Builder
-    public TagGroup(Picture picture, String tagGroupName, String tagValue) {
+    public TagGroup(Picture picture, String weather, List<String> style) {
         if (picture == null) {
             throw new InvalidParamException("TagGroup.picture");
         }
-        if (StringUtils.isBlank(tagGroupName)) {
-            throw new InvalidParamException("TagGroup.tagGroupName");
-        }
-
         this.picture = picture;
-        this.tagGroupName = tagGroupName;
-        this.tagValue = tagValue;
+        this.weather = weather;
+        this.style = style;
     }
 }

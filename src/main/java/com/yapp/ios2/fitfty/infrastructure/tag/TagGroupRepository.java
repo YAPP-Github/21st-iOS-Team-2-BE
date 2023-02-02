@@ -10,14 +10,14 @@ import java.util.Optional;
 public interface TagGroupRepository extends JpaRepository<TagGroup, Long> {
     Optional<TagGroup> findByTagValue(String tagValue);
 
-//    @Query(nativeQuery=true, value="SELECT *  FROM question ORDER BY random() LIMIT 10")
-    @Query(nativeQuery = true, value="SELECT * FROM yourTableName ORDER BY RAND() LIMIT 10 OFFSET floor(rand()(SELECT COUNT() FROM yourTableName))")
-    List<TagGroup> findRandomPicture();
+    @Query(nativeQuery = true, value = "SELECT *" +
+            "FROM tag_group" +
+            "WHERE style = :style AND weather = :weather" +
+            "ORDER BY RAND(:seed) LIMIT 5 OFFSET :offset")
+    List<TagGroup> findRandomPicture(@Param("style") String style, @Param("weather") String weather,
+            @Param("seed") long seed, @Param("offset") int offset);
 
-//    @Query("SELECT COUNT(t) FROM tag_group t")
-//    int getNumberOfTagGroup();
-
-//    @Query("SELECT u FROM tag_group u WHERE INDEX(u) IN :indexs")
-//    List<TagGroup> getResultList(int[] indexes);
+    @Query("SELECT COUNT(t) FROM tag_group t")
+    int getNumberOfTagGroup();
 
 }

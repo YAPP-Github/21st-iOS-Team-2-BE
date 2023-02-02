@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardReaderImpl implements BoardReader {
     private final BoardRepository boardRepository;
+    private final PictureRepository pictureRepository;
     private final TagGroupRepository tagGroupRepository;
     private final UserReader userReader;
 
@@ -34,71 +35,46 @@ public class BoardReaderImpl implements BoardReader {
 
     @Override
     public List<PictureInfo.StyleInfo> getPictureSeries(String userToken, String weather) {
-//        style, weather tag로 s3 link 5개씩 찾아오기 (repository)
-//                4. picture dto로부터 board info 찾기
-//        1. user code, view, bookmark 여부 return
-//                2. bookmark list에 있는지 contains() 메서드로 확인하기
-//        3. 조회수 + 1
-
-//        userReader.findOneByNickname(nickname)
-//                .isPresent();
-
-        var bookmarkList = userReader.findBookmarkByUserToken(userToken);
+        var bookmarkList = userReader.findBookmarkByUserToken(userToken).stream()
+                .map(Bookmark::getBoardToken)
+                .collect(Collectors.toList());
         var user = userReader.findOneByUserToken(userToken);
-//        var pictureList = user.getStyle().stream()
-//                .map(style -> {
-//                    var picutreDetailList = getRandomPicture(style);
-//
-//                     PictureInfo.PictureDetailInfo.builder()
-//                            .filePath()
-//                            .nickname(user.getNickname())
-//                            .views()
-//                            .bookmarked()
-//                            .build();
-//
-//                    return PictureInfo.StyleInfo.builder()
-//                            .style(style)
-//                            .pictureInfoList()
-//                            .build();
-//                }).collect(Collectors.toList());
-//
-//        var itemOptionGroupList = item.getItemOptionGroupList();
-//        return itemOptionGroupList.stream()
-//                .map(itemOptionGroup -> {
-//                    var itemOptionList = itemOptionGroup.getItemOptionList();
-//                    var itemOptionInfoList = itemOptionList.stream()
-//                            .map(ItemInfo.ItemOptionInfo::new)
-//                            .collect(Collectors.toList());
-//
-//                    return new ItemInfo.ItemOptionGroupInfo(itemOptionGroup, itemOptionInfoList);
-//                }).collect(Collectors.toList());
 
+        var styleInfoList = user.getStyle().stream()
+                .map(style -> {
+                    // 날짜 기준으로 변경, offset query 변경
+                    var tagGroupList = getRandomPicture(style, weather);
+                    var PictureDetailInfoList = tagGroupList.stream()
+                            .map(tagGroup -> {
+                                var picture = pictureRepository.findById(tagGroup.getPictureId());
+                                var board = boardRepository.findByBoardToken(picture.getBoardToken());
+                                board.increaseViews();
+                                Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
 
-        return null;
+                                return new PictureInfo.PictureDetailInfo(board, user.getNickname, bookmarked);
+                            }).collect(Collectors.toList());
+
+                    return new PictureInfo.StyleInfo(style, PictureDetailInfo);
+                }).collect(Collectors.toList());
+
+        return styleInfoList;
 
     }
 
     @Override
-    public List<PictureInfo.PictureDetailInfo> getRandomPicture(String tagValue) {
-//        var tagGroup = tagGroupRepository.findByTagValue(tagValue);
+    public List<PictureInfo.PictureDetailInfo> getRandomPicture(String style, String weather) {
+        GregorianCalendar today = new GregorianCalendar();
+        long seed = today.get(today.YEAR) * 10000 + today.get(today.MONTH) * 100 + today.get(today.DAY_OF_MONTH);
+        int offset = new Random(seed).nextFloat() * tagGroupRepository.getNumberOfTagGroup();
 
-//        var size = tagGroupRepository.getNumberOfTagGroup();
-//        var randomList = generateNumbers(System.currentTimeMillis(), size); // 날짜 기준으로 변경
-//
-//        int[] index = new Random().ints(0, size, 10).toArray();
+        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(style, weather, seed, offset);
 
-        // 날짜 기준으로 변경
-        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture();
-
-//        Query query = em.createQuery("SELECT u FROM UserTable u WHERE INDEX(u) IN :indexs");
-//        query.setParameter("indexs", index);
-//        List<UserTable> listUsersRandom = query.getResultList();
-        return null;
+        return tagGroupList;
     }
 
     public double[] generateNumbers(long seed, int amount) {
         double[] randomList = new double[amount];
-        for (int i=0;i<amount;i++) {
+        for (int i = 0; i < amount; i++) {
             Random generator = new Random(seed);
             randomList[i] = Math.abs((double) (generator.nextLong() % 0.001) * 10000);
             seed--;
