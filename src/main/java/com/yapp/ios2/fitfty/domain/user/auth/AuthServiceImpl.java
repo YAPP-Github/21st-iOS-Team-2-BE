@@ -58,10 +58,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String loginWithKakao(String code) {
+    public String loginWithKakaoCode(String code) {
 
         // 1. kakaoCallback 으로부터 code 받아온걸로 kakaoToken GET
         KakaoOAuthTokenDto kakaoOAuthTokenDto = kakaoOAuth.getOAuthToken(code);
+//        log.info(kakaoOAuthTokenDto.getAccess_token());
 
         // 2. kakaoToken 으로 profile, email GET
         SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto);
@@ -90,5 +91,29 @@ public class AuthServiceImpl implements AuthService {
         var user = userReader.findOneByUserToken(userToken);
         user.deleteUser();
         userStore.store(user);
+    }
+
+    @Override
+    public String loginWithKakao(String accessToken) {
+        SignUp signUp = kakaoOAuth.getProfile(accessToken);
+
+        if (signUp.getEmail() == null) {
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
+
+        if (userReader.findOneByEmail(signUp.getEmail())
+                .orElse(null) == null) {
+            userService.registerUser(signUp);
+        }
+
+        return login(SignIn.builder()
+                             .email(signUp.getEmail())
+                             .password(signUp.getPassword())
+                             .build());
+    }
+
+    @Override
+    public String loginWithApple(String token) {
+        return token;
     }
 }

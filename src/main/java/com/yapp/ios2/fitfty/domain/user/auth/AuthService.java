@@ -6,7 +6,10 @@ public interface AuthService {
 
     String login(UserCommand.SignIn command);
 
-    String loginWithKakao(String code);
+    String loginWithKakaoCode(String code);
 
     void unActivateUser();
+
+    String loginWithKakao(String accessToken);
+    String loginWithApple(String token);
 }
