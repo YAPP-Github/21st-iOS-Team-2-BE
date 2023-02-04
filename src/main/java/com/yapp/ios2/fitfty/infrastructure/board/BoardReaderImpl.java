@@ -5,6 +5,7 @@ import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.PictureInfo;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
+import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
@@ -34,15 +35,16 @@ public class BoardReaderImpl implements BoardReader {
 
     @Override
     public List<PictureInfo.StyleInfo> getPictureSeries(String userToken, String weather) {
-        var bookmarkList = userReader.findBookmarkByUserToken(userToken).stream()
+        var bookmarkList = userReader.findBookmarkByUserToken(userToken)
+                .stream()
                 .map(Bookmark::getBoardToken)
                 .collect(Collectors.toList());
         var user = userReader.findOneByUserToken(userToken);
 
-        var styleInfoList = user.getStyle().stream()
+        var styleInfoList = user.getStyle()
+                .stream()
                 .map(style -> {
-                    // 날짜 기준으로 변경, offset query 변경
-                    var tagGroupList = getRandomPicture(style, weather);
+                    var tagGroupList = getRandomPicture(style, weather, user.getGender());
                     var pictureDetailInfoList = tagGroupList.stream()
                             .map(tagGroup -> {
                                 var pictureId = tagGroup.getPictureId();
@@ -51,34 +53,31 @@ public class BoardReaderImpl implements BoardReader {
                                 board.increaseViews();
                                 Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
 
-                                return new PictureInfo.PictureDetailInfo(board, user.getNickname(), bookmarked);
-                            }).collect(Collectors.toList());
+                                return new PictureInfo.PictureDetailInfo(board, user.getNickname(),
+                                                                         bookmarked);
+                            })
+                            .collect(Collectors.toList());
 
                     return new PictureInfo.StyleInfo(style, pictureDetailInfoList);
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
 
         return styleInfoList;
 
     }
 
     @Override
-    public List<TagGroup> getRandomPicture(String style, String weather) {
+    public List<TagGroup> getRandomPicture(String style, String weather, User.Gender gender) {
+        String styleQuery = "%" + style + "%";
         GregorianCalendar today = new GregorianCalendar();
-        long seed = today.get(today.YEAR) * 100000000L + today.get(today.MONTH) * 100 + today.get(today.DAY_OF_MONTH);
+        long seed = today.get(today.YEAR) * 100000000L + today.get(today.MONTH) * 100 + today.get(
+                today.DAY_OF_MONTH);
         int offset = (int) new Random(seed).nextFloat() * tagGroupRepository.getNumberOfTagGroup();
 
-        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(style, weather, seed, offset);
+        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(styleQuery, weather,
+                                                                           gender.toString(),
+                                                                           seed, offset);
 
         return tagGroupList;
-    }
-
-    public double[] generateNumbers(long seed, int amount) {
-        double[] randomList = new double[amount];
-        for (int i = 0; i < amount; i++) {
-            Random generator = new Random(seed);
-            randomList[i] = Math.abs((double) (generator.nextLong() % 0.001) * 10000);
-            seed--;
-        }
-        return randomList;
     }
 }

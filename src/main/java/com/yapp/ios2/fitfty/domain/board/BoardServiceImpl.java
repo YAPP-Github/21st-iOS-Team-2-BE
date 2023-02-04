@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.user.UserMapper;
+import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.interfaces.board.BoardDto;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final BoardStore pictureStore;
+    private final BoardStore boardStore;
     private final BoardReader boardReader;
     private final PictureSeriesFactory pictureSeriesFactory;
     private final BoardInfoMapper boardInfoMapper;
     private final UserService userService;
+    private final UserReader userReader;
     private final UserMapper userMapper;
 
     @Override
@@ -25,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
         String userToken = userService.getCurrentUserToken();
         var picture = pictureSeriesFactory.store(request, userToken);
         var initBoard = request.toEntity(userToken, picture);
-        var board = pictureStore.store(initBoard);
+        var board = boardStore.store(initBoard);
         userService.addUserFeed(userMapper.toUserFeedCommand(userToken, board.getBoardToken()));
 
         return board;
@@ -33,22 +35,23 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public BoardInfo.Main changeBoardInfo(BoardCommand.RegisterBoardRequest request,
-            String boardToken) {
+    public void changeBoardInfo(BoardCommand.RegisterBoardRequest request,
+                                String boardToken) {
         var board = boardReader.getBoard(boardToken);
         var picture = board.getPicture();
-        picture.update(request);
+        var tagGroup = picture.getTagGroup();
+        tagGroup.update(request);
+        picture.update(request, tagGroup);
         board.update(request, picture);
-
-        return boardInfoMapper.of(board);
     }
 
     @Override
     @Transactional
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
         var board = boardReader.getBoard(boardToken);
+        var user = userReader.findOneByUserToken(board.getUserToken());
         board.increaseViews();
-        return boardInfoMapper.of(board);
+        return boardInfoMapper.of(board, user);
     }
 
     @Override
@@ -83,14 +86,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public PictureInfo.Main getPictureList(BoardDto.GetPictureRequest request) {
-        // 1. 유저찾기 by userToken
-        // 2. get user preference, bookmark list from userService
-        // 3. style, weather tag로 s3 link 5개씩 찾아오기 (repository)
-        // 4. picture dto로부터 board info 찾기
-        // 1. user code, view, bookmark 여부 return
-        // 3. 조회수 + 1
-        // 5. return response
-
         String userToken = userService.getCurrentUserToken();
         var styleInfoList = boardReader.getPictureSeries(userToken, request.getWeather());
         return new PictureInfo.Main(styleInfoList);
