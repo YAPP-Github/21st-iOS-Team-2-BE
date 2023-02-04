@@ -1,15 +1,16 @@
 package com.yapp.ios2.fitfty.domain.tag;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
+import com.yapp.ios2.fitfty.domain.board.BoardCommand;
 import com.yapp.ios2.fitfty.domain.board.Picture;
 import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,41 +26,76 @@ public class TagGroup extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @Setter
     @JoinColumn(name = "picture_id")
     private Picture picture;
-    // private String tagGroupName;
-    private String weather;
+
+    @Enumerated(EnumType.STRING)
+    private Weather weather;
 
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
-    // @Builder
-    // public TagGroup(Picture picture, String tagGroupName, String tagValue) {
-    // if (picture == null) {
-    // throw new InvalidParamException("TagGroup.picture");
-    // }
-    // if (StringUtils.isBlank(tagGroupName)) {
-    // throw new InvalidParamException("TagGroup.tagGroupName");
-    // }
-
-    // this.picture = picture;
-    // this.tagGroupName = tagGroupName;
-    // this.tagValue = tagValue;
-    // }
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Builder
-    public TagGroup(Picture picture, String weather, List<String> style) {
+    public TagGroup(Picture picture, Weather weather, List<String> style, Gender gender) {
         if (picture == null) {
             throw new InvalidParamException("TagGroup.picture");
         }
         this.picture = picture;
         this.weather = weather;
         this.style = style;
+        this.gender = gender;
     }
 
     public Long getPictureId() {
         return picture.getId();
+    }
+
+    public void update(BoardCommand.RegisterBoardRequest request) {
+        this.weather = request.getRegisterTagGroupRequest()
+                .getWeather();
+        this.style = request.getRegisterTagGroupRequest()
+                .getStyle();
+        this.gender = request.getRegisterTagGroupRequest()
+                .getGender();
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Gender {
+        FEMALE("여성"),
+        MALE("남성");
+
+        private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Weather {
+        FREEZING("한파"),
+        COLD("추운 날"),
+        CHILLY("쌀쌀한 날"),
+        WARM("따뜻한 날"),
+        HOT("더운 날");
+
+        private final String description;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Style {
+        MINIMAL("미니멀"),
+        MODERN("모던"),
+        CASUAL("캐주얼"),
+        STREET("스트릿"),
+        LOVELY("러블리"),
+        HIP("힙"),
+        LUXURY("럭셔리");
+
+        private final String description;
     }
 }
