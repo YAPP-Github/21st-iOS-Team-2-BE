@@ -12,6 +12,7 @@ public interface UserService {
 
     String findUserToken(String nickname);
 
+    UserInfo.CustomOption getUserDetail();
     UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command);
 
     List<String> getBookmark(String userToken);

@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
+import com.yapp.ios2.fitfty.domain.user.UserInfo.CustomOption;
 import com.yapp.ios2.fitfty.domain.user.UserInfo.ProfileInfo;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
@@ -68,6 +69,14 @@ public class UserServiceImpl implements UserService {
 
         return result.map(User::getUserToken)
                 .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public CustomOption getUserDetail() {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        return userMapper.toCustomOption(user);
     }
 
     @Override

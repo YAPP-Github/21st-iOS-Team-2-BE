@@ -33,6 +33,12 @@ public class UserController {
         return CommonResponse.success(userService.findNickname(nickname));
     }
 
+    @GetMapping("/details")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse getUserDetails() {
+        return CommonResponse.success(userService.getUserDetail());
+    }
+
     @PutMapping("/details")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse updateUserDetails(@RequestBody CustomOption request) {
