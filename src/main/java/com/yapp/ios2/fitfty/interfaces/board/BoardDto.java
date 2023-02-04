@@ -1,8 +1,8 @@
 package com.yapp.ios2.fitfty.interfaces.board;
 
-import com.yapp.ios2.fitfty.domain.board.Board;
-import com.yapp.ios2.fitfty.domain.board.Board.WeatherType;
+import com.yapp.ios2.fitfty.domain.board.Board.CloudType;
 import com.yapp.ios2.fitfty.domain.board.Picture;
+import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,19 +20,18 @@ public class BoardDto {
         private String content;
         private Float temperature;
         private String location;
-        private WeatherType weather;
+        private CloudType cloudType;
         private ZonedDateTime photoTakenTime;
-        private List<RegisterTagGroupRequest> tagGroupList;
+        private RegisterTagGroupRequest tagGroup;
     }
 
     @Getter
     @Setter
     @ToString
     public static class RegisterTagGroupRequest {
-        // private String tagGroupName;
-        // private String tagValue;
-        private String weather;
-        private List<String> style;
+        private TagGroup.Weather weather;
+        private List<TagGroup.Style> style;
+        private TagGroup.Gender gender;
     }
 
     @Getter
@@ -56,9 +55,8 @@ public class BoardDto {
         private String content;
         private Float temperature;
         private String location;
-        private WeatherType weather;
+        private CloudType cloudType;
         private ZonedDateTime photoTakenTime;
-        private Picture picture;
     }
 
     @Getter
@@ -66,12 +64,12 @@ public class BoardDto {
     @ToString
     public static class Main {
         private final String boardToken;
-        private final String userToken;
+        private final String nickname;
         private final String filePath;
         private final String content;
         private final String location;
         private final Float temperature;
-        private final Board.WeatherType weather;
+        private final CloudType cloudType;
         private final ZonedDateTime photoTakenTime;
         private final Integer views;
         private final Integer bookmarkCnt;
@@ -93,14 +91,5 @@ public class BoardDto {
         private final String nickname;
         private final Integer views;
         private final Boolean bookmarked;
-        // private final List<TagGroupInfo> itemOptionGroupList;
     }
-
-    // @Getter
-    // @Builder
-    // @ToString
-    // public static class TagGroupInfo {
-    // private final String tagGroupType;
-    // private final String tagValue;
-    // }
 }

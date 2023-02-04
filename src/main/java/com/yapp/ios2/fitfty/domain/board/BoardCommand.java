@@ -1,6 +1,6 @@
 package com.yapp.ios2.fitfty.domain.board;
 
-import com.yapp.ios2.fitfty.domain.board.Board.WeatherType;
+import com.yapp.ios2.fitfty.domain.board.Board.CloudType;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +19,9 @@ public class BoardCommand {
         private final String content;
         private final Float temperature;
         private final String location;
-        private final WeatherType weather;
+        private final CloudType cloudType;
         private final ZonedDateTime photoTakenTime;
-        private final List<RegisterTagGroupRequest> registerTagGroupRequestList; //ex) 날씨, 스타일
+        private final RegisterTagGroupRequest registerTagGroupRequest; //ex) 날씨, 스타일, 성별
 
         public Board toEntity(String userToken, Picture picture) {
             return Board.builder()
@@ -30,7 +30,7 @@ public class BoardCommand {
                     .content(content)
                     .location(location)
                     .temperature(temperature)
-                    .weather(weather)
+                    .cloudType(cloudType)
                     .photoTakenTime(photoTakenTime)
                     .build();
         }
@@ -47,24 +47,17 @@ public class BoardCommand {
     @Builder
     @ToString
     public static class RegisterTagGroupRequest {
-//        private final String tagGroupName;  // ex) style, weather
-//        private final String tagValue;  //ex) formal, casual
-
-        private final String weather;
+        private final TagGroup.Weather weather;
         private final List<String> style;
+        private final TagGroup.Gender gender;
 
         public TagGroup toEntity(Picture picture) {
             return TagGroup.builder()
                     .picture(picture)
                     .weather(weather)
                     .style(style)
+                    .gender(gender)
                     .build();
-
-//            return TagGroup.builder()
-//                    .picture(picture)
-//                    .tagGroupName(tagGroupName)
-//                    .tagValue(tagValue)
-//                    .build();
         }
     }
 }
