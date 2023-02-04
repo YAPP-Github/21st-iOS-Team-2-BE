@@ -52,6 +52,7 @@ public class User extends AbstractEntity {
 
     private String profilePictureUrl;
     private String message;
+    private String phoneNumber;
     private String role;
 
     @Enumerated(EnumType.STRING)
@@ -105,6 +106,7 @@ public class User extends AbstractEntity {
         this.nickname = userToken;
         this.profilePictureUrl = null;
         this.message = null;
+        this.phoneNumber = null;
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;
@@ -115,6 +117,11 @@ public class User extends AbstractEntity {
         this.nickname = command.getNickname();
         this.gender = command.getGender();
         this.style = command.getStyle();
+    }
+
+    public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
+        this.phoneNumber = command.getPhoneNumber();
+        this.gender = command.getGender();
     }
 
     public void updateProfile(UserCommand.Profile command) {

@@ -16,6 +16,7 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     UserInfo.CustomOption toCustomOption(User user);
+    UserInfo.CustomPrivacy toCustomPrivacy(User user);
 
     UserInfo.ProfileInfo toProfileInfo(User user);
 

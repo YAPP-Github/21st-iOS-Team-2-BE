@@ -3,6 +3,7 @@ package com.yapp.ios2.fitfty.interfaces.user;
 import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
+import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomPrivacy;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.CustomOption;
@@ -44,6 +45,20 @@ public class UserController {
     public CommonResponse updateUserDetails(@RequestBody CustomOption request) {
         var userCommand = userDtoMapper.of(request);
         var response = userService.updateUserDetails(userCommand);
+        return CommonResponse.success(response);
+    }
+
+    @GetMapping("/privacy")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse getUserPrivacy() {
+        return CommonResponse.success(userService.getUserPrivacy());
+    }
+
+    @PutMapping("/privacy")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse updateUserPrivacy(@RequestBody CustomPrivacy request) {
+        var userCommand = userDtoMapper.of(request);
+        var response = userService.updateUserPrivacy(userCommand);
         return CommonResponse.success(response);
     }
 

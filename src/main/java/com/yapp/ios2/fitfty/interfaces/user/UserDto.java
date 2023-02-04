@@ -123,6 +123,19 @@ public class UserDto {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class CustomPrivacy {
+        @NotNull
+        private String phoneNumber;
+
+        @NotNull
+        private User.Gender gender;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class AppleSignInDto {
         String userIdentifier;
         String userEmail;

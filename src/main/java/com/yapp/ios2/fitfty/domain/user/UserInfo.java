@@ -39,6 +39,17 @@ public class UserInfo {
     @Getter
     @Setter
     @Builder
+    public static class CustomPrivacy {
+
+        private String email;
+        private String nickname;
+        private String phoneNumber;
+        private Gender gender;
+    }
+
+    @Getter
+    @Setter
+    @Builder
     public static class ImageInfo {
 
         private String userToken;

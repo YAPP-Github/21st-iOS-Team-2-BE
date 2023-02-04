@@ -51,6 +51,15 @@ public class UserCommand {
     @Getter
     @Builder
     @ToString
+    public static class CustomPrivacy {
+
+        private String phoneNumber;
+        private Gender gender;
+    }
+
+    @Getter
+    @Builder
+    @ToString
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserFeed {

@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CustomOption getUserDetail() {
+    public UserInfo.CustomOption getUserDetail() {
         var userToken = getCurrentUserToken();
         var user = userReader.findOneByUserToken(userToken);
         return userMapper.toCustomOption(user);
@@ -86,6 +86,23 @@ public class UserServiceImpl implements UserService {
         var user = userReader.findOneByUserToken(userToken);
         user.updateCustomOption(command);
         return userMapper.toCustomOption(user);
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.CustomPrivacy getUserPrivacy() {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        return userMapper.toCustomPrivacy(user);
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.CustomPrivacy updateUserPrivacy(UserCommand.CustomPrivacy command) {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        user.updatePrivacyOption(command);
+        return userMapper.toCustomPrivacy(user);
     }
 
     @Override
@@ -170,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ProfileInfo updateProfile(Profile command) {
+    public UserInfo.ProfileInfo updateProfile(Profile command) {
         String userToken = getCurrentUserToken();
         var user = userReader.findOneByUserToken(userToken);
         user.updateProfile(command);
