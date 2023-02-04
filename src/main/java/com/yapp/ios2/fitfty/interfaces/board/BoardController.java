@@ -41,9 +41,8 @@ public class BoardController {
     public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken,
                                           @RequestBody @Valid BoardDto.RegisterBoardRequest request) {
         var boardCommand = boardDtoMapper.of(request);
-        var boardInfo = boardService.changeBoardInfo(boardCommand, boardToken);
-        var response = boardDtoMapper.of(boardInfo);
-        return CommonResponse.success(response);
+        boardService.changeBoardInfo(boardCommand, boardToken);
+        return CommonResponse.success("OK");
     }
 
     @GetMapping("/{boardToken}")
