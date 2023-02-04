@@ -1,7 +1,6 @@
 package com.yapp.ios2.fitfty.interfaces.board;
 
 import com.yapp.ios2.fitfty.domain.board.Board.CloudType;
-import com.yapp.ios2.fitfty.domain.board.Picture;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import lombok.Builder;
 import lombok.Getter;
