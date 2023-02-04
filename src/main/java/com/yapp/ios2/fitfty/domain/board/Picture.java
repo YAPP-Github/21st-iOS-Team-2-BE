@@ -17,7 +17,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +39,8 @@ public class Picture extends AbstractEntity {
     private String userToken;
     private String filePath;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "picture", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TagGroup> tagGroupList = Lists.newArrayList();
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "picture", cascade = CascadeType.ALL)
+    private TagGroup tagGroup;
 
     @Builder
     public Picture(String userToken, String filePath) {
@@ -54,14 +56,8 @@ public class Picture extends AbstractEntity {
         this.filePath = filePath;
     }
 
-    public void update(BoardCommand.RegisterBoardRequest request) {
+    public void update(BoardCommand.RegisterBoardRequest request, TagGroup tagGroup) {
         this.filePath = request.getFilePath();
-        var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
-
-        tagGroupList.clear();
-        tagGroupList.addAll(registerTagGroupRequestList.stream()
-                                    .map(requestTagGroup -> requestTagGroup.toEntity(this))
-                                    .collect(Collectors.toList()));
-
+        this.tagGroup = tagGroup;
     }
 }

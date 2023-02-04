@@ -23,26 +23,32 @@ public class PictureSeriesFactoryImpl implements PictureSeriesFactory {
     @Override
     public Picture store(BoardCommand.RegisterBoardRequest request, String userToken) {
         var picture = boardStore.pictureStore(request.toPictureEntity(userToken));
-        storeTagSeries(request, picture);
+        var registerTagGroupRequest = request.getRegisterTagGroupRequest();
+        System.out.println(picture);
+
+        var initTagGroup = registerTagGroupRequest.toEntity(picture);
+        var tagGroup = tagGroupStore.store(initTagGroup);
+//        storeTagSeries(request, picture);
         return picture;
     }
 
     @Override
     public Picture storeTagSeries(BoardCommand.RegisterBoardRequest request, Picture picture) {
-        var registerTagGroupRequestList = request.getRegisterTagGroupRequestList();
-        if (CollectionUtils.isEmpty(registerTagGroupRequestList)) {
-            return picture;
-        }
+        var registerTagGroupRequest = request.getRegisterTagGroupRequest();
 
-        registerTagGroupRequestList.stream()
-                .map(requestTagGroup -> {
-                    // tagGroup store
-                    var initTagGroup = requestTagGroup.toEntity(picture);
-                    var tagGroup = tagGroupStore.store(initTagGroup);
+        var initTagGroup = registerTagGroupRequest.toEntity(picture);
+        var tagGroup = tagGroupStore.store(initTagGroup);
 
-                    return initTagGroup;
-                })
-                .collect(Collectors.toList());
         return picture;
+
+//        registerTagGroupRequest.stream()
+//                .map(requestTagGroup -> {
+//                    // tagGroup store
+//                    var initTagGroup = requestTagGroup.toEntity(picture);
+//                    var tagGroup = tagGroupStore.store(initTagGroup);
+//
+//                    return initTagGroup;
+//                })
+//                .collect(Collectors.toList());
     }
 }
