@@ -1,5 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
+import com.yapp.ios2.fitfty.domain.user.User.LoginType;
+import com.yapp.ios2.fitfty.domain.user.UserCommand;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignUp;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
@@ -34,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
 
-    public String login(SignIn command) {
+    public String login(UserCommand.SignIn command) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(command.getEmail(),
@@ -59,13 +61,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String loginWithKakaoCode(String code) {
-
         // 1. kakaoCallback 으로부터 code 받아온걸로 kakaoToken GET
         KakaoOAuthTokenDto kakaoOAuthTokenDto = kakaoOAuth.getOAuthToken(code);
-//        log.info(kakaoOAuthTokenDto.getAccess_token());
 
         // 2. kakaoToken 으로 profile, email GET
-        SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto);
+        SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto.getAccess_token());
 
         if (signUp.getEmail() == null) {
             throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
@@ -85,17 +85,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional
-    public void unActivateUser() {
-        var userToken = userService.getCurrentUserToken();
-        var user = userReader.findOneByUserToken(userToken);
-        user.deleteUser();
-        userStore.store(user);
-    }
-
-    @Override
-    public String loginWithKakao(String accessToken) {
-        SignUp signUp = kakaoOAuth.getProfile(accessToken);
+    public String loginWithKakao(UserCommand.SignInKakao command) {
+        SignUp signUp = kakaoOAuth.getProfile(command.getAccessToken());
 
         if (signUp.getEmail() == null) {
             throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
@@ -113,7 +104,31 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String loginWithApple(String token) {
-        return token;
+    public String loginWithApple(UserCommand.SignInApple command) {
+        if (command.getUserEmail() == null) {
+            // EMAIL PUBLIC KEY 가져오고 command.eamil에 넣어주는 로직 필요
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
+
+        SignUp signUp = new SignUp(command.getUserEmail(), LoginType.APPLE);
+
+        if (userReader.findOneByEmail(signUp.getEmail())
+                .orElse(null) == null) {
+            userService.registerUser(signUp);
+        }
+
+        return login(SignIn.builder()
+                             .email(signUp.getEmail())
+                             .password(signUp.getPassword())
+                             .build());
+    }
+
+    @Override
+    @Transactional
+    public void unActivateUser() {
+        var userToken = userService.getCurrentUserToken();
+        var user = userReader.findOneByUserToken(userToken);
+        user.deleteUser();
+        userStore.store(user);
     }
 }

@@ -6,13 +6,13 @@ import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,13 +59,13 @@ public class AuthController {
         return CommonResponse.success(authService.loginWithKakaoCode(code));
     }
 
-    @GetMapping("/sign-in/kakao/{accessToken}")
-    public CommonResponse signInWithKakao(@PathVariable String accessToken) {
-        return CommonResponse.success(authService.loginWithKakao(accessToken));
+    @PostMapping("/sign-in/kakao")
+    public CommonResponse signInWithKakao(@Valid @RequestBody UserDto.KakaoSignInDto signInDto) {
+        return CommonResponse.success(authService.loginWithKakao(userMapper.toSignInKakao(signInDto)));
     }
 
-    @GetMapping("/sign-in/apple/{accessToken}")
-    public CommonResponse signInWithApple(@PathVariable String accessToken) {
-        return CommonResponse.success(authService.loginWithApple(accessToken));
+    @PostMapping("/sign-in/apple")
+    public CommonResponse signInWithApple(@Valid @RequestBody UserDto.AppleSignInDto signInDto) {
+        return CommonResponse.success(authService.loginWithApple(userMapper.toSignUpApple(signInDto)));
     }
 }

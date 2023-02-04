@@ -118,4 +118,26 @@ public class UserDto {
         private List<String> style;
     }
 
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AppleSignInDto {
+        String userIdentifier;
+        String userEmail;
+        String userName;
+        @NotNull
+        String identityToken;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class KakaoSignInDto {
+        @NotNull
+        String accessToken;
+    }
 }

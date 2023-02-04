@@ -60,37 +60,6 @@ public class KakaoOAuth {
         return kakaoOAuthTokenDto;
     }
 
-    public SignUp getProfile(KakaoOAuthTokenDto kakaoOAuthTokenDto) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        headers.add("Authorization", "Bearer " + kakaoOAuthTokenDto.getAccess_token());
-
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(headers);
-
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoProfileDto kakaoProfileDto = null;
-        try {
-            kakaoProfileDto = objectMapper.readValue(responseEntity.getBody(),
-                                                     KakaoProfileDto.class);
-        } catch (Exception e) {
-            throw new KakaoOAuthException(e.getMessage());
-        }
-
-        return SignUp.builder()
-                .email(kakaoProfileDto.kakaoAccount.email)
-                .password("FITFTY_USER")
-                .type(LoginType.KAKAO)
-                .build();
-    }
-
     public SignUp getProfile(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -115,10 +84,6 @@ public class KakaoOAuth {
             throw new KakaoOAuthException(e.getMessage());
         }
 
-        return SignUp.builder()
-                .email(kakaoProfileDto.kakaoAccount.email)
-                .password("FITFTY_USER")
-                .type(LoginType.KAKAO)
-                .build();
+        return new SignUp(kakaoProfileDto.kakaoAccount.email, LoginType.KAKAO);
     }
 }
