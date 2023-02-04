@@ -7,13 +7,13 @@ import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
 public class UserInfo {
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     public static class Login {
 
         @NotNull
@@ -26,8 +26,8 @@ public class UserInfo {
     }
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     public static class CustomOption {
 
         private String email;
@@ -37,8 +37,8 @@ public class UserInfo {
     }
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     public static class CustomPrivacy {
 
         private String email;
@@ -48,8 +48,8 @@ public class UserInfo {
     }
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     public static class ImageInfo {
 
         private String userToken;
@@ -57,8 +57,8 @@ public class UserInfo {
     }
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     public static class ProfileInfo {
 
         private String profilePictureUrl;
@@ -66,8 +66,8 @@ public class UserInfo {
     }
 
     @Getter
-    @Setter
     @Builder
+    @ToString
     @AllArgsConstructor
     public static class UserProfile {
 

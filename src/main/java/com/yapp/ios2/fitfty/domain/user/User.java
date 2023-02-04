@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends AbstractEntity {
-
     private static final String USER_PREFIX = "user_";
     private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
 
