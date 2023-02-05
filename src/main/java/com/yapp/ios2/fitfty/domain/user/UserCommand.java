@@ -55,6 +55,7 @@ public class UserCommand {
 
         private String phoneNumber;
         private Gender gender;
+        private String nickname;
     }
 
     @Getter

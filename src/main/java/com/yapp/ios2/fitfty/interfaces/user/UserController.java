@@ -56,7 +56,7 @@ public class UserController {
 
     @PutMapping("/privacy")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse updateUserPrivacy(@RequestBody CustomPrivacy request) {
+    public CommonResponse updateUserPrivacy(@RequestBody UserDto.CustomPrivacy request) {
         var userCommand = userDtoMapper.of(request);
         var response = userService.updateUserPrivacy(userCommand);
         return CommonResponse.success(response);

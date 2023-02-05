@@ -126,9 +126,10 @@ public class UserDto {
     public static class CustomPrivacy {
         @NotNull
         private String phoneNumber;
-
         @NotNull
         private User.Gender gender;
+        @NotNull
+        private String nickname;
     }
 
     @Getter

@@ -121,6 +121,7 @@ public class User extends AbstractEntity {
     public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
         this.phoneNumber = command.getPhoneNumber();
         this.gender = command.getGender();
+        this.nickname = command.getNickname();
     }
 
     public void updateProfile(UserCommand.Profile command) {

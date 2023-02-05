@@ -1,10 +1,13 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomOption;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
+import com.yapp.ios2.fitfty.global.exception.DuplicateException;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -82,8 +85,17 @@ public class UserServiceImpl implements UserService {
     public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
         var userToken = getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
+        nicknameValidation(user, command.getNickname());
         user.updateCustomOption(command);
         return userMapper.toCustomOption(user);
+    }
+
+    private void nicknameValidation(User user, String newNickname) {
+        if (!Objects.equals(user.getNickname(), newNickname)) {
+            if (findNickname(newNickname)) {
+                throw new DuplicateException("해당 닉네임이 이미 존재합니다.");
+            }
+        }
     }
 
     @Override
@@ -99,6 +111,7 @@ public class UserServiceImpl implements UserService {
     public UserInfo.CustomPrivacy updateUserPrivacy(UserCommand.CustomPrivacy command) {
         var userToken = getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
+        nicknameValidation(user, command.getNickname());
         user.updatePrivacyOption(command);
         return userMapper.toCustomPrivacy(user);
     }
@@ -179,7 +192,7 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toImageInfo)
                 .collect(Collectors.toList());
 
-        return new UserInfo.UserProfile(user.getNickname(), user.getProfilePictureUrl(),
+        return new UserInfo.UserProfile(user.getUserToken(), user.getNickname(), user.getProfilePictureUrl(),
                                         user.getMessage(), userFeed, userBookmark);
     }
 

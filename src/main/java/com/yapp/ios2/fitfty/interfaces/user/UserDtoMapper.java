@@ -14,5 +14,5 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface UserDtoMapper {
     UserCommand.CustomOption of(CustomOption customOption);
-    UserCommand.CustomPrivacy of(CustomPrivacy customPrivacy);
+    UserCommand.CustomPrivacy of(UserDto.CustomPrivacy customPrivacy);
 }

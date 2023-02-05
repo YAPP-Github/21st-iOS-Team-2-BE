@@ -14,23 +14,10 @@ public class UserInfo {
     @Getter
     @Builder
     @ToString
-    public static class Login {
-
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String email;
-
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String nickname;
-    }
-
-    @Getter
-    @Builder
-    @ToString
     public static class CustomOption {
 
         private String email;
+        private String userToken;
         private String nickname;
         private Gender gender;
         private List<String> style;
@@ -42,6 +29,7 @@ public class UserInfo {
     public static class CustomPrivacy {
 
         private String email;
+        private String userToken;
         private String nickname;
         private String phoneNumber;
         private Gender gender;
@@ -70,7 +58,7 @@ public class UserInfo {
     @ToString
     @AllArgsConstructor
     public static class UserProfile {
-
+        private String userToken;
         private String nickname;
         private String profilePictureUrl;
         private String message;
