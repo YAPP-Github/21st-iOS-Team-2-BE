@@ -9,5 +9,5 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     List<Feed> findByUserToken(String userToken);
 
-    Optional<Feed> findOneByUserTokenAndBoardToken(String userToken, String boardToken);
+    Optional<Feed> findFirstByUserTokenAndBoardToken(String userToken, String boardToken);
 }

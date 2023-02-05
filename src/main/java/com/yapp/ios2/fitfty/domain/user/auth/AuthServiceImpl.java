@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 3. 가입 여부 확인하고, 가입안되어있으면 가입
-        if (userReader.findOneByEmail(signUp.getEmail())
+        if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             userService.registerUser(signUp);
         }
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
         }
 
-        if (userReader.findOneByEmail(signUp.getEmail())
+        if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             userService.registerUser(signUp);
         }
@@ -112,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
         SignUp signUp = new SignUp(command.getUserEmail(), LoginType.APPLE);
 
-        if (userReader.findOneByEmail(signUp.getEmail())
+        if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             userService.registerUser(signUp);
         }
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void unActivateUser() {
         var userToken = userService.getCurrentUserToken();
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
         user.deleteUser();
         userStore.store(user);
     }

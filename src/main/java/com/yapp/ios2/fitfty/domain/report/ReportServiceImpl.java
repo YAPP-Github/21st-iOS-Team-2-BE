@@ -45,8 +45,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void addUserReport(MakeUserCommand command) {
-        var reportUser = userReader.findOneByUserToken(command.getReportUserToken());
-        var reportedUser = userReader.findOneByUserToken(command.getReportedUserToken());
+        var reportUser = userReader.findFirstByUserToken(command.getReportUserToken());
+        var reportedUser = userReader.findFirstByUserToken(command.getReportedUserToken());
         var count = 0;
         var recentReport = reportReader.findFirstByReportedUserTokenOrderByReportedCount(
                 command.getReportedUserToken());
@@ -65,7 +65,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void addBoardReport(MakeBoardCommand command) {
-        var reportUser = userReader.findOneByUserToken(command.getReportUserToken());
+        var reportUser = userReader.findFirstByUserToken(command.getReportUserToken());
         var reportedBoard = boardReader.getBoard(command.getReportedBoardToken());
         var count = 0;
         var recentReport = reportReader.findFirstByReportedBoardTokenOrderByReportedCount(
