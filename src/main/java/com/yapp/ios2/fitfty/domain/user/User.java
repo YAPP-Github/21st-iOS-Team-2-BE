@@ -58,6 +58,8 @@ public class User extends AbstractEntity {
     private LoginType type;
     @Convert(converter = BooleanToYNConverter.class)
     private boolean activated;
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isOnBoardingComplete;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -109,6 +111,7 @@ public class User extends AbstractEntity {
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;
+        this.isOnBoardingComplete = false;
         this.style = new ArrayList<>();
     }
 
@@ -116,6 +119,7 @@ public class User extends AbstractEntity {
         this.nickname = command.getNickname();
         this.gender = command.getGender();
         this.style = command.getStyle();
+        this.isOnBoardingComplete = true;
     }
 
     public void updatePrivacyOption(UserCommand.CustomPrivacy command) {

@@ -2,8 +2,6 @@ package com.yapp.ios2.fitfty.domain.user;
 
 import com.yapp.ios2.fitfty.domain.user.User.Gender;
 import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +19,7 @@ public class UserInfo {
         private String nickname;
         private Gender gender;
         private List<String> style;
+        private Boolean isOnBoardingComplete;
     }
 
     @Getter
