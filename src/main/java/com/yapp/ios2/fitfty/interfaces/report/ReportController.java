@@ -23,26 +23,49 @@ public class ReportController {
     private final ReportService reportService;
     private final ReportDtoMapper reportDtoMapper;
 
-    @GetMapping("/")
+    @GetMapping("/user")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public CommonResponse getReports() {
-        var response = reportService.getAllReports();
+    public CommonResponse getUserReports() {
+        var response = reportService.getUserReports();
         return CommonResponse.success(response);
     }
 
-    @PostMapping("/new")
+    @PostMapping("/user/new")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public CommonResponse makeReport(@RequestBody ReportDto.NewReport request) {
+    public CommonResponse makeUserReport(@RequestBody ReportDto.MakeUserReport request) {
         var command = reportDtoMapper.of(request);
-        reportService.addReport(command);
+        reportService.addUserReport(command);
         return CommonResponse.success("OK");
     }
 
-    @PutMapping("/")
+    @PutMapping("/user")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public CommonResponse updateReport(@RequestBody ReportDto.UpdateReport request) {
-        var command = reportDtoMapper.of(request);
-        var response = reportService.updateReport(command);
+    public CommonResponse updateUserReport(@RequestBody ReportDto.UpdateReport request) {
+        var command = ReportDto.toUpdateCommand(request, "USER");
+        reportService.updateReport(command);
+        return CommonResponse.success("OK");
+    }
+
+    @GetMapping("/board")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public CommonResponse getBoardReports() {
+        var response = reportService.getBoardReports();
         return CommonResponse.success(response);
+    }
+
+    @PostMapping("/board/new")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse makeBoardReport(@RequestBody ReportDto.MakeBoardReport request) {
+        var command = reportDtoMapper.of(request);
+        reportService.addBoardReport(command);
+        return CommonResponse.success("OK");
+    }
+
+    @PutMapping("/board")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public CommonResponse updateBoardReport(@RequestBody ReportDto.UpdateReport request) {
+        var command = ReportDto.toUpdateCommand(request, "BOARD");
+        reportService.updateReport(command);
+        return CommonResponse.success("OK");
     }
 }

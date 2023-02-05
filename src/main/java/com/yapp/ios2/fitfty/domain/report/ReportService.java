@@ -1,16 +1,17 @@
 package com.yapp.ios2.fitfty.domain.report;
 
-import com.yapp.ios2.fitfty.domain.report.ReportCommand.NewCommand;
-import com.yapp.ios2.fitfty.domain.report.ReportCommand.UpdateCommand;
-import com.yapp.ios2.fitfty.domain.report.ReportInfo.Main;
+import com.yapp.ios2.fitfty.domain.report.ReportCommand.MakeUserCommand;
 import java.util.List;
 
 
 public interface ReportService {
 
-    List<Main> getAllReports();
+    List<ReportInfo.UserMain> getUserReports();
+    List<ReportInfo.BoardMain> getBoardReports();
 
-    void addReport(NewCommand command);
+    void addUserReport(MakeUserCommand command);
+    void addBoardReport(ReportCommand.MakeBoardCommand command);
 
-    ReportInfo.Main updateReport(UpdateCommand command);
+    void updateReport(ReportCommand.UpdateCommand command);
+
 }

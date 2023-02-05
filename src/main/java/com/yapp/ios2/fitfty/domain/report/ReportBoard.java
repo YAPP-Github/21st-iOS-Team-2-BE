@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.report;
 
 import com.querydsl.core.util.StringUtils;
-import com.yapp.ios2.fitfty.domain.user.User;
+import com.yapp.ios2.fitfty.global.enums.ReportType;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
@@ -12,59 +12,42 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Entity
-@Table(name = "`report`")
+@Table(name = "`report_board`")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Report {
-    private static final String REPORT_PREFIX = "report_";
+public class ReportBoard {
+    private static final String REPORT_PREFIX = "rpt_b_";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String reportToken;
-//    @ManyToOne
-//    @JoinColumn(name = "report_user")
     private String reportUserToken;
-//    @ManyToOne
-//    @JoinColumn(name = "reported_user")
-    private String reportedUserToken;
+    private String reportUserEmail;
+    private String reportedBoardToken;
+    private String reportedBoardFilePath;
     private Integer reportedCount;
-    private String content;
 
     @Enumerated(EnumType.STRING)
     private ReportType type;
     @Convert(converter = BooleanToYNConverter.class)
     private boolean isConfirmed;
 
-    @Getter
-    @RequiredArgsConstructor
-    public enum ReportType {
-        COMMERCIAL("영리목적/홍보성"),
-        COPYRIGHT("저작권침해"),
-        OBSCENE("음란성/선정성"),
-        INSULT("욕설/인신공격"),
-        PRIVACY("개인정보 노출"),
-        REPEAT("같은내용 반복게시");
-
-        private final String description;
-    }
-
     @Builder
-    public Report(String reportUserToken, String reportedUserToken, Integer count, ReportType type, String content) {
-        if (StringUtils.isNullOrEmpty(reportUserToken) || StringUtils.isNullOrEmpty(reportedUserToken)) {
+    public ReportBoard(String reportUserToken, String reportUserEmail, String reportedBoardToken, String reportedBoardFilePath, Integer count, ReportType type) {
+        if (StringUtils.isNullOrEmpty(reportUserToken) ||StringUtils.isNullOrEmpty(reportUserEmail) ) {
             throw new InvalidParamException("Report.user");
+        }
+        if (StringUtils.isNullOrEmpty(reportedBoardToken) || StringUtils.isNullOrEmpty(reportedBoardFilePath)) {
+            throw new InvalidParamException("Report.board");
         }
         if (count == null) {
             throw new InvalidParamException("Report.count");
@@ -75,14 +58,16 @@ public class Report {
 
         this.reportToken = TokenGenerator.randomCharacterWithPrefix(REPORT_PREFIX);
         this.reportUserToken = reportUserToken;
-        this.reportedUserToken = reportedUserToken;
+        this.reportUserEmail = reportUserEmail;
+        this.reportedBoardToken = reportedBoardToken;
+        this.reportedBoardFilePath = reportedBoardFilePath;
         this.reportedCount = count;
         this.type = type;
-        this.content = null;
         this.isConfirmed = false;
     }
 
     public void confirmReport() {
         this.isConfirmed = true;
     }
+
 }

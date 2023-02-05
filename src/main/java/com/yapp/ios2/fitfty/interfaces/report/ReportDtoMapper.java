@@ -1,7 +1,6 @@
 package com.yapp.ios2.fitfty.interfaces.report;
 
 import com.yapp.ios2.fitfty.domain.report.ReportCommand;
-import com.yapp.ios2.fitfty.interfaces.report.ReportDto.NewReport;
 import com.yapp.ios2.fitfty.interfaces.report.ReportDto.UpdateReport;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -14,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface ReportDtoMapper {
 
-    ReportCommand.NewCommand of(NewReport request);
+    ReportCommand.MakeBoardCommand of(ReportDto.MakeBoardReport request);
+    ReportCommand.MakeUserCommand of(ReportDto.MakeUserReport request);
     ReportCommand.UpdateCommand of(UpdateReport request);
 }
