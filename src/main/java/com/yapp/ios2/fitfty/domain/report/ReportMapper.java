@@ -10,6 +10,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface ReportMapper {
+
     ReportInfo.UserMain of(ReportUser reportUser);
 
     ReportInfo.BoardMain of(ReportBoard reportBoard);

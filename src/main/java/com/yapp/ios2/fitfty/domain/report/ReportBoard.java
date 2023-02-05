@@ -39,7 +39,7 @@ public class ReportBoard {
     @Enumerated(EnumType.STRING)
     private ReportType type;
     @Convert(converter = BooleanToYNConverter.class)
-    private boolean isConfirmed;
+    private Boolean isConfirmed;
 
     @Builder
     public ReportBoard(String reportUserToken, String reportUserEmail, String reportedBoardToken, String reportedBoardFilePath, Integer count, ReportType type) {
@@ -66,8 +66,8 @@ public class ReportBoard {
         this.isConfirmed = false;
     }
 
-    public void confirmReport() {
-        this.isConfirmed = true;
+    public void changeConfirmStatus(boolean status) {
+        this.isConfirmed = status;
     }
 
 }

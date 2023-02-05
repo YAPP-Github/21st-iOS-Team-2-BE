@@ -18,7 +18,7 @@ public class ReportInfo {
         private final String reportedUserEmail;
         private final Integer reportedCount;
         private final ReportType type;
-        private final boolean isConfirmed;
+        private final Boolean isConfirmed;
     }
 
     @Getter
@@ -32,6 +32,6 @@ public class ReportInfo {
         private final String reportedBoardFilePath;
         private final Integer reportedCount;
         private final ReportType type;
-        private final boolean isConfirmed;
+        private final Boolean isConfirmed;
     }
 }

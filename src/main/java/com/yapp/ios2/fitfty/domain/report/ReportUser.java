@@ -1,7 +1,6 @@
 package com.yapp.ios2.fitfty.domain.report;
 
 import com.querydsl.core.util.StringUtils;
-import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.global.enums.ReportType;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
@@ -18,12 +17,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name = "`report_user`")
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ReportUser {
     private static final String REPORT_PREFIX = "rpt_u_";
 
@@ -39,7 +38,7 @@ public class ReportUser {
     @Enumerated(EnumType.STRING)
     private ReportType type;
     @Convert(converter = BooleanToYNConverter.class)
-    private boolean isConfirmed;
+    private Boolean isConfirmed;
 
     @Builder
     public ReportUser(String reportUserToken, String reportedUserToken, String reportUserEmail, String reportedUserEmail, Integer count, ReportType type) {
@@ -65,7 +64,7 @@ public class ReportUser {
         this.isConfirmed = false;
     }
 
-    public void confirmReport() {
-        this.isConfirmed = true;
+    public void changeConfirmStatus(boolean status) {
+        this.isConfirmed = status;
     }
 }

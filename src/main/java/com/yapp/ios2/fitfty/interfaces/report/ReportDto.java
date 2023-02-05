@@ -32,11 +32,14 @@ public class ReportDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateReport {
+        private String reportToken;
         private Boolean isConfirmed;
+        private String type;
     }
 
     public static UpdateCommand toUpdateCommand(UpdateReport updateReport, String type) {
         return UpdateCommand.builder()
+                .reportToken(updateReport.reportToken)
                 .isConfirmed(updateReport.isConfirmed)
                 .type(type)
                 .build();

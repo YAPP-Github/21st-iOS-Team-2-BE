@@ -31,6 +31,7 @@ public class ReportCommand {
     @Builder
     @ToString
     public static class UpdateCommand {
+        private String reportToken;
         private Boolean isConfirmed;
         private String type;
     }
