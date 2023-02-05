@@ -30,8 +30,8 @@ public class BoardController {
     @PostMapping("/new")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse registerBoard(@RequestBody @Valid BoardDto.RegisterBoardRequest request) {
-        var pictureCommand = boardDtoMapper.of(request);
-        var board = boardService.registerBoard(pictureCommand);
+        var boardCommand = boardDtoMapper.of(request);
+        var board = boardService.registerBoard(boardCommand);
         var response = boardDtoMapper.of(board);
         return CommonResponse.success(response);
     }
@@ -40,10 +40,9 @@ public class BoardController {
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse changeBoardInfo(@PathVariable("boardToken") String boardToken,
                                           @RequestBody @Valid BoardDto.RegisterBoardRequest request) {
-        var pictureCommand = boardDtoMapper.of(request);
-        var boardInfo = boardService.changeBoardInfo(pictureCommand, boardToken);
-        var response = boardDtoMapper.of(boardInfo);
-        return CommonResponse.success(response);
+        var boardCommand = boardDtoMapper.of(request);
+        boardService.changeBoardInfo(boardCommand, boardToken);
+        return CommonResponse.success("OK");
     }
 
     @GetMapping("/{boardToken}")

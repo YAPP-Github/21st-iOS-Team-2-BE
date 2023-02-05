@@ -50,7 +50,7 @@ public class Board extends AbstractEntity {
     private Float temperature;
 
     @Enumerated(EnumType.STRING)
-    private WeatherType weather;
+    private CloudType cloudType;
     private ZonedDateTime photoTakenTime; //data 형식 변경 여부 확인
     private Integer views;
     private Integer bookmarkCnt;
@@ -60,7 +60,7 @@ public class Board extends AbstractEntity {
 
     @Builder
     public Board(String userToken, Picture picture, String content, String location,
-                 Float temperature, WeatherType weather, ZonedDateTime photoTakenTime) {
+                 Float temperature, CloudType cloudType, ZonedDateTime photoTakenTime) {
         if (StringUtils.isBlank(userToken)) {
             throw new InvalidParamException("Board.userToken");
         }
@@ -74,7 +74,7 @@ public class Board extends AbstractEntity {
         this.content = content;
         this.location = location;
         this.temperature = temperature;
-        this.weather = weather;
+        this.cloudType = cloudType;
         this.photoTakenTime = photoTakenTime;
         this.views = 0;
         this.bookmarkCnt = 0;
@@ -86,7 +86,7 @@ public class Board extends AbstractEntity {
         this.content = request.getContent();
         this.location = request.getLocation();
         this.temperature = request.getTemperature();
-        this.weather = request.getWeather();
+        this.cloudType = request.getCloudType();
         this.photoTakenTime = request.getPhotoTakenTime();
     }
 
@@ -106,7 +106,7 @@ public class Board extends AbstractEntity {
 
     @Getter
     @RequiredArgsConstructor
-    public enum WeatherType {
+    public enum CloudType {
         SUNNY("맑음"), CLOUDY("구름많음"), GRAY("흐림");
         private final String description;
     }
