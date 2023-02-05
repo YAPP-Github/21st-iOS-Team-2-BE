@@ -3,6 +3,7 @@ package com.yapp.ios2.fitfty.infrastructure.user.OAuth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignUp;
+import com.yapp.ios2.fitfty.global.exception.KakaoOAuthException;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
@@ -59,11 +60,11 @@ public class KakaoOAuth {
         return kakaoOAuthTokenDto;
     }
 
-    public SignUp getProfile(KakaoOAuthTokenDto kakaoOAuthTokenDto) {
+    public SignUp getProfile(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        headers.add("Authorization", "Bearer " + kakaoOAuthTokenDto.getAccess_token());
+        headers.add("Authorization", "Bearer " + accessToken);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(headers);
 
@@ -80,13 +81,9 @@ public class KakaoOAuth {
             kakaoProfileDto = objectMapper.readValue(responseEntity.getBody(),
                                                      KakaoProfileDto.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new KakaoOAuthException(e.getMessage());
         }
 
-        return SignUp.builder()
-                .email(kakaoProfileDto.kakaoAccount.email)
-                .password("FITFTY_USER")
-                .type(LoginType.KAKAO)
-                .build();
+        return new SignUp(kakaoProfileDto.kakaoAccount.email, LoginType.KAKAO);
     }
 }

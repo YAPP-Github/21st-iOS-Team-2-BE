@@ -21,19 +21,19 @@ public class UserReaderImpl implements UserReader {
     private final BookmarkRepository bookmarkRepository;
 
     @Override
-    public Optional<User> findOneByEmail(String email) {
-        return userRepository.findOneByEmail(email);
+    public Optional<User> findFirstByEmail(String email) {
+        return userRepository.findFirstByEmail(email);
     }
 
     @Override
-    public User findOneByUserToken(String userToken) {
-        return userRepository.findOneByUserToken(userToken)
+    public User findFirstByUserToken(String userToken) {
+        return userRepository.findFirstByUserToken(userToken)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public Optional<User> findOneByNickname(String nickname) {
-        return userRepository.findOneByNickname(nickname);
+    public Optional<User> findFirstByNickname(String nickname) {
+        return userRepository.findFirstByNickname(nickname);
     }
 
     @Override
