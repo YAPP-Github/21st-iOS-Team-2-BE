@@ -29,7 +29,7 @@ public class BoardDto {
     @ToString
     public static class RegisterTagGroupRequest {
         private TagGroup.Weather weather;
-        private List<TagGroup.Style> style;
+        private List<String> style;
         private TagGroup.Gender gender;
     }
 

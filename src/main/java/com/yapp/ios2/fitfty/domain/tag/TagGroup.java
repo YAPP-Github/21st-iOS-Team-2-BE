@@ -84,18 +84,4 @@ public class TagGroup extends AbstractEntity {
 
         private final String description;
     }
-
-    @Getter
-    @RequiredArgsConstructor
-    public enum Style {
-        MINIMAL("미니멀"),
-        MODERN("모던"),
-        CASUAL("캐주얼"),
-        STREET("스트릿"),
-        LOVELY("러블리"),
-        HIP("힙"),
-        LUXURY("럭셔리");
-
-        private final String description;
-    }
 }
