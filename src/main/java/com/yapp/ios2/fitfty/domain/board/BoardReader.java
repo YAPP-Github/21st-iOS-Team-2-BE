@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface BoardReader {
     Board getBoard(String boardToken);
-    List<PictureInfo.StyleInfo> getPictureSeries(String userToken, String weather);
-    List<TagGroup> getRandomPicture(String style, String weather, User.Gender gender);
+    List<PictureInfo.PictureDetailInfo> getPictureSeries(String userToken, String weather, List<String> style, String gender);
+    List<TagGroup> getRandomPicture(String style, String weather, String gender);
 }
