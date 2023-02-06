@@ -162,6 +162,7 @@ public class UserDto {
         private User.Gender gender;
         @NotNull
         private String nickname;
+        private String birthday;
     }
 
     @Getter

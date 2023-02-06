@@ -129,6 +129,7 @@ public class User extends AbstractEntity {
         this.phoneNumber = command.getPhoneNumber();
         this.gender = command.getGender();
         this.nickname = command.getNickname();
+        this.birthday = command.getBirthday();
     }
 
     public void updateProfile(UserCommand.Profile command) {

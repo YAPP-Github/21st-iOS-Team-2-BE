@@ -32,6 +32,7 @@ public class UserInfo {
         private String nickname;
         private String phoneNumber;
         private Gender gender;
+        private String birthday;
     }
 
     @Getter
