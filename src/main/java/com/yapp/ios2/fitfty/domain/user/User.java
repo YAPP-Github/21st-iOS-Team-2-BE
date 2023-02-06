@@ -6,6 +6,7 @@ import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -63,6 +64,7 @@ public class User extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private String birthday;
 
     @Convert(converter = StringListConverter.class)
     private List<String> style;
@@ -139,6 +141,14 @@ public class User extends AbstractEntity {
         if (command.getProfilePictureUrl() != null) {
             this.profilePictureUrl = command.getProfilePictureUrl();
         }
+    }
+
+    public void updateKakaoLoginInfo(KakaoProfileDto kakaoProfileDto) {
+        this.profilePictureUrl = kakaoProfileDto.getProperties().profileImage;
+        if (!StringUtils.isNullOrEmpty(kakaoProfileDto.getKakaoAccount().gender)) {
+            this.gender = (kakaoProfileDto.getKakaoAccount().gender.equals("male")) ? Gender.MALE : Gender.FEMALE;
+        }
+        this.birthday = kakaoProfileDto.getKakaoAccount().birthday;
     }
 
     public void deleteUser() {

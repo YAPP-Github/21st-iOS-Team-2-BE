@@ -6,7 +6,6 @@ import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
