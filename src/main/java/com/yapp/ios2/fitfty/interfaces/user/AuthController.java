@@ -6,6 +6,7 @@ import com.yapp.ios2.fitfty.domain.user.UserMapper;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.auth.AuthService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,17 @@ public class AuthController {
     }
 
     @GetMapping("/kakao/callback")
-    public CommonResponse HandleKakakoOAuth(String code) {
-        return CommonResponse.success(authService.loginWithKakao(code));
+    public CommonResponse handleKakakoOAuth(String code) {
+        return CommonResponse.success(authService.loginWithKakaoCode(code));
+    }
+
+    @PostMapping("/sign-in/kakao")
+    public CommonResponse signInWithKakao(@Valid @RequestBody UserDto.KakaoSignInDto signInDto) {
+        return CommonResponse.success(authService.loginWithKakao(userMapper.toSignInKakao(signInDto)));
+    }
+
+    @PostMapping("/sign-in/apple")
+    public CommonResponse signInWithApple(@Valid @RequestBody UserDto.AppleSignInDto signInDto) {
+        return CommonResponse.success(authService.loginWithApple(userMapper.toSignUpApple(signInDto)));
     }
 }

@@ -5,11 +5,11 @@ import java.util.Optional;
 
 public interface UserReader {
 
-    Optional<User> findOneByEmail(String email);
+    Optional<User> findFirstByEmail(String email);
 
-    User findOneByUserToken(String userToken);
+    User findFirstByUserToken(String userToken);
 
-    Optional<User> findOneByNickname(String nickname);
+    Optional<User> findFirstByNickname(String nickname);
 
     List<Feed> findFeedByUserToken(String userToken);
 

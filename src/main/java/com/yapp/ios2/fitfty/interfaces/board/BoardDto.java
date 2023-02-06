@@ -1,8 +1,7 @@
 package com.yapp.ios2.fitfty.interfaces.board;
 
-import com.yapp.ios2.fitfty.domain.board.Board;
-import com.yapp.ios2.fitfty.domain.board.Board.WeatherType;
-import com.yapp.ios2.fitfty.domain.board.Picture;
+import com.yapp.ios2.fitfty.domain.board.Board.CloudType;
+import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,17 +19,32 @@ public class BoardDto {
         private String content;
         private Float temperature;
         private String location;
-        private WeatherType weather;
+        private CloudType cloudType;
         private ZonedDateTime photoTakenTime;
-        private List<RegisterTagGroupRequest> tagGroupList;
+        private RegisterTagGroupRequest tagGroup;
     }
 
     @Getter
     @Setter
     @ToString
     public static class RegisterTagGroupRequest {
-        private String tagGroupName;
-        private String tagValue;
+        private TagGroup.Weather weather;
+        private List<String> style;
+        private TagGroup.Gender gender;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class GetPictureRequest {
+        private String weather;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    public static class PictureListResponse {
+        private final List<StyleInfo> styleInfoList;
     }
 
     @Getter
@@ -40,9 +54,8 @@ public class BoardDto {
         private String content;
         private Float temperature;
         private String location;
-        private WeatherType weather;
+        private CloudType cloudType;
         private ZonedDateTime photoTakenTime;
-        private Picture picture;
     }
 
     @Getter
@@ -50,30 +63,32 @@ public class BoardDto {
     @ToString
     public static class Main {
         private final String boardToken;
-        private final String userToken;
+        private final String nickname;
         private final String filePath;
         private final String content;
         private final String location;
         private final Float temperature;
-        private final Board.WeatherType weather;
+        private final CloudType cloudType;
         private final ZonedDateTime photoTakenTime;
+        private final Integer views;
         private final Integer bookmarkCnt;
     }
 
     @Getter
     @Builder
     @ToString
-    public static class PictureInfo {
-        private final String pictureToken;
-        private final String userToken;
-        private final List<TagGroupInfo> itemOptionGroupList;
+    public static class StyleInfo {
+        private final String style;
+        private final List<PictureDetailInfo> pictureInfoList;
     }
 
     @Getter
     @Builder
     @ToString
-    public static class TagGroupInfo {
-        private final String tagGroupType;
-        private final String tagValue;
+    public static class PictureDetailInfo {
+        private final String filePath;
+        private final String nickname;
+        private final Integer views;
+        private final Boolean bookmarked;
     }
 }

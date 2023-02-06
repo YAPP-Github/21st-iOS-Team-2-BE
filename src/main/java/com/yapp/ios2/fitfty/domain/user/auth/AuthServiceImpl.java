@@ -1,11 +1,14 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
+import com.yapp.ios2.fitfty.domain.user.User.LoginType;
+import com.yapp.ios2.fitfty.domain.user.UserCommand;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignUp;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.domain.user.Utils.JwtTokenProvider;
+import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.user.OAuth.KakaoOAuth;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
@@ -33,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
 
-    public String login(SignIn command) {
+    public String login(UserCommand.SignIn command) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(command.getEmail(),
@@ -57,16 +60,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String loginWithKakao(String code) {
-
+    public String loginWithKakaoCode(String code) {
         // 1. kakaoCallback 으로부터 code 받아온걸로 kakaoToken GET
         KakaoOAuthTokenDto kakaoOAuthTokenDto = kakaoOAuth.getOAuthToken(code);
 
         // 2. kakaoToken 으로 profile, email GET
-        SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto);
+        SignUp signUp = kakaoOAuth.getProfile(kakaoOAuthTokenDto.getAccess_token());
+
+        if (signUp.getEmail() == null) {
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
 
         // 3. 가입 여부 확인하고, 가입안되어있으면 가입
-        if (userReader.findOneByEmail(signUp.getEmail())
+        if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             userService.registerUser(signUp);
         }
@@ -79,10 +85,49 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public String loginWithKakao(UserCommand.SignInKakao command) {
+        SignUp signUp = kakaoOAuth.getProfile(command.getAccessToken());
+
+        if (signUp.getEmail() == null) {
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
+
+        if (userReader.findFirstByEmail(signUp.getEmail())
+                .orElse(null) == null) {
+            userService.registerUser(signUp);
+        }
+
+        return login(SignIn.builder()
+                             .email(signUp.getEmail())
+                             .password(signUp.getPassword())
+                             .build());
+    }
+
+    @Override
+    public String loginWithApple(UserCommand.SignInApple command) {
+        if (command.getUserEmail() == null) {
+            // EMAIL PUBLIC KEY 가져오고 command.eamil에 넣어주는 로직 필요
+            throw new InvalidParamException("EMAIL 조회 권한 승인이 필요합니다.");
+        }
+
+        SignUp signUp = new SignUp(command.getUserEmail(), LoginType.APPLE);
+
+        if (userReader.findFirstByEmail(signUp.getEmail())
+                .orElse(null) == null) {
+            userService.registerUser(signUp);
+        }
+
+        return login(SignIn.builder()
+                             .email(signUp.getEmail())
+                             .password(signUp.getPassword())
+                             .build());
+    }
+
+    @Override
     @Transactional
     public void unActivateUser() {
         var userToken = userService.getCurrentUserToken();
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
         user.deleteUser();
         userStore.store(user);
     }

@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findOneByEmail(String email);
-    Optional<User> findOneByNickname(String nickname);
-    Optional<User> findOneByUserToken(String userToken);
+    Optional<User> findFirstByEmail(String email);
+    Optional<User> findFirstByNickname(String nickname);
+    Optional<User> findFirstByUserToken(String userToken);
 }

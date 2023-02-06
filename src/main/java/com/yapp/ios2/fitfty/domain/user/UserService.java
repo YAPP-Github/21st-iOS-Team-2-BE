@@ -8,11 +8,14 @@ public interface UserService {
 
     String registerUser(UserCommand.SignUp command);
 
-    String findNickname(String nickname);
+    Boolean findNickname(String nickname);
 
     String findUserToken(String nickname);
 
+    UserInfo.CustomOption getUserDetail();
     UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command);
+    UserInfo.CustomPrivacy getUserPrivacy();
+    UserInfo.CustomPrivacy updateUserPrivacy(UserCommand.CustomPrivacy command);
 
     List<String> getBookmark(String userToken);
 

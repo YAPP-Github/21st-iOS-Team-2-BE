@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends AbstractEntity {
-
     private static final String USER_PREFIX = "user_";
     private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
 
@@ -52,12 +51,15 @@ public class User extends AbstractEntity {
 
     private String profilePictureUrl;
     private String message;
+    private String phoneNumber;
     private String role;
 
     @Enumerated(EnumType.STRING)
     private LoginType type;
     @Convert(converter = BooleanToYNConverter.class)
     private boolean activated;
+    @Convert(converter = BooleanToYNConverter.class)
+    private Boolean isOnBoardingComplete;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -93,7 +95,7 @@ public class User extends AbstractEntity {
     @Builder
     public User(String email, LoginType type) {
         if (StringUtils.isNullOrEmpty(email)) {
-            throw new InvalidParamException("User.partnerId");
+            throw new InvalidParamException("User.email");
         }
         if (type == null) {
             throw new InvalidParamException("User.type");
@@ -105,9 +107,11 @@ public class User extends AbstractEntity {
         this.nickname = userToken;
         this.profilePictureUrl = null;
         this.message = null;
+        this.phoneNumber = null;
         this.role = "ROLE_USER";
         this.type = type;
         this.activated = true;
+        this.isOnBoardingComplete = false;
         this.style = new ArrayList<>();
     }
 
@@ -115,6 +119,13 @@ public class User extends AbstractEntity {
         this.nickname = command.getNickname();
         this.gender = command.getGender();
         this.style = command.getStyle();
+        this.isOnBoardingComplete = true;
+    }
+
+    public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
+        this.phoneNumber = command.getPhoneNumber();
+        this.gender = command.getGender();
+        this.nickname = command.getNickname();
     }
 
     public void updateProfile(UserCommand.Profile command) {

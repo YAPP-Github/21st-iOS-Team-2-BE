@@ -16,7 +16,8 @@ public enum ErrorCode {
     CURRENT_CONTEXT_ERROR("Security Context에 회원 정보가 없습니다."),
     MEMBER_NOT_ACTIVATED("비활성화 상태의 회원입니다."),
     FORBIDDEN("자원에 접근할 권한이 없습니다."),
-    UNAUTHORIZED("로그인이 필요한 요청입니다.");
+    UNAUTHORIZED("로그인이 필요한 요청입니다."),
+    KAKAO_OAUTH_NO_RESPONES("카카오 OAuth 서비스로부터 응답이 잘못되었습니다.");
     private final String errorMsg;
 
     public String getErrorMsg(Object... arg) {

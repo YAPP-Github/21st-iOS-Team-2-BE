@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String email) {
-        return userReader.findOneByEmail(email)
+        return userReader.findFirstByEmail(email)
                 .map(user -> createUser(email, user))
                 .orElseThrow(MemberNotFoundException::new);
     }

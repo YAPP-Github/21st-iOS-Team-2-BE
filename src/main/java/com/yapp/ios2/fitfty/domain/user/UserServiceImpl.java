@@ -1,11 +1,13 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomOption;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
-import com.yapp.ios2.fitfty.domain.user.UserInfo.ProfileInfo;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
+import com.yapp.ios2.fitfty.global.exception.DuplicateException;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
             throw new CurrentContextError();
         }
 
-        return userReader.findOneByEmail(authentication.getName())
+        return userReader.findFirstByEmail(authentication.getName())
                 .orElseThrow(MemberNotFoundException::new)
                 .getUserToken();
     }
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String registerUser(UserCommand.SignUp command) {
-        if (userReader.findOneByEmail(command.getEmail())
+        if (userReader.findFirstByEmail(command.getEmail())
                 .orElse(null) != null) {
             throw new MemberAlreadyExistException();
         }
@@ -56,36 +58,62 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String findNickname(String nickname) {
-
-        var result = userReader.findOneByNickname(nickname);
-
-        if (result.orElse(null) == null) {
-            return null;
-        }
-        return result.get()
-                .getNickname();
+    public Boolean findNickname(String nickname) {
+        return userReader.findFirstByNickname(nickname)
+                .isPresent();
     }
 
     @Override
     @Transactional
     public String findUserToken(String nickname) {
-        var result = userReader.findOneByNickname(nickname);
+        var result = userReader.findFirstByNickname(nickname);
 
-        if (result.orElse(null) == null) {
-            return null;
-        }
-        return result.get()
-                .getUserToken();
+        return result.map(User::getUserToken)
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.CustomOption getUserDetail() {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findFirstByUserToken(userToken);
+        return userMapper.toCustomOption(user);
     }
 
     @Override
     @Transactional
     public UserInfo.CustomOption updateUserDetails(UserCommand.CustomOption command) {
         var userToken = getCurrentUserToken();
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
+        nicknameValidation(user, command.getNickname());
         user.updateCustomOption(command);
         return userMapper.toCustomOption(user);
+    }
+
+    private void nicknameValidation(User user, String newNickname) {
+        if (!Objects.equals(user.getNickname(), newNickname)) {
+            if (findNickname(newNickname)) {
+                throw new DuplicateException("해당 닉네임이 이미 존재합니다.");
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.CustomPrivacy getUserPrivacy() {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findFirstByUserToken(userToken);
+        return userMapper.toCustomPrivacy(user);
+    }
+
+    @Override
+    @Transactional
+    public UserInfo.CustomPrivacy updateUserPrivacy(UserCommand.CustomPrivacy command) {
+        var userToken = getCurrentUserToken();
+        var user = userReader.findFirstByUserToken(userToken);
+        nicknameValidation(user, command.getNickname());
+        user.updatePrivacyOption(command);
+        return userMapper.toCustomPrivacy(user);
     }
 
     @Override
@@ -100,7 +128,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserInfo.ImageInfo addBookmark(UserCommand.Bookmark command) {
-        var user = userReader.findOneByUserToken(command.getUserToken());
+        var user = userReader.findFirstByUserToken(command.getUserToken());
         var initBookmark = Bookmark.builder()
                 .boardToken(command.getBoardToken())
                 .userToken(command.getUserToken())
@@ -131,7 +159,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserInfo.ImageInfo addUserFeed(UserCommand.UserFeed command) {
-        var user = userReader.findOneByUserToken(command.getUserToken());
+        var user = userReader.findFirstByUserToken(command.getUserToken());
         var initFeed = Feed.builder()
                 .boardToken(command.getBoardToken())
                 .userToken(command.getUserToken())
@@ -154,7 +182,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserInfo.UserProfile retrieveProfile(String nickname) {
         String userToken = (nickname == null) ? getCurrentUserToken() : findUserToken(nickname);
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
         var userFeed = user.getFeedList()
                 .stream()
                 .map(userMapper::toImageInfo)
@@ -164,15 +192,15 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toImageInfo)
                 .collect(Collectors.toList());
 
-        return new UserInfo.UserProfile(user.getNickname(), user.getProfilePictureUrl(),
+        return new UserInfo.UserProfile(user.getUserToken(), user.getNickname(), user.getProfilePictureUrl(),
                                         user.getMessage(), userFeed, userBookmark);
     }
 
     @Override
     @Transactional
-    public ProfileInfo updateProfile(Profile command) {
+    public UserInfo.ProfileInfo updateProfile(Profile command) {
         String userToken = getCurrentUserToken();
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
         user.updateProfile(command);
         return userMapper.toProfileInfo(user);
     }

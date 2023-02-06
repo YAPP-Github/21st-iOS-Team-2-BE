@@ -27,8 +27,8 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public Bookmark store(Bookmark bookmark) {
-        if (bookmarkRepository.findOneByUserTokenAndBoardToken(bookmark.getUserToken(),
-                                                           bookmark.getBoardToken())
+        if (bookmarkRepository.findFirstByUserTokenAndBoardToken(bookmark.getUserToken(),
+                                                                 bookmark.getBoardToken())
                 .orElse(null) != null) {
             throw new DuplicateException();
         }
@@ -37,8 +37,8 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public Feed store(Feed feed) {
-        if (feedRepository.findOneByUserTokenAndBoardToken(feed.getUserToken(),
-                                                           feed.getBoardToken())
+        if (feedRepository.findFirstByUserTokenAndBoardToken(feed.getUserToken(),
+                                                             feed.getBoardToken())
                 .orElse(null) != null) {
             throw new DuplicateException();
         }
@@ -47,14 +47,14 @@ public class UserStoreImpl implements UserStore {
 
     @Override
     public void deleteFeedByUserTokenAndBoardToken(String userToken, String boardToken) {
-        var feed = feedRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
+        var feed = feedRepository.findFirstByUserTokenAndBoardToken(userToken, boardToken)
                 .orElseThrow(EntityNotFoundException::new);
         feedRepository.delete(feed);
     }
 
     @Override
     public void deleteBookmarkByUserTokenAndBoardToken(String userToken, String boardToken) {
-        var bookmark = bookmarkRepository.findOneByUserTokenAndBoardToken(userToken, boardToken)
+        var bookmark = bookmarkRepository.findFirstByUserTokenAndBoardToken(userToken, boardToken)
                 .orElseThrow(EntityNotFoundException::new);
         bookmarkRepository.delete(bookmark);
     }
