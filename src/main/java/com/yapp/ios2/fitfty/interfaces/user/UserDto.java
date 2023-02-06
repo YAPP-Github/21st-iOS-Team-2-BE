@@ -80,6 +80,13 @@ public class UserDto {
             @JsonProperty(value = "gender_needs_agreement")
             public Boolean genderNeedsAgreement;
             public String gender;
+
+            @JsonProperty(value = "has_age_range")
+            public Boolean hasAgeRange;
+            @JsonProperty(value = "age_range_needs_agreement")
+            public Boolean ageRangeNeedsAgreement;
+            @JsonProperty(value = "age_range")
+            public String ageRange;
             @Data
             @JsonIgnoreProperties(ignoreUnknown = true)
             public class Profile {

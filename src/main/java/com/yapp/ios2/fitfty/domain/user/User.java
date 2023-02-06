@@ -65,6 +65,7 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String birthday;
+    private String ageRange;
 
     @Convert(converter = StringListConverter.class)
     private List<String> style;
@@ -149,6 +150,7 @@ public class User extends AbstractEntity {
             this.gender = (kakaoProfileDto.getKakaoAccount().gender.equals("male")) ? Gender.MALE : Gender.FEMALE;
         }
         this.birthday = kakaoProfileDto.getKakaoAccount().birthday;
+        this.ageRange = kakaoProfileDto.getKakaoAccount().ageRange;
     }
 
     public void deleteUser() {
