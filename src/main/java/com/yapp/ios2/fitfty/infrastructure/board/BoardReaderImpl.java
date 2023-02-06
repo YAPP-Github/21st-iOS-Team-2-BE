@@ -1,23 +1,21 @@
 package com.yapp.ios2.fitfty.infrastructure.board;
 
 import com.yapp.ios2.fitfty.domain.board.Board;
-import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.PictureInfo;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
+import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Component;
-
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component

@@ -1,5 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
+import com.yapp.ios2.fitfty.domain.board.Board;
+import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
@@ -15,6 +17,7 @@ import com.yapp.ios2.fitfty.global.response.ErrorCode;
 import com.yapp.ios2.fitfty.infrastructure.user.OAuth.KakaoOAuth;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserReader userReader;
     private final UserService userService;
     private final UserStore userStore;
+    private final BoardReader boardReader;
 
     @Override
     public String login(UserCommand.SignIn command) {
@@ -136,7 +140,13 @@ public class AuthServiceImpl implements AuthService {
     public void unActivateUser() {
         var userToken = userService.getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
-        user.deleteUser();
-        userStore.store(user);
+        var feeds = userReader.findFeedByUserToken(userToken);
+        var boards = feeds.stream().map(feed -> {
+            var boardToken = feed.getBoardToken();
+            var board = boardReader.getBoard(boardToken);
+            board.deleteBoard();
+            return board;
+        }).collect(Collectors.toList());
+        userStore.delete(user);
     }
 }

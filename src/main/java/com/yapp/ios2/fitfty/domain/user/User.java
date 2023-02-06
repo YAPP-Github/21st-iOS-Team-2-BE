@@ -58,8 +58,6 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private LoginType type;
     @Convert(converter = BooleanToYNConverter.class)
-    private boolean activated;
-    @Convert(converter = BooleanToYNConverter.class)
     private Boolean isOnBoardingComplete;
 
     @Enumerated(EnumType.STRING)
@@ -70,10 +68,10 @@ public class User extends AbstractEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feed> feedList = new ArrayList<>();
 
     @Getter
@@ -113,7 +111,6 @@ public class User extends AbstractEntity {
         this.phoneNumber = null;
         this.role = "ROLE_USER";
         this.type = type;
-        this.activated = true;
         this.isOnBoardingComplete = false;
         this.style = new ArrayList<>();
     }
@@ -152,9 +149,5 @@ public class User extends AbstractEntity {
         }
         this.birthday = kakaoProfileDto.getKakaoAccount().birthday;
         this.ageRange = kakaoProfileDto.getKakaoAccount().ageRange;
-    }
-
-    public void deleteUser() {
-        this.activated = false;
     }
 }
