@@ -39,7 +39,7 @@ public class BoardReaderImpl implements BoardReader {
                 .stream()
                 .map(Bookmark::getBoardToken)
                 .collect(Collectors.toList());
-        var user = userReader.findOneByUserToken(userToken);
+        var user = userReader.findFirstByUserToken(userToken);
 
         var styleInfoList = user.getStyle()
                 .stream()

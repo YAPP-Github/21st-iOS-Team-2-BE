@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
         var board = boardReader.getBoard(boardToken);
-        var user = userReader.findOneByUserToken(board.getUserToken());
+        var user = userReader.findFirstByUserToken(board.getUserToken());
         board.increaseViews();
         return boardInfoMapper.of(board, user);
     }
