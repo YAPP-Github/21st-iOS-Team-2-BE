@@ -16,4 +16,9 @@ public class TagGroupStoreImpl implements TagGroupStore {
     public TagGroup store(TagGroup tagGroup) {
         return tagGroupRepository.save(tagGroup);
     }
+
+    @Override
+    public void deleteTagGroup(TagGroup tagGroup) {
+        tagGroupRepository.delete(tagGroup);
+    }
 }

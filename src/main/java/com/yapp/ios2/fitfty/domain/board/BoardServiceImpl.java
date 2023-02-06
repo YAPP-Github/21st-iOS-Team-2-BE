@@ -59,8 +59,8 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoard(String boardToken) {
         String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
+        boardStore.deleteBoard(board);
         userService.deleteUserFeed(userMapper.toUserFeedCommand(userToken, boardToken));
-        board.deleteBoard();
     }
 
     @Override
@@ -87,7 +87,20 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public PictureInfo.Main getPictureList(BoardDto.GetPictureRequest request) {
         String userToken = userService.getCurrentUserToken();
-        var styleInfoList = boardReader.getPictureSeries(userToken, request.getWeather());
-        return new PictureInfo.Main(styleInfoList);
+        var user = userReader.findFirstByUserToken(userToken);
+        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, request.getWeather(),
+                                                                 user.getStyle(), user.getGender()
+                                                                         .toString());
+        return new PictureInfo.Main(pictureDetailInfoList);
+    }
+
+    @Override
+    @Transactional
+    public PictureInfo.Main getFilteredPictureList(BoardDto.GetFilteredPictureRequest request) {
+        String userToken = userService.getCurrentUserToken();
+        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, request.getWeather(),
+                                                                 request.getStyle(),
+                                                                 request.getGender());
+        return new PictureInfo.Main(pictureDetailInfoList);
     }
 }
