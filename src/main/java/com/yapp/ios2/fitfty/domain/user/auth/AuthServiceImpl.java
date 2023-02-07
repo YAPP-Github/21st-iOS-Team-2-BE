@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
-import com.yapp.ios2.fitfty.domain.board.Board;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
+import com.yapp.ios2.fitfty.domain.board.BoardStore;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
@@ -40,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final UserStore userStore;
     private final BoardReader boardReader;
+    private final BoardStore boardStore;
 
     @Override
     public String login(UserCommand.SignIn command) {
@@ -72,7 +73,8 @@ public class AuthServiceImpl implements AuthService {
         KakaoOAuthTokenDto kakaoOAuthTokenDto = kakaoOAuth.getOAuthToken(code);
 
         // 2. kakaoToken 으로 profile, email GET
-        KakaoProfileDto kakaoProfileDto = kakaoOAuth.getProfile(kakaoOAuthTokenDto.getAccess_token());
+        KakaoProfileDto kakaoProfileDto = kakaoOAuth.getProfile(
+                kakaoOAuthTokenDto.getAccess_token());
         SignUp signUp = new SignUp(kakaoProfileDto.kakaoAccount.email, LoginType.KAKAO);
 
         if (signUp.getEmail() == null) {
@@ -141,12 +143,10 @@ public class AuthServiceImpl implements AuthService {
         var userToken = userService.getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
         var feeds = userReader.findFeedByUserToken(userToken);
-        var boards = feeds.stream().map(feed -> {
-            var boardToken = feed.getBoardToken();
-            var board = boardReader.getBoard(boardToken);
-            board.deleteBoard();
-            return board;
-        }).collect(Collectors.toList());
+        var boards = feeds.stream()
+                .map(feed -> boardReader.getBoard(feed.getBoardToken()))
+                .peek(boardStore::deleteBoard)
+                .collect(Collectors.toList());
         userStore.delete(user);
     }
 }

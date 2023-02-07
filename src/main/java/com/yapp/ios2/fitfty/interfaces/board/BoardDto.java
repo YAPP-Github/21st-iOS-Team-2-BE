@@ -60,6 +60,8 @@ public class BoardDto {
     @Builder
     @ToString
     public static class RegisterResponse {
+
+        private String boardToken;
         private String content;
         private Float temperature;
         private String location;
