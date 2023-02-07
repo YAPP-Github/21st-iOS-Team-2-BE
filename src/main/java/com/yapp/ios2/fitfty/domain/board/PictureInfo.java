@@ -13,30 +13,23 @@ public class PictureInfo {
     @Builder
     @ToString
     public static class Main {
-        private final List<StyleInfo> styleInfoList;
-    }
-
-    @Getter
-    @ToString
-    @RequiredArgsConstructor
-    public static class StyleInfo {
-        private final String style;
-        private final List<PictureDetailInfo> pictureInfoList;
+        private final List<PictureDetailInfo> pictureDetailInfoList;
     }
 
     @Getter
     @ToString
     public static class PictureDetailInfo {
         private final String filePath;
+        private final String boardToken;
         private final String nickname;
         private final Integer views;
         private final Boolean bookmarked;
 
-        public PictureDetailInfo(Board board, String nickname, Boolean bookmarked) {
-            this.filePath = board.getPicture()
-                    .getFilePath();
+        public PictureDetailInfo(String filePath, String boardToken, Integer views, String nickname, Boolean bookmarked) {
+            this.filePath = filePath;
+            this.boardToken = boardToken;
             this.nickname = nickname;
-            this.views = board.getViews();
+            this.views = views;
             this.bookmarked = bookmarked;
         }
     }

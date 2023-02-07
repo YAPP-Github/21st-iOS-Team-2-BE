@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String registerUser(UserCommand.SignUp command) {
+    public User registerUser(UserCommand.SignUp command) {
         if (userReader.findFirstByEmail(command.getEmail())
                 .orElse(null) != null) {
             throw new MemberAlreadyExistException();
@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
                 .type(command.getType())
                 .build();
 
-        return userStore.store(initUser)
-                .getUserToken();
+        return userStore.store(initUser);
     }
 
     @Override

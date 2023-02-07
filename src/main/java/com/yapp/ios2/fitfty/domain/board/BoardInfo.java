@@ -31,9 +31,9 @@ public class BoardInfo {
     @Builder
     @ToString
     public static class TagGroupInfo {
-        private final TagGroup.Weather weather;
+        private final String weather;
         private final List<String> style;
-        private final TagGroup.Gender gender;
+        private final String gender;
     }
 
     @Getter

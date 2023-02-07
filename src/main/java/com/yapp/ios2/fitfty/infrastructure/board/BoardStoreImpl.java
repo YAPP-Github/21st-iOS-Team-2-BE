@@ -24,4 +24,8 @@ public class BoardStoreImpl implements BoardStore {
         return pictureRepository.save(picture);
     }
 
+    @Override
+    public void deleteBoard(Board board) {
+        boardRepository.delete(board);
+    }
 }
