@@ -5,7 +5,6 @@ import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +21,15 @@ public class StyleController {
     private final BoardDtoMapper boardDtoMapper;
 
     @GetMapping()
-    public CommonResponse getPictureList(@RequestBody @Valid BoardDto.GetPictureRequest request) {
+    public CommonResponse getPictureList(@Valid BoardDto.GetPictureRequest request) {
         var board = boardService.getPictureList(request);
+        var response = boardDtoMapper.of(board);
+        return CommonResponse.success(response);
+    }
+
+    @GetMapping("/filter")
+    public CommonResponse getFilteredPicture(@Valid BoardDto.GetFilteredPictureRequest request) {
+        var board = boardService.getFilteredPictureList(request);
         var response = boardDtoMapper.of(board);
         return CommonResponse.success(response);
     }

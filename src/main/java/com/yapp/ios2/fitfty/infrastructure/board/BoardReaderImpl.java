@@ -9,7 +9,14 @@ import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
+import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
+import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -32,48 +39,69 @@ public class BoardReaderImpl implements BoardReader {
     }
 
     @Override
-    public List<PictureInfo.StyleInfo> getPictureSeries(String userToken, String weather) {
+    public List<PictureInfo.PictureDetailInfo> getPictureSeries(String userToken, String weather,
+                                                                List<String> style, String gender) {
         var bookmarkList = userReader.findBookmarkByUserToken(userToken)
                 .stream()
                 .map(Bookmark::getBoardToken)
                 .collect(Collectors.toList());
-        var user = userReader.findFirstByUserToken(userToken);
+        var styleQuery = getStyleQuery(style);
+        var pictureDetailInfoList = getPictureDetailInfoSeries(styleQuery, weather, gender,
+                                                               bookmarkList);
 
-        var styleInfoList = user.getStyle()
-                .stream()
-                .map(style -> {
-                    var tagGroupList = getRandomPicture(style, weather, user.getGender());
-                    var pictureDetailInfoList = tagGroupList.stream()
-                            .map(tagGroup -> {
-                                var pictureId = tagGroup.getPictureId();
-                                var board = boardRepository.findByPictureId(pictureId)
-                                        .orElseThrow(EntityNotFoundException::new);
-                                board.increaseViews();
-                                Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
-
-                                return new PictureInfo.PictureDetailInfo(board, user.getNickname(),
-                                                                         bookmarked);
-                            })
-                            .collect(Collectors.toList());
-
-                    return new PictureInfo.StyleInfo(style, pictureDetailInfoList);
-                })
-                .collect(Collectors.toList());
-
-        return styleInfoList;
+        return pictureDetailInfoList;
 
     }
 
+    public String getStyleQuery(List<String> style) {
+        if (CollectionUtils.isEmpty(style)) {
+            return "[A-Z]*";
+        }
+
+        Iterator<String> it = style.iterator();
+        StringBuilder sb = new StringBuilder();
+        sb.append(it.next());
+        while (it.hasNext()) {
+            sb.append("|" + it.next());
+        }
+        return sb.toString();
+    }
+
+    public List<PictureInfo.PictureDetailInfo> getPictureDetailInfoSeries(String style,
+                                                                          String weather,
+                                                                          String gender,
+                                                                          List<String> bookmarkList) {
+        var tagGroupList = getRandomPicture(style, weather, gender);
+        var pictureDetailInfoList = tagGroupList.stream()
+                .map(tagGroup -> {
+                    var pictureId = tagGroup.getPictureId();
+                    var board = boardRepository.findByPictureId(pictureId)
+                            .orElseThrow(EntityNotFoundException::new);
+                    var picture = board.getPicture();
+                    var user = userReader.findFirstByUserToken(board.getUserToken());
+                    board.increaseViews();
+                    Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
+
+                    return new PictureInfo.PictureDetailInfo(picture.getFilePath(),
+                                                             board.getBoardToken(),
+                                                             board.getViews(), user.getNickname(),
+                                                             bookmarked);
+                })
+                .collect(Collectors.toList());
+
+        return pictureDetailInfoList;
+    }
+
     @Override
-    public List<TagGroup> getRandomPicture(String style, String weather, User.Gender gender) {
-        String styleQuery = "%" + style + "%";
+    public List<TagGroup> getRandomPicture(String style, String weather, String gender) {
         GregorianCalendar today = new GregorianCalendar();
         long seed = today.get(today.YEAR) * 100000000L + today.get(today.MONTH) * 100 + today.get(
                 today.DAY_OF_MONTH);
         int offset = (int) new Random(seed).nextFloat() * tagGroupRepository.getNumberOfTagGroup();
 
-        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(styleQuery, weather,
-                                                                           gender.toString(),
+        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(weather,
+                                                                           gender,
+                                                                           style,
                                                                            seed, offset);
 
         return tagGroupList;

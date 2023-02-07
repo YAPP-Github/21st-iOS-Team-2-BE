@@ -41,10 +41,19 @@ public class BoardDto {
     }
 
     @Getter
+    @Setter
+    @ToString
+    public static class GetFilteredPictureRequest {
+        private String weather;
+        private List<String> style;
+        private String gender;
+    }
+
+    @Getter
     @Builder
     @ToString
     public static class PictureListResponse {
-        private final List<StyleInfo> styleInfoList;
+        private final List<PictureDetailInfo> pictureDetailInfoList;
     }
 
     @Getter
@@ -77,16 +86,9 @@ public class BoardDto {
     @Getter
     @Builder
     @ToString
-    public static class StyleInfo {
-        private final String style;
-        private final List<PictureDetailInfo> pictureInfoList;
-    }
-
-    @Getter
-    @Builder
-    @ToString
     public static class PictureDetailInfo {
         private final String filePath;
+        private final String boardToken;
         private final String nickname;
         private final Integer views;
         private final Boolean bookmarked;

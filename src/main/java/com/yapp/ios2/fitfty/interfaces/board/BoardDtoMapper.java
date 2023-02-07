@@ -24,8 +24,6 @@ public interface BoardDtoMapper {
 
     BoardDto.PictureListResponse of(PictureInfo.Main pictureInfo);
 
-    BoardDto.StyleInfo of(PictureInfo.StyleInfo styleInfo);
-
     BoardDto.PictureDetailInfo of(PictureInfo.PictureDetailInfo pictureDetailInfo);
 
 }
