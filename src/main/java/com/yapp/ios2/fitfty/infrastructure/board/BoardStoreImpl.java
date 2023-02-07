@@ -28,10 +28,6 @@ public class BoardStoreImpl implements BoardStore {
 
     @Override
     public void deleteBoard(Board board) {
-        var picture = board.getPicture();
-        var tagGroup = picture.getTagGroup();
         boardRepository.delete(board);
-        pictureRepository.delete(picture);
-        tagGroupStore.deleteTagGroup(tagGroup);
     }
 }

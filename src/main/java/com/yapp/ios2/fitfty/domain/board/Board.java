@@ -38,7 +38,7 @@ public class Board extends AbstractEntity {
     private String boardToken;
     private String userToken;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
     private Picture picture;
 
