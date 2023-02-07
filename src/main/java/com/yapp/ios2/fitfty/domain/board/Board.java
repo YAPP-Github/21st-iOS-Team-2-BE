@@ -2,7 +2,6 @@ package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
-import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -40,7 +38,7 @@ public class Board extends AbstractEntity {
     private String boardToken;
     private String userToken;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
     private Picture picture;
 
@@ -51,12 +49,9 @@ public class Board extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     private CloudType cloudType;
-    private ZonedDateTime photoTakenTime; //data 형식 변경 여부 확인
+    private ZonedDateTime photoTakenTime;
     private Integer views;
     private Integer bookmarkCnt;
-
-    @Convert(converter = BooleanToYNConverter.class)
-    private boolean status;
 
     @Builder
     public Board(String userToken, Picture picture, String content, String location,
@@ -78,7 +73,6 @@ public class Board extends AbstractEntity {
         this.photoTakenTime = photoTakenTime;
         this.views = 0;
         this.bookmarkCnt = 0;
-        this.status = true;
     }
 
     public void update(BoardCommand.RegisterBoardRequest request, Picture picture) {
@@ -90,11 +84,9 @@ public class Board extends AbstractEntity {
         this.photoTakenTime = request.getPhotoTakenTime();
     }
 
-    public void deleteBoard() {
-        this.status = false;
+    public void increaseViews() {
+        this.views += 1;
     }
-
-    public void increaseViews() { this.views += 1; }
 
     public void increaseBookmarkCnt() {
         this.bookmarkCnt += 1;
@@ -107,7 +99,13 @@ public class Board extends AbstractEntity {
     @Getter
     @RequiredArgsConstructor
     public enum CloudType {
-        SUNNY("맑음"), CLOUDY("구름많음"), GRAY("흐림");
+        SUNNY("맑음"),
+        LOTSOFCLOUDY("구름많음"),
+        CLOUDY("흐림"),
+        RAIN("비"),
+        RAINORSNOW("비 또는 눈"),
+        SNOW("눈"),
+        SCURRY("소나기");
         private final String description;
     }
 

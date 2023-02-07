@@ -47,9 +47,9 @@ public class BoardCommand {
     @Builder
     @ToString
     public static class RegisterTagGroupRequest {
-        private final TagGroup.Weather weather;
+        private final String weather;
         private final List<String> style;
-        private final TagGroup.Gender gender;
+        private final String gender;
 
         public TagGroup toEntity(Picture picture) {
             return TagGroup.builder()

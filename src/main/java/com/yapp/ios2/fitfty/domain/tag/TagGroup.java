@@ -31,17 +31,15 @@ public class TagGroup extends AbstractEntity {
     @JoinColumn(name = "picture_id")
     private Picture picture;
 
-    @Enumerated(EnumType.STRING)
-    private Weather weather;
+    private String weather;
 
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
 
     @Builder
-    public TagGroup(Picture picture, Weather weather, List<String> style, Gender gender) {
+    public TagGroup(Picture picture, String weather, List<String> style, String gender) {
         if (picture == null) {
             throw new InvalidParamException("TagGroup.picture");
         }

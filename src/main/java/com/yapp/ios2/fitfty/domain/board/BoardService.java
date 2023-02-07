@@ -6,6 +6,7 @@ public interface BoardService {
     Board registerBoard(BoardCommand.RegisterBoardRequest request);
     BoardInfo.Main retrieveBoardInfo(String boardToken);
     PictureInfo.Main getPictureList(BoardDto.GetPictureRequest request);
+    PictureInfo.Main getFilteredPictureList(BoardDto.GetFilteredPictureRequest request);
     void changeBoardInfo(BoardCommand.RegisterBoardRequest request, String boardToken);
     void deleteBoard(String boardToken);
     void addBookmark(String boardToken);

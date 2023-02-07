@@ -1,6 +1,5 @@
 package com.yapp.ios2.fitfty.domain.board;
 
-import com.google.common.collect.Lists;
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
@@ -17,12 +16,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
