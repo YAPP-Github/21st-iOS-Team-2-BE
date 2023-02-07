@@ -6,7 +6,7 @@ public interface UserService {
 
     String getCurrentUserToken();
 
-    String registerUser(UserCommand.SignUp command);
+    User registerUser(UserCommand.SignUp command);
 
     Boolean findNickname(String nickname);
 

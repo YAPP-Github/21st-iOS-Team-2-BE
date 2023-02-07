@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.infrastructure.board;
 
 import com.yapp.ios2.fitfty.domain.board.Board;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

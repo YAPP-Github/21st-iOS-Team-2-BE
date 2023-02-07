@@ -60,7 +60,7 @@ public class KakaoOAuth {
         return kakaoOAuthTokenDto;
     }
 
-    public SignUp getProfile(String accessToken) {
+    public KakaoProfileDto getProfile(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -84,6 +84,6 @@ public class KakaoOAuth {
             throw new KakaoOAuthException(e.getMessage());
         }
 
-        return new SignUp(kakaoProfileDto.kakaoAccount.email, LoginType.KAKAO);
+        return kakaoProfileDto;
     }
 }

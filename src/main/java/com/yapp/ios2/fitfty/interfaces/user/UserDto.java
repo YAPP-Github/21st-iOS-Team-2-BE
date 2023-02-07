@@ -39,32 +39,64 @@ public class UserDto {
         public KakaoAccount kakaoAccount;
 
         @Data
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class Properties {
             public String nickname;
+            @JsonProperty(value = "profile_image")
+            public String profileImage;
+            @JsonProperty(value = "thumbnail_image")
+            public String thumbnailImage;
         }
 
         @Data
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class KakaoAccount {
             @JsonProperty(value = "profile_nickname_needs_agreement")
             public Boolean profileNicknameNeedsAgreement;
+            @JsonProperty(value = "profile_image_needs_agreement")
+            public Boolean profileImageNeedsAgreement;
             public Profile profile;
 
             @JsonProperty(value = "has_email")
             public Boolean hasEmail;
-
             @JsonProperty(value = "email_needs_agreement")
             public Boolean emailNeedsAgreement;
-
             @JsonProperty(value = "is_email_valid")
             public Boolean isEmailValid;
-
             @JsonProperty(value = "is_email_verified")
             public Boolean isEmailVerified;
             public String email;
 
+            @JsonProperty(value = "has_birthday")
+            public Boolean hasBirthday;
+            @JsonProperty(value = "birthday_needs_agreement")
+            public Boolean birthdayNeedsAgreement;
+            public String birthday;
+            @JsonProperty(value = "birthday_type")
+            public String birthdayType;
+
+            @JsonProperty(value = "has_gender")
+            public Boolean hasGender;
+            @JsonProperty(value = "gender_needs_agreement")
+            public Boolean genderNeedsAgreement;
+            public String gender;
+
+            @JsonProperty(value = "has_age_range")
+            public Boolean hasAgeRange;
+            @JsonProperty(value = "age_range_needs_agreement")
+            public Boolean ageRangeNeedsAgreement;
+            @JsonProperty(value = "age_range")
+            public String ageRange;
             @Data
+            @JsonIgnoreProperties(ignoreUnknown = true)
             public class Profile {
                 public String nickname;
+                @JsonProperty(value = "profile_image_url")
+                public String profileImageUrl;
+                @JsonProperty(value = "thumbnail_image_url")
+                public String thumbnailImageUrl;
+                @JsonProperty(value = "is_default_image")
+                public Boolean isDefaultImage;
             }
         }
     }
@@ -130,6 +162,7 @@ public class UserDto {
         private User.Gender gender;
         @NotNull
         private String nickname;
+        private String birthday;
     }
 
     @Getter

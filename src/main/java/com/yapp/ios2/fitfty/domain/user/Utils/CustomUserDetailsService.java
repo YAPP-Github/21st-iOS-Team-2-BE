@@ -28,10 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
-        if (!user.isActivated()) {
-            throw new MemberNotActivatedException();
-        }
-
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
                 new SimpleGrantedAuthority(user.getRole()));
 

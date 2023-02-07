@@ -6,6 +6,7 @@ import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -57,20 +58,20 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private LoginType type;
     @Convert(converter = BooleanToYNConverter.class)
-    private boolean activated;
-    @Convert(converter = BooleanToYNConverter.class)
     private Boolean isOnBoardingComplete;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private String birthday;
+    private String ageRange;
 
     @Convert(converter = StringListConverter.class)
     private List<String> style;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feed> feedList = new ArrayList<>();
 
     @Getter
@@ -110,7 +111,6 @@ public class User extends AbstractEntity {
         this.phoneNumber = null;
         this.role = "ROLE_USER";
         this.type = type;
-        this.activated = true;
         this.isOnBoardingComplete = false;
         this.style = new ArrayList<>();
     }
@@ -126,6 +126,7 @@ public class User extends AbstractEntity {
         this.phoneNumber = command.getPhoneNumber();
         this.gender = command.getGender();
         this.nickname = command.getNickname();
+        this.birthday = command.getBirthday();
     }
 
     public void updateProfile(UserCommand.Profile command) {
@@ -141,7 +142,12 @@ public class User extends AbstractEntity {
         }
     }
 
-    public void deleteUser() {
-        this.activated = false;
+    public void updateKakaoLoginInfo(KakaoProfileDto kakaoProfileDto) {
+        this.profilePictureUrl = kakaoProfileDto.getProperties().profileImage;
+        if (!StringUtils.isNullOrEmpty(kakaoProfileDto.getKakaoAccount().gender)) {
+            this.gender = (kakaoProfileDto.getKakaoAccount().gender.equals("male")) ? Gender.MALE : Gender.FEMALE;
+        }
+        this.birthday = kakaoProfileDto.getKakaoAccount().birthday;
+        this.ageRange = kakaoProfileDto.getKakaoAccount().ageRange;
     }
 }

@@ -58,4 +58,9 @@ public class UserStoreImpl implements UserStore {
                 .orElseThrow(EntityNotFoundException::new);
         bookmarkRepository.delete(bookmark);
     }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 }

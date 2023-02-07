@@ -11,4 +11,6 @@ public interface UserStore {
     void deleteFeedByUserTokenAndBoardToken(String userToken, String pictureToken);
 
     void deleteBookmarkByUserTokenAndBoardToken(String userToken, String pictureToken);
+
+    void delete(User user);
 }
