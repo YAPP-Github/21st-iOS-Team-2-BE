@@ -22,13 +22,15 @@ public class PictureInfo {
         private final String filePath;
         private final String boardToken;
         private final String nickname;
+        private final String profilePictureUrl;
         private final Integer views;
         private final Boolean bookmarked;
 
-        public PictureDetailInfo(String filePath, String boardToken, Integer views, String nickname, Boolean bookmarked) {
+        public PictureDetailInfo(String filePath, String boardToken, Integer views, String nickname, String profilePictureUrl, Boolean bookmarked) {
             this.filePath = filePath;
             this.boardToken = boardToken;
             this.nickname = nickname;
+            this.profilePictureUrl = profilePictureUrl;
             this.views = views;
             this.bookmarked = bookmarked;
         }
