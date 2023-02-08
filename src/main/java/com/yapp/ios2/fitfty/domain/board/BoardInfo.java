@@ -17,6 +17,7 @@ public class BoardInfo {
         private final Long boardId;
         private final String boardToken;
         private final String nickname;
+        private final String profilePictureUrl;
         private final String filePath;
         private final String content;
         private final String location;

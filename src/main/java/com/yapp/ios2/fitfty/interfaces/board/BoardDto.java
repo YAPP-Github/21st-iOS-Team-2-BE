@@ -75,6 +75,7 @@ public class BoardDto {
     public static class Main {
         private final String boardToken;
         private final String nickname;
+        private final String profilePictureUrl;
         private final String filePath;
         private final String content;
         private final String location;
@@ -92,6 +93,7 @@ public class BoardDto {
         private final String filePath;
         private final String boardToken;
         private final String nickname;
+        private final String profilePictureUrl;
         private final Integer views;
         private final Boolean bookmarked;
     }

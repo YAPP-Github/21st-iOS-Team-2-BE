@@ -5,24 +5,21 @@ import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.PictureInfo;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import com.yapp.ios2.fitfty.domain.user.Bookmark;
-import com.yapp.ios2.fitfty.domain.user.User;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
-import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
-import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
+import com.yapp.ios2.fitfty.global.exception.PictureNotFoundException;
+import com.yapp.ios2.fitfty.global.response.ErrorCode;
 import com.yapp.ios2.fitfty.infrastructure.tag.TagGroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -84,7 +81,9 @@ public class BoardReaderImpl implements BoardReader {
 
                     return new PictureInfo.PictureDetailInfo(picture.getFilePath(),
                                                              board.getBoardToken(),
-                                                             board.getViews(), user.getNickname(),
+                                                             board.getViews(),
+                                                             user.getNickname(),
+                                                             user.getProfilePictureUrl(),
                                                              bookmarked);
                 })
                 .collect(Collectors.toList());
@@ -103,6 +102,9 @@ public class BoardReaderImpl implements BoardReader {
                                                                            gender,
                                                                            style,
                                                                            seed, offset);
+        if (CollectionUtils.isEmpty(tagGroupList)) {
+            throw new PictureNotFoundException(ErrorCode.PICTURE_NOT_FOUND.getErrorMsg());
+        }
 
         return tagGroupList;
     }
