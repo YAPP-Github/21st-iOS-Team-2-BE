@@ -74,16 +74,28 @@ public class BoardDto {
     @ToString
     public static class Main {
         private final String boardToken;
+        private final String userToken;
         private final String nickname;
         private final String profilePictureUrl;
         private final String filePath;
         private final String content;
+        private final TagGroupInfo tagGroupInfo;
         private final String location;
         private final Float temperature;
         private final CloudType cloudType;
         private final ZonedDateTime photoTakenTime;
         private final Integer views;
         private final Integer bookmarkCnt;
+        private final Boolean bookmarked;
+    }
+
+    @Getter
+    @Builder
+    @ToString
+    public static class TagGroupInfo {
+        private final String weather;
+        private final List<String> style;
+        private final String gender;
     }
 
     @Getter
@@ -92,6 +104,7 @@ public class BoardDto {
     public static class PictureDetailInfo {
         private final String filePath;
         private final String boardToken;
+        private final String userToken;
         private final String nickname;
         private final String profilePictureUrl;
         private final Integer views;

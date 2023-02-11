@@ -82,6 +82,7 @@ public class BoardReaderImpl implements BoardReader {
                     return new PictureInfo.PictureDetailInfo(picture.getFilePath(),
                                                              board.getBoardToken(),
                                                              board.getViews(),
+                                                             user.getUserToken(),
                                                              user.getNickname(),
                                                              user.getProfilePictureUrl(),
                                                              bookmarked);

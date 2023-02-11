@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.AbstractEntity;
+import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
 import lombok.Builder;
@@ -94,6 +95,11 @@ public class Board extends AbstractEntity {
 
     public void decreaseBookmarkCnt() {
         this.bookmarkCnt -= 1;
+    }
+
+    public TagGroup getTagGroup() {
+        return this.getPicture()
+                .getTagGroup();
     }
 
     @Getter
