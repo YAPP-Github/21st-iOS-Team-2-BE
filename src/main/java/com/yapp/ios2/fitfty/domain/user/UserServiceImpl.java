@@ -1,15 +1,16 @@
 package com.yapp.ios2.fitfty.domain.user;
 
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
-import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomOption;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
 import com.yapp.ios2.fitfty.global.exception.DuplicateException;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,21 +26,6 @@ public class UserServiceImpl implements UserService {
     private final UserStore userStore;
     private final UserMapper userMapper;
     private final BoardReader boardReader;
-
-    @Override
-    @Transactional
-    public String checkNonMemeber() {
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return "NONMEMBER";
-        }
-
-        return userReader.findFirstByEmail(authentication.getName())
-                .orElseThrow(MemberNotFoundException::new)
-                .getUserToken();
-    }
 
     @Override
     @Transactional
