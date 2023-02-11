@@ -6,6 +6,7 @@ import com.yapp.ios2.fitfty.domain.user.User.LoginType;
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignIn;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.SignUp;
+import com.yapp.ios2.fitfty.domain.user.UserInfo;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
@@ -97,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public String loginWithKakao(UserCommand.SignInKakao command) {
+    public UserInfo.SignInInfo loginWithKakao(UserCommand.SignInKakao command) {
         KakaoProfileDto kakaoProfileDto = kakaoOAuth.getProfile(command.getAccessToken());
         SignUp signUp = new SignUp(kakaoProfileDto.kakaoAccount.email, LoginType.KAKAO);
 
@@ -105,36 +106,49 @@ public class AuthServiceImpl implements AuthService {
             throw new KakaoOAuthException(ErrorCode.NO_EMAIL.getErrorMsg());
         }
 
+        boolean isNew = false;
         if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             var userInit = userService.registerUser(signUp);
             userInit.updateKakaoLoginInfo(kakaoProfileDto);
+            isNew = true;
         }
 
-        return login(SignIn.builder()
+        var authToken = login(SignIn.builder()
                              .email(signUp.getEmail())
                              .password(signUp.getPassword())
                              .build());
+        return new UserInfo.SignInInfo(authToken, isNew);
     }
 
     @Override
     @Transactional
-    public String loginWithApple(UserCommand.SignInApple command) {
+    public UserInfo.SignInInfo loginWithApple(UserCommand.SignInApple command) {
         if (command.getUserEmail() == null) {
             throw new AppleOAuthException(ErrorCode.NO_EMAIL.getErrorMsg());
         }
 
         SignUp signUp = new SignUp(command.getUserEmail(), LoginType.APPLE);
 
+        boolean isNew = false;
         if (userReader.findFirstByEmail(signUp.getEmail())
                 .orElse(null) == null) {
             userService.registerUser(signUp);
+            isNew = true;
         }
 
-        return login(SignIn.builder()
-                             .email(signUp.getEmail())
-                             .password(signUp.getPassword())
-                             .build());
+        var authToken = login(SignIn.builder()
+                                      .email(signUp.getEmail())
+                                      .password(signUp.getPassword())
+                                      .build());
+        return new UserInfo.SignInInfo(authToken, isNew);
+    }
+
+    @Override
+    public String getRole() {
+        var userToken = userService.getCurrentUserToken();
+        var user = userReader.findFirstByUserToken(userToken);
+        return user.getRole();
     }
 
     @Override
