@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface UserService {
 
+    String checkNonMemeber();
+
     String getCurrentUserToken();
 
     User registerUser(UserCommand.SignUp command);
