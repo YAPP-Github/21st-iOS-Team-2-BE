@@ -13,10 +13,11 @@ public interface BoardInfoMapper {
     @Mappings({
             @Mapping(source = "board.id", target = "boardId"),
             @Mapping(expression = "java(board.getPicture().getFilePath())", target = "filePath"),
+            @Mapping(expression = "java(user.getUserToken())", target = "userToken"),
             @Mapping(expression = "java(user.getNickname())", target = "nickname"),
             @Mapping(expression = "java(user.getProfilePictureUrl())", target = "profilePictureUrl")
     })
-    BoardInfo.Main of(Board board, User user);
+    BoardInfo.Main of(Board board, User user, BoardInfo.TagGroupInfo tagGroupInfo, Boolean bookmarked);
 
     BoardInfo.TagGroupInfo of(TagGroup tagGroup);
 
