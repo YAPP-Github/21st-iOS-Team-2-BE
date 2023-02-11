@@ -26,6 +26,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public String checkNonMemeber() {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "NONMEMBER";
+        }
+
+        return userReader.findFirstByEmail(authentication.getName())
+                .orElseThrow(MemberNotFoundException::new)
+                .getUserToken();
+    }
+
+    @Override
+    @Transactional
     public String getCurrentUserToken() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
