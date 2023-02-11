@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomOption;
 import com.yapp.ios2.fitfty.domain.user.UserCommand.Profile;
 import com.yapp.ios2.fitfty.global.exception.CurrentContextError;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserReader userReader;
     private final UserStore userStore;
     private final UserMapper userMapper;
+    private final BoardReader boardReader;
 
     @Override
     @Transactional
@@ -135,8 +137,11 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         var bookmark = userStore.store(initBookmark);
+        var board = boardReader.getBoard(bookmark.getBoardToken());
+        var filePath = board.getPicture()
+                .getFilePath();
 
-        return userMapper.toImageInfo(bookmark);
+        return userMapper.toImageInfo(bookmark, filePath);
     }
 
     @Override
@@ -166,8 +171,11 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         var feed = userStore.store(initFeed);
+        var board = boardReader.getBoard(feed.getBoardToken());
+        var filePath = board.getPicture()
+                .getFilePath();
 
-        return userMapper.toImageInfo(feed);
+        return userMapper.toImageInfo(feed, filePath);
     }
 
     @Override
@@ -184,14 +192,25 @@ public class UserServiceImpl implements UserService {
         var user = userReader.findFirstByUserToken(userToken);
         var userFeed = user.getFeedList()
                 .stream()
-                .map(userMapper::toImageInfo)
+                .map(feed -> {
+                    var board = boardReader.getBoard(feed.getBoardToken());
+                    var filePath = board.getPicture()
+                            .getFilePath();
+                    return userMapper.toImageInfo(feed, filePath);
+                })
                 .collect(Collectors.toList());
         var userBookmark = user.getBookmarkList()
                 .stream()
-                .map(userMapper::toImageInfo)
+                .map(bookmark -> {
+                    var board = boardReader.getBoard(bookmark.getBoardToken());
+                    var filePath = board.getPicture()
+                            .getFilePath();
+                    return userMapper.toImageInfo(bookmark, filePath);
+                })
                 .collect(Collectors.toList());
 
-        return new UserInfo.UserProfile(user.getUserToken(), user.getNickname(), user.getProfilePictureUrl(),
+        return new UserInfo.UserProfile(user.getUserToken(), user.getNickname(),
+                                        user.getProfilePictureUrl(),
                                         user.getMessage(), userFeed, userBookmark);
     }
 

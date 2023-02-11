@@ -1,6 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
+import com.yapp.ios2.fitfty.domain.user.UserInfo;
 
 public interface AuthService {
 
@@ -10,7 +11,9 @@ public interface AuthService {
 
     void unActivateUser();
 
-    String loginWithKakao(UserCommand.SignInKakao command);
+    UserInfo.SignInInfo loginWithKakao(UserCommand.SignInKakao command);
 
-    String loginWithApple(UserCommand.SignInApple command);
+    UserInfo.SignInInfo loginWithApple(UserCommand.SignInApple command);
+
+    String getRole();
 }

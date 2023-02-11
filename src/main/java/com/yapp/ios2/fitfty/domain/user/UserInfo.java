@@ -42,6 +42,7 @@ public class UserInfo {
 
         private String userToken;
         private String boardToken;
+        private String filePath;
     }
 
     @Getter
@@ -64,5 +65,13 @@ public class UserInfo {
         private String message;
         private List<ImageInfo> codiList;
         private List<ImageInfo> bookmarkList;
+    }
+
+    @Getter
+    @ToString
+    @AllArgsConstructor
+    public static class SignInInfo {
+        private String authToken;
+        private Boolean isNew;
     }
 }
