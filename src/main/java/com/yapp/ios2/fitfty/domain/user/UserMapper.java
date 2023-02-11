@@ -6,6 +6,8 @@ import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignInDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.SignUpDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -20,9 +22,9 @@ public interface UserMapper {
 
     UserInfo.ProfileInfo toProfileInfo(User user);
 
-    UserInfo.ImageInfo toImageInfo(Bookmark bookmark);
+    UserInfo.ImageInfo toImageInfo(Bookmark bookmark, String filePath);
 
-    UserInfo.ImageInfo toImageInfo(Feed feed);
+    UserInfo.ImageInfo toImageInfo(Feed feed, String filePath);
 
     UserCommand.SignIn toSignIn(SignInDto signInDto);
 

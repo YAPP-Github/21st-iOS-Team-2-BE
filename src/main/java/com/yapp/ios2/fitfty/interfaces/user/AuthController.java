@@ -53,6 +53,12 @@ public class AuthController {
         return CommonResponse.success("OK");
     }
 
+    @GetMapping("/role")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public CommonResponse getRole() {
+        return CommonResponse.success(authService.getRole());
+    }
+
     @GetMapping("/kakao/callback")
     public CommonResponse handleKakakoOAuth(String code) {
         return CommonResponse.success(authService.loginWithKakaoCode(code));

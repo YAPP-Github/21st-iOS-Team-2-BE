@@ -106,7 +106,7 @@ public class User extends AbstractEntity {
         this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
         this.password = TEMP_PASS;
         this.nickname = userToken;
-        this.profilePictureUrl = null;
+        this.profilePictureUrl = "https://fitfty.s3.ap-northeast-2.amazonaws.com/fitfty_profile_dummy.png";
         this.message = null;
         this.phoneNumber = null;
         this.role = "ROLE_USER";

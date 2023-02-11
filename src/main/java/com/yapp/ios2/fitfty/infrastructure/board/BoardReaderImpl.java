@@ -4,7 +4,6 @@ import com.yapp.ios2.fitfty.domain.board.Board;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.PictureInfo;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
-import com.yapp.ios2.fitfty.domain.user.Bookmark;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
 import com.yapp.ios2.fitfty.global.exception.PictureNotFoundException;
@@ -36,12 +35,9 @@ public class BoardReaderImpl implements BoardReader {
     }
 
     @Override
-    public List<PictureInfo.PictureDetailInfo> getPictureSeries(String userToken, String weather,
+    public List<PictureInfo.PictureDetailInfo> getPictureSeries(List<String> bookmarkList,
+                                                                String weather,
                                                                 List<String> style, String gender) {
-        var bookmarkList = userReader.findBookmarkByUserToken(userToken)
-                .stream()
-                .map(Bookmark::getBoardToken)
-                .collect(Collectors.toList());
         var styleQuery = getStyleQuery(style);
         var pictureDetailInfoList = getPictureDetailInfoSeries(styleQuery, weather, gender,
                                                                bookmarkList);
