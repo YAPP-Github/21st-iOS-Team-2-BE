@@ -104,6 +104,7 @@ public class BoardDto {
     public static class PictureDetailInfo {
         private final String filePath;
         private final String boardToken;
+        private final String userToken;
         private final String nickname;
         private final String profilePictureUrl;
         private final Integer views;
