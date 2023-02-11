@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -91,7 +93,8 @@ public class BoardServiceImpl implements BoardService {
     public PictureInfo.Main getPictureList(BoardDto.GetPictureRequest request) {
         String userToken = userService.getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
-        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, request.getWeather(),
+        var bookmarkList = userService.getBookmark(userToken);
+        var pictureDetailInfoList = boardReader.getPictureSeries(bookmarkList, request.getWeather(),
                                                                  user.getStyle(), user.getGender()
                                                                          .toString());
         return new PictureInfo.Main(pictureDetailInfoList);
@@ -100,8 +103,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public PictureInfo.Main getFilteredPictureList(BoardDto.GetFilteredPictureRequest request) {
-        String userToken = userService.getCurrentUserToken();
-        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, request.getWeather(),
+        String userToken = userService.checkNonMemeber();
+        var bookmarkList = (userToken.equals("NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
+        var pictureDetailInfoList = boardReader.getPictureSeries(bookmarkList, request.getWeather(),
                                                                  request.getStyle(),
                                                                  request.getGender());
         return new PictureInfo.Main(pictureDetailInfoList);
