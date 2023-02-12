@@ -12,6 +12,7 @@ import org.mapstruct.ReportingPolicy;
 public interface BoardInfoMapper {
     @Mappings({
             @Mapping(source = "board.id", target = "boardId"),
+            @Mapping(source = "board.createdAt", target = "createdAt"),
             @Mapping(expression = "java(board.getPicture().getFilePath())", target = "filePath"),
             @Mapping(expression = "java(user.getUserToken())", target = "userToken"),
             @Mapping(expression = "java(user.getNickname())", target = "nickname"),
