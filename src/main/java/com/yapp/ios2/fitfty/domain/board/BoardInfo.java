@@ -24,7 +24,7 @@ public class BoardInfo {
         private final String location;
         private final Float temperature;
         private final Board.CloudType cloudType;
-        private final ZonedDateTime photoTakenTime;
+        private final ZonedDateTime createdAt;
         private final Integer views;
         private final Integer bookmarkCnt;
         private final Boolean bookmarked;
