@@ -1,7 +1,7 @@
 package com.yapp.ios2.fitfty.interfaces.report;
 
 import com.yapp.ios2.fitfty.domain.report.ReportCommand.UpdateCommand;
-import com.yapp.ios2.fitfty.global.enums.ReportType;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,18 +13,16 @@ public class ReportDto {
     @Builder
     @ToString
     public static class MakeUserReport {
-        private String reportUserToken;
         private String reportedUserToken;
-        private ReportType type;
+        private List<String> type;
     }
 
     @Getter
     @Builder
     @ToString
     public static class MakeBoardReport {
-        private String reportUserToken;
         private String reportedBoardToken;
-        private ReportType type;
+        private List<String> type;
     }
 
     @Getter
@@ -34,14 +32,14 @@ public class ReportDto {
     public static class UpdateReport {
         private String reportToken;
         private Boolean isConfirmed;
-        private String type;
+        private String reportDomain;
     }
 
-    public static UpdateCommand toUpdateCommand(UpdateReport updateReport, String type) {
+    public static UpdateCommand toUpdateCommand(UpdateReport updateReport, String reportDomain) {
         return UpdateCommand.builder()
                 .reportToken(updateReport.reportToken)
                 .isConfirmed(updateReport.isConfirmed)
-                .type(type)
+                .reportDomain(reportDomain)
                 .build();
     }
 }

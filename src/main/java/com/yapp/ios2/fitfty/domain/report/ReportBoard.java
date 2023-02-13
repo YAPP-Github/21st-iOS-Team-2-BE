@@ -1,14 +1,13 @@
 package com.yapp.ios2.fitfty.domain.report;
 
 import com.querydsl.core.util.StringUtils;
-import com.yapp.ios2.fitfty.global.enums.ReportType;
+import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
+import java.util.List;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +35,13 @@ public class ReportBoard {
     private String reportedBoardFilePath;
     private Integer reportedCount;
 
-    @Enumerated(EnumType.STRING)
-    private ReportType type;
+    @Convert(converter = StringListConverter.class)
+    private List<String> type;
     @Convert(converter = BooleanToYNConverter.class)
     private Boolean isConfirmed;
 
     @Builder
-    public ReportBoard(String reportUserToken, String reportUserEmail, String reportedBoardToken, String reportedBoardFilePath, Integer count, ReportType type) {
+    public ReportBoard(String reportUserToken, String reportUserEmail, String reportedBoardToken, String reportedBoardFilePath, Integer count, List<String> type) {
         if (StringUtils.isNullOrEmpty(reportUserToken) ||StringUtils.isNullOrEmpty(reportUserEmail) ) {
             throw new InvalidParamException("Report.user");
         }
