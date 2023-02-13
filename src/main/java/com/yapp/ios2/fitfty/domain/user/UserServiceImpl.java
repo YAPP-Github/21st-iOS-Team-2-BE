@@ -154,10 +154,7 @@ public class UserServiceImpl implements UserService {
 
         var bookmark = userStore.store(initBookmark);
         var board = boardReader.getBoard(bookmark.getBoardToken());
-        var filePath = board.getPicture()
-                .getFilePath();
-
-        return userMapper.toImageInfo(bookmark, filePath);
+        return UserInfo.ImageInfo.of(bookmark, board);
     }
 
     @Override
@@ -188,10 +185,7 @@ public class UserServiceImpl implements UserService {
 
         var feed = userStore.store(initFeed);
         var board = boardReader.getBoard(feed.getBoardToken());
-        var filePath = board.getPicture()
-                .getFilePath();
-
-        return userMapper.toImageInfo(feed, filePath);
+        return UserInfo.ImageInfo.of(feed, board);
     }
 
     @Override
@@ -210,18 +204,14 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(feed -> {
                     var board = boardReader.getBoard(feed.getBoardToken());
-                    var filePath = board.getPicture()
-                            .getFilePath();
-                    return userMapper.toImageInfo(feed, filePath);
+                    return UserInfo.ImageInfo.of(feed, board);
                 })
                 .collect(Collectors.toList());
         var userBookmark = user.getBookmarkList()
                 .stream()
                 .map(bookmark -> {
                     var board = boardReader.getBoard(bookmark.getBoardToken());
-                    var filePath = board.getPicture()
-                            .getFilePath();
-                    return userMapper.toImageInfo(bookmark, filePath);
+                    return UserInfo.ImageInfo.of(bookmark, board);
                 })
                 .collect(Collectors.toList());
 
