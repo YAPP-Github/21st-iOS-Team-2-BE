@@ -53,7 +53,6 @@ public class UserCommand {
     @ToString
     public static class CustomPrivacy {
 
-        private String phoneNumber;
         private Gender gender;
         private String nickname;
         private String birthday;

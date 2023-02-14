@@ -1,5 +1,7 @@
 package com.yapp.ios2.fitfty.domain.report;
 
+import com.yapp.ios2.fitfty.domain.report.ReportInfo.BoardReportMain;
+import com.yapp.ios2.fitfty.domain.report.ReportInfo.UserReportMain;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -11,7 +13,7 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface ReportMapper {
 
-    ReportInfo.UserMain of(ReportUser reportUser);
+    UserReportMain of(ReportUser reportUser);
 
-    ReportInfo.BoardMain of(ReportBoard reportBoard);
+    BoardReportMain of(ReportBoard reportBoard);
 }

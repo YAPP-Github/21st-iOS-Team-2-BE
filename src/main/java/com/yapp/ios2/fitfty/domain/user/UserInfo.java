@@ -1,5 +1,6 @@
 package com.yapp.ios2.fitfty.domain.user;
 
+import com.yapp.ios2.fitfty.domain.board.Board;
 import com.yapp.ios2.fitfty.domain.user.User.Gender;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,6 @@ public class UserInfo {
         private String email;
         private String userToken;
         private String nickname;
-        private String phoneNumber;
         private Gender gender;
         private String birthday;
     }
@@ -38,11 +38,24 @@ public class UserInfo {
     @Getter
     @Builder
     @ToString
+    @AllArgsConstructor
     public static class ImageInfo {
 
         private String userToken;
         private String boardToken;
         private String filePath;
+
+        public static ImageInfo of(Bookmark bookmark, Board board) {
+            return new UserInfo.ImageInfo(board.getUserToken(), bookmark.getBoardToken(),
+                                          board.getPicture()
+                                                  .getFilePath());
+        }
+
+        public static ImageInfo of(Feed feed, Board board) {
+            return new UserInfo.ImageInfo(board.getUserToken(), feed.getBoardToken(),
+                                          board.getPicture()
+                                                  .getFilePath());
+        }
     }
 
     @Getter
