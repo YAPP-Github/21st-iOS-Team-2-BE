@@ -52,7 +52,6 @@ public class User extends AbstractEntity {
 
     private String profilePictureUrl;
     private String message;
-    private String phoneNumber;
     private String role;
 
     @Enumerated(EnumType.STRING)
@@ -108,7 +107,6 @@ public class User extends AbstractEntity {
         this.nickname = userToken;
         this.profilePictureUrl = "https://fitfty.s3.ap-northeast-2.amazonaws.com/fitfty_profile_dummy.png";
         this.message = null;
-        this.phoneNumber = null;
         this.role = "ROLE_USER";
         this.type = type;
         this.isOnBoardingComplete = false;
@@ -123,7 +121,6 @@ public class User extends AbstractEntity {
     }
 
     public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
-        this.phoneNumber = command.getPhoneNumber();
         this.gender = command.getGender();
         this.nickname = command.getNickname();
         this.birthday = command.getBirthday();

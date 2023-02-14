@@ -18,17 +18,15 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     UserInfo.CustomOption toCustomOption(User user);
+
     UserInfo.CustomPrivacy toCustomPrivacy(User user);
 
     UserInfo.ProfileInfo toProfileInfo(User user);
 
-    UserInfo.ImageInfo toImageInfo(Bookmark bookmark, String filePath);
-
-    UserInfo.ImageInfo toImageInfo(Feed feed, String filePath);
-
     UserCommand.SignIn toSignIn(SignInDto signInDto);
 
     UserCommand.SignUp toSignUp(SignUpDto signUpDto);
+
     UserCommand.SignInApple toSignUpApple(UserDto.AppleSignInDto signUpDto);
 
     UserCommand.Bookmark toBookmarkCommand(String userToken, String boardToken);
