@@ -1,7 +1,6 @@
 package com.yapp.ios2.fitfty.domain.board;
 
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
-import com.yapp.ios2.fitfty.domain.user.User;
 import java.util.List;
 
 public interface BoardReader {
