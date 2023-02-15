@@ -50,13 +50,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
+        String userToken = userService.checkNonMemeber();
+        var bookmarkList = (userToken.equals("NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
         var board = boardReader.getBoard(boardToken);
-        var userToken = board.getUserToken();
-        var user = userReader.findFirstByUserToken(userToken);
+        var boardUser = userReader.findFirstByUserToken(board.getUserToken());
         var tagGroupInfo = boardInfoMapper.of(board.getTagGroup());
-        Boolean bookmarked = userService.getBookmark(userToken).contains(boardToken);
+        Boolean bookmarked = bookmarkList.contains(boardToken);
         board.increaseViews();
-        return boardInfoMapper.of(board, user, tagGroupInfo, bookmarked);
+        return boardInfoMapper.of(board, boardUser, tagGroupInfo, bookmarked);
     }
 
     @Override
