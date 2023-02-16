@@ -101,6 +101,10 @@ public class UserCommand {
         String userEmail;
         String userName;
         String identityToken;
+
+        public void setUserEmail(String email) {
+            this.userEmail = email;
+        }
     }
 
     @Getter
