@@ -1,5 +1,7 @@
 package com.yapp.ios2.fitfty.domain.user.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.util.StringUtils;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.BoardStore;
 import com.yapp.ios2.fitfty.domain.user.User.LoginType;
@@ -11,13 +13,22 @@ import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.domain.user.UserStore;
 import com.yapp.ios2.fitfty.domain.user.Utils.JwtTokenProvider;
-import com.yapp.ios2.fitfty.global.exception.AppleOAuthException;
 import com.yapp.ios2.fitfty.global.exception.KakaoOAuthException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 import com.yapp.ios2.fitfty.global.response.ErrorCode;
+import com.yapp.ios2.fitfty.infrastructure.user.OAuth.ApplePublicKeyResponse;
 import com.yapp.ios2.fitfty.infrastructure.user.OAuth.KakaoOAuth;
+import com.yapp.ios2.fitfty.infrastructure.user.OAuth.MaterialsOfApplePublicKey;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoOAuthTokenDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -124,8 +135,45 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public UserInfo.SignInInfo loginWithApple(UserCommand.SignInApple command) {
-        if (command.getUserEmail() == null) {
-            throw new AppleOAuthException(ErrorCode.NO_EMAIL.getErrorMsg());
+        if (StringUtils.isNullOrEmpty(command.getUserEmail())) {
+            String headerOfAccessToken = command.getIdentityToken().substring(0, command.getIdentityToken().indexOf("."));
+
+            String kidAndAlg = new String(Base64.getDecoder().decode(headerOfAccessToken));
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map mappedKidAlg = null;
+            try {
+                mappedKidAlg = objectMapper.readValue(kidAndAlg,Map.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            // 애플한테서 key들의 재료들 얻기 + 알맞는 key의 재료 찾기
+            ApplePublicKeyResponse keys = ApplePublicKeyResponse.getApplePublicKeys();
+            MaterialsOfApplePublicKey key = keys.getMatchedKeyBy(mappedKidAlg.get("kid"), mappedKidAlg.get("alg"))
+                    .orElseThrow(() -> new NullPointerException("Failed get public key from apple's id server."));
+
+            // 알맞는 key 재료로 부터, RS256 ( SHA-256 + RSA ) 암호화방식에서 사용하는 n, e 구하기
+            byte[] nBytes = Base64.getUrlDecoder().decode(key.getN());
+            byte[] eBytes = Base64.getUrlDecoder().decode(key.getE());
+            BigInteger n = new BigInteger(1, nBytes);
+            BigInteger e = new BigInteger(1, eBytes);
+
+            // n, e를 이용하여 public key 만들기
+            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+            KeyFactory keyFactory = null;
+            PublicKey publicKey = null;
+
+            try{
+                keyFactory = KeyFactory.getInstance(key.getKty());
+                publicKey = keyFactory.generatePublic(publicKeySpec);
+            }
+            catch (Exception e2){
+                e2.printStackTrace();
+            }
+
+            // 만들어진 public key로 accessToken의 body를 디코딩해서 유효한 유저 프로필 얻기
+            Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(command.getIdentityToken()).getBody();
+
+            command.setUserEmail(userInfo.get("email", String.class));
         }
 
         SignUp signUp = new SignUp(command.getUserEmail(), LoginType.APPLE);
