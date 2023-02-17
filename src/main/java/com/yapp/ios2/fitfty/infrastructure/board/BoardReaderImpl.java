@@ -3,6 +3,7 @@ package com.yapp.ios2.fitfty.infrastructure.board;
 import com.yapp.ios2.fitfty.domain.board.Board;
 import com.yapp.ios2.fitfty.domain.board.BoardReader;
 import com.yapp.ios2.fitfty.domain.board.PictureInfo;
+import com.yapp.ios2.fitfty.domain.report.ReportReader;
 import com.yapp.ios2.fitfty.domain.tag.TagGroup;
 import com.yapp.ios2.fitfty.domain.user.UserReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
@@ -27,6 +28,7 @@ public class BoardReaderImpl implements BoardReader {
     private final BoardRepository boardRepository;
     private final TagGroupRepository tagGroupRepository;
     private final UserReader userReader;
+    private final ReportReader reportReader;
 
     @Override
     public Board getBoard(String boardToken) {
@@ -35,11 +37,13 @@ public class BoardReaderImpl implements BoardReader {
     }
 
     @Override
-    public List<PictureInfo.PictureDetailInfo> getPictureSeries(List<String> bookmarkList,
+    public List<PictureInfo.PictureDetailInfo> getPictureSeries(String currentUser,
+                                                                List<String> bookmarkList,
                                                                 String weather,
                                                                 List<String> style, String gender) {
         var styleQuery = getStyleQuery(style);
-        var pictureDetailInfoList = getPictureDetailInfoSeries(styleQuery, weather, gender,
+        var pictureDetailInfoList = getPictureDetailInfoSeries(currentUser, styleQuery, weather,
+                                                               gender,
                                                                bookmarkList);
 
         return pictureDetailInfoList;
@@ -60,7 +64,8 @@ public class BoardReaderImpl implements BoardReader {
         return sb.toString();
     }
 
-    public List<PictureInfo.PictureDetailInfo> getPictureDetailInfoSeries(String style,
+    public List<PictureInfo.PictureDetailInfo> getPictureDetailInfoSeries(String currentUser,
+                                                                          String style,
                                                                           String weather,
                                                                           String gender,
                                                                           List<String> bookmarkList) {
@@ -72,13 +77,25 @@ public class BoardReaderImpl implements BoardReader {
                             .orElseThrow(EntityNotFoundException::new);
                     var picture = board.getPicture();
                     var user = userReader.findFirstByUserToken(board.getUserToken());
+                    var boardToken = board.getBoardToken();
+                    var userToken = user.getUserToken();
+
+                    // 신고된 유저 or 게시글 여부 검증
+                    if (!currentUser.equals(
+                            "NONMEMBER") && (reportReader.findFirstByReportUserTokenAndReportedBoardToken(
+                            currentUser, boardToken)
+                            || reportReader.findFirstByReportUserTokenAndReportedUserToken(
+                            currentUser, userToken))) {
+                        return null;
+                    }
+
                     board.increaseViews();
                     Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
 
                     return new PictureInfo.PictureDetailInfo(picture.getFilePath(),
-                                                             board.getBoardToken(),
+                                                             boardToken,
                                                              board.getViews(),
-                                                             user.getUserToken(),
+                                                             userToken,
                                                              user.getNickname(),
                                                              user.getProfilePictureUrl(),
                                                              bookmarked);
