@@ -51,7 +51,8 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public BoardInfo.Main retrieveBoardInfo(String boardToken) {
         String userToken = userService.checkNonMemeber();
-        var bookmarkList = (userToken.equals("NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
+        var bookmarkList = (userToken.equals(
+                "NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
         var board = boardReader.getBoard(boardToken);
         var boardUser = userReader.findFirstByUserToken(board.getUserToken());
         var tagGroupInfo = boardInfoMapper.of(board.getTagGroup());
@@ -95,7 +96,8 @@ public class BoardServiceImpl implements BoardService {
         String userToken = userService.getCurrentUserToken();
         var user = userReader.findFirstByUserToken(userToken);
         var bookmarkList = userService.getBookmark(userToken);
-        var pictureDetailInfoList = boardReader.getPictureSeries(bookmarkList, request.getWeather(),
+        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, bookmarkList,
+                                                                 request.getWeather(),
                                                                  user.getStyle(), user.getGender()
                                                                          .toString());
         return new PictureInfo.Main(pictureDetailInfoList);
@@ -105,8 +107,10 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public PictureInfo.Main getFilteredPictureList(BoardDto.GetFilteredPictureRequest request) {
         String userToken = userService.checkNonMemeber();
-        var bookmarkList = (userToken.equals("NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
-        var pictureDetailInfoList = boardReader.getPictureSeries(bookmarkList, request.getWeather(),
+        var bookmarkList = (userToken.equals(
+                "NONMEMBER")) ? Collections.EMPTY_LIST : userService.getBookmark(userToken);
+        var pictureDetailInfoList = boardReader.getPictureSeries(userToken, bookmarkList,
+                                                                 request.getWeather(),
                                                                  request.getStyle(),
                                                                  request.getGender());
         return new PictureInfo.Main(pictureDetailInfoList);

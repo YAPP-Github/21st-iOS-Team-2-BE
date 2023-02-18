@@ -8,5 +8,7 @@ public interface ReportBoardRepository extends JpaRepository<ReportBoard, Long> 
 
     Optional<ReportBoard> findByReportToken(String reportToken);
 
+    Optional<ReportBoard> findFirstByReportUserTokenAndReportedBoardToken(String userToken, String boardToken);
+
     Optional<ReportBoard> findFirstByReportedBoardTokenOrderByReportedCountDesc(String reportedBoard);
 }
