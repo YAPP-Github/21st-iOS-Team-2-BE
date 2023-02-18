@@ -11,7 +11,7 @@ public interface ReportUserRepository extends JpaRepository<ReportUser, Long> {
 
     Optional<ReportUser> findByReportToken(String reportToken);
 
-    Optional<ReportBoard> findFirstByReportUserTokenAndReportedUserToken(String currentUserToken,
+    Optional<ReportUser> findFirstByReportUserTokenAndReportedUserToken(String currentUserToken,
                                                                          String reportedUserToken);
 
     Optional<ReportUser> findFirstByReportedUserTokenOrderByReportedCountDesc(
