@@ -88,9 +88,10 @@ public class BoardReaderImpl implements BoardReader {
                                                              bookmarked);
                 })
                 .filter(pictureDetailInfo -> {
-                    return !currentUser.equals("NONMEMBER")
+                    return (!currentUser.equals("NONMEMBER")
                             && !reportReader.findFirstByReportUserTokenAndReportedBoardToken(currentUser, pictureDetailInfo.getBoardToken())
-                            && !reportReader.findFirstByReportUserTokenAndReportedUserToken(currentUser, pictureDetailInfo.getUserToken());
+                            && !reportReader.findFirstByReportUserTokenAndReportedUserToken(currentUser, pictureDetailInfo.getUserToken()))
+                            || currentUser.equals("NONMEMBER");
                 })
                 .collect(Collectors.toList());
 
