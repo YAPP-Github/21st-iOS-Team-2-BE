@@ -4,8 +4,10 @@ import com.yapp.ios2.fitfty.domain.report.ReportBoard;
 import com.yapp.ios2.fitfty.domain.report.ReportUser;
 import com.yapp.ios2.fitfty.domain.report.ReportReader;
 import com.yapp.ios2.fitfty.global.exception.EntityNotFoundException;
+
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,14 +31,17 @@ public class ReportReaderImpl implements ReportReader {
     }
 
     @Override
-    public Optional<ReportUser> findFirstByReportedUserTokenOrderByReportedCount(String reportedUserToken) {
-        return reportUserRepository.findFirstByReportedUserTokenOrderByReportedCountDesc(reportedUserToken);
+    public Optional<ReportUser> findFirstByReportedUserTokenOrderByReportedCount(
+            String reportedUserToken) {
+        return reportUserRepository.findFirstByReportedUserTokenOrderByReportedCountDesc(
+                reportedUserToken);
     }
 
     @Override
     public Optional<ReportBoard> findFirstByReportedBoardTokenOrderByReportedCount(
             String reportedBoardToken) {
-        return reportBoardRepository.findFirstByReportedBoardTokenOrderByReportedCountDesc(reportedBoardToken);
+        return reportBoardRepository.findFirstByReportedBoardTokenOrderByReportedCountDesc(
+                reportedBoardToken);
     }
 
     @Override
@@ -49,5 +54,21 @@ public class ReportReaderImpl implements ReportReader {
     public ReportBoard findBoardReportByReportToken(String reportToken) {
         return reportBoardRepository.findByReportToken(reportToken)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public boolean findFirstByReportUserTokenAndReportedBoardToken(String userToken,
+                                                                   String boardToken) {
+        return reportBoardRepository.findFirstByReportUserTokenAndReportedBoardToken(userToken,
+                                                                                     boardToken)
+                .isPresent();
+    }
+
+    @Override
+    public boolean findFirstByReportUserTokenAndReportedUserToken(String currentUserToken,
+                                                                  String reportedUserToken) {
+        return reportUserRepository.findFirstByReportUserTokenAndReportedUserToken(currentUserToken,
+                                                                                   reportedUserToken)
+                .isPresent();
     }
 }

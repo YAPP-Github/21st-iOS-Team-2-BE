@@ -11,9 +11,15 @@ public interface ReportReader {
 
     Optional<ReportUser> findFirstByReportedUserTokenOrderByReportedCount(String reportedUserToken);
 
-    Optional<ReportBoard> findFirstByReportedBoardTokenOrderByReportedCount(String reportedBoardToken);
+    Optional<ReportBoard> findFirstByReportedBoardTokenOrderByReportedCount(
+            String reportedBoardToken);
 
     ReportUser findUserReportByReportToken(String reportToken);
 
     ReportBoard findBoardReportByReportToken(String reportToken);
+
+    boolean findFirstByReportUserTokenAndReportedBoardToken(String userToken, String boardToken);
+
+    boolean findFirstByReportUserTokenAndReportedUserToken(String currentUserToken,
+                                                           String reportedUserToken);
 }
