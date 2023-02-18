@@ -39,12 +39,11 @@ public class BoardReaderImpl implements BoardReader {
     @Override
     public List<PictureInfo.PictureDetailInfo> getPictureSeries(String currentUser,
                                                                 List<String> bookmarkList,
-                                                                String weather,
-                                                                List<String> style, String gender) {
+                                                                String weather, List<String> style,
+                                                                String gender) {
         var styleQuery = getStyleQuery(style);
         var pictureDetailInfoList = getPictureDetailInfoSeries(currentUser, styleQuery, weather,
-                                                               gender,
-                                                               bookmarkList);
+                                                               gender, bookmarkList);
 
         return pictureDetailInfoList;
 
@@ -79,26 +78,19 @@ public class BoardReaderImpl implements BoardReader {
                     var user = userReader.findFirstByUserToken(board.getUserToken());
                     var boardToken = board.getBoardToken();
                     var userToken = user.getUserToken();
-
-                    // 신고된 유저 or 게시글 여부 검증
-                    if (!currentUser.equals(
-                            "NONMEMBER") && (reportReader.findFirstByReportUserTokenAndReportedBoardToken(
-                            currentUser, boardToken)
-                            || reportReader.findFirstByReportUserTokenAndReportedUserToken(
-                            currentUser, userToken))) {
-                        return null;
-                    }
-
                     board.increaseViews();
                     Boolean bookmarked = bookmarkList.contains(board.getBoardToken());
 
-                    return new PictureInfo.PictureDetailInfo(picture.getFilePath(),
-                                                             boardToken,
-                                                             board.getViews(),
-                                                             userToken,
+                    return new PictureInfo.PictureDetailInfo(picture.getFilePath(), boardToken,
+                                                             board.getViews(), userToken,
                                                              user.getNickname(),
                                                              user.getProfilePictureUrl(),
                                                              bookmarked);
+                })
+                .filter(pictureDetailInfo -> {
+                    return !currentUser.equals("NONMEMBER")
+                            && !reportReader.findFirstByReportUserTokenAndReportedBoardToken(currentUser, pictureDetailInfo.getBoardToken())
+                            && !reportReader.findFirstByReportUserTokenAndReportedUserToken(currentUser, pictureDetailInfo.getUserToken());
                 })
                 .collect(Collectors.toList());
 
@@ -112,9 +104,7 @@ public class BoardReaderImpl implements BoardReader {
                 today.DAY_OF_MONTH);
         int offset = (int) new Random(seed).nextFloat() * tagGroupRepository.getNumberOfTagGroup();
 
-        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(weather,
-                                                                           gender,
-                                                                           style,
+        List<TagGroup> tagGroupList = tagGroupRepository.findRandomPicture(weather, gender, style,
                                                                            seed, offset);
         if (CollectionUtils.isEmpty(tagGroupList)) {
             throw new PictureNotFoundException(ErrorCode.PICTURE_NOT_FOUND.getErrorMsg());
