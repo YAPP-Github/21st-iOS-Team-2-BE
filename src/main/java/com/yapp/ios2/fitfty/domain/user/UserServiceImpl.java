@@ -7,6 +7,7 @@ import com.yapp.ios2.fitfty.global.exception.DuplicateException;
 import com.yapp.ios2.fitfty.global.exception.MemberAlreadyExistException;
 import com.yapp.ios2.fitfty.global.exception.MemberNotFoundException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -202,6 +203,7 @@ public class UserServiceImpl implements UserService {
         var user = userReader.findFirstByUserToken(userToken);
         var userFeed = user.getFeedList()
                 .stream()
+                .sorted(Comparator.comparing(Feed::getUpdatedAt).reversed())
                 .map(feed -> {
                     var board = boardReader.getBoard(feed.getBoardToken());
                     return UserInfo.ImageInfo.of(feed, board);
@@ -209,6 +211,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
         var userBookmark = user.getBookmarkList()
                 .stream()
+                .sorted(Comparator.comparing(Bookmark::getUpdatedAt).reversed())
                 .map(bookmark -> {
                     var board = boardReader.getBoard(bookmark.getBoardToken());
                     return UserInfo.ImageInfo.of(bookmark, board);

@@ -121,20 +121,33 @@ public class User extends AbstractEntity {
     }
 
     public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
-        this.gender = command.getGender();
-        this.nickname = command.getNickname();
-        this.birthday = command.getBirthday();
+        if (StringUtils.isNullOrEmpty(command.getNickname()) && StringUtils.isNullOrEmpty(command.getBirthday()) && command.getGender() == null) {
+            throw new InvalidParamException("모든 파라미터가 null 입니다.");
+        }
+
+        if (!StringUtils.isNullOrEmpty(command.getNickname())) {
+            this.nickname = command.getNickname();
+        }
+
+        if (!StringUtils.isNullOrEmpty(command.getBirthday())) {
+            this.birthday = command.getBirthday();
+        }
+
+        if (command.getGender() != null) {
+            this.gender = command.getGender();
+        }
     }
 
     public void updateProfile(UserCommand.Profile command) {
-        if (command.getProfilePictureUrl() == null && command.getMessage() == null) {
+        if (StringUtils.isNullOrEmpty(command.getProfilePictureUrl()) && StringUtils.isNullOrEmpty(command.getMessage())) {
             throw new InvalidParamException("모든 파라미터가 null 입니다.");
         }
-        if (command.getMessage() != null) {
+
+        if (!StringUtils.isNullOrEmpty(command.getMessage())) {
             this.message = command.getMessage();
         }
 
-        if (command.getProfilePictureUrl() != null) {
+        if (!StringUtils.isNullOrEmpty(command.getProfilePictureUrl())) {
             this.profilePictureUrl = command.getProfilePictureUrl();
         }
     }

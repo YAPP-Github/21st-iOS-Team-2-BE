@@ -156,9 +156,7 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CustomPrivacy {
-        @NotNull
         private User.Gender gender;
-        @NotNull
         private String nickname;
         private String birthday;
     }
