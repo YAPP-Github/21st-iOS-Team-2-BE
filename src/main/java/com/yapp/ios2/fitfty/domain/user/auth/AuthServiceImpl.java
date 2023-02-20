@@ -129,6 +129,7 @@ public class AuthServiceImpl implements AuthService {
                              .email(signUp.getEmail())
                              .password(signUp.getPassword())
                              .build());
+
         return new UserInfo.SignInInfo(authToken, isNew);
     }
 

@@ -52,7 +52,6 @@ public class UserCommand {
     @Builder
     @ToString
     public static class CustomPrivacy {
-
         private Gender gender;
         private String nickname;
         private String birthday;

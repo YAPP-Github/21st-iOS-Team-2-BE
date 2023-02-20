@@ -6,9 +6,11 @@ import com.yapp.ios2.fitfty.domain.user.Utils.StringListConverter;
 import com.yapp.ios2.fitfty.global.exception.InvalidParamException;
 import com.yapp.ios2.fitfty.global.util.BooleanToYNConverter;
 import com.yapp.ios2.fitfty.global.util.TokenGenerator;
+import com.yapp.ios2.fitfty.interfaces.user.UserDto;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.KakaoProfileDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -35,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class User extends AbstractEntity {
     private static final String USER_PREFIX = "user_";
     private static final String TEMP_PASS = "$2a$10$ujymf7RwzeAvcQavkKez0O0wAuk6oeZT0TCISiKI0.gxBetvi6pfe";
-
+    private static final String FITFTY_DEFAULT_IMAGE_URL = "https://fitfty.s3.ap-northeast-2.amazonaws.com/fitfty_profile_dummy.png";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -105,7 +107,7 @@ public class User extends AbstractEntity {
         this.userToken = TokenGenerator.randomCharacterWithPrefix(USER_PREFIX);
         this.password = TEMP_PASS;
         this.nickname = userToken;
-        this.profilePictureUrl = "https://fitfty.s3.ap-northeast-2.amazonaws.com/fitfty_profile_dummy.png";
+        this.profilePictureUrl = FITFTY_DEFAULT_IMAGE_URL;
         this.message = null;
         this.role = "ROLE_USER";
         this.type = type;
@@ -121,29 +123,50 @@ public class User extends AbstractEntity {
     }
 
     public void updatePrivacyOption(UserCommand.CustomPrivacy command) {
-        this.gender = command.getGender();
-        this.nickname = command.getNickname();
-        this.birthday = command.getBirthday();
+        if (StringUtils.isNullOrEmpty(command.getNickname()) && StringUtils.isNullOrEmpty(command.getBirthday()) && command.getGender() == null) {
+            throw new InvalidParamException("모든 파라미터가 null 입니다.");
+        }
+
+        if (!StringUtils.isNullOrEmpty(command.getNickname())) {
+            this.nickname = command.getNickname();
+        }
+
+        if (!StringUtils.isNullOrEmpty(command.getBirthday())) {
+            this.birthday = command.getBirthday();
+        }
+
+        if (command.getGender() != null) {
+            this.gender = command.getGender();
+        }
     }
 
     public void updateProfile(UserCommand.Profile command) {
-        if (command.getProfilePictureUrl() == null && command.getMessage() == null) {
+        if (StringUtils.isNullOrEmpty(command.getProfilePictureUrl()) && StringUtils.isNullOrEmpty(command.getMessage())) {
             throw new InvalidParamException("모든 파라미터가 null 입니다.");
         }
-        if (command.getMessage() != null) {
+
+        if (!StringUtils.isNullOrEmpty(command.getMessage())) {
             this.message = command.getMessage();
         }
 
-        if (command.getProfilePictureUrl() != null) {
+        if (!StringUtils.isNullOrEmpty(command.getProfilePictureUrl())) {
             this.profilePictureUrl = command.getProfilePictureUrl();
         }
     }
 
     public void updateKakaoLoginInfo(KakaoProfileDto kakaoProfileDto) {
-        this.profilePictureUrl = kakaoProfileDto.getProperties().profileImage;
+        if (StringUtils.isNullOrEmpty(kakaoProfileDto.getProperties().profileImage)
+                || (Objects.equals(kakaoProfileDto.getProperties().profileImage,
+                                   UserDto.defaultProfileImageUrl))) {
+            this.profilePictureUrl = FITFTY_DEFAULT_IMAGE_URL;
+        } else {
+            this.profilePictureUrl = kakaoProfileDto.getProperties().profileImage;
+        }
+
         if (!StringUtils.isNullOrEmpty(kakaoProfileDto.getKakaoAccount().gender)) {
             this.gender = (kakaoProfileDto.getKakaoAccount().gender.equals("male")) ? Gender.MALE : Gender.FEMALE;
         }
+
         this.birthday = kakaoProfileDto.getKakaoAccount().birthday;
         this.ageRange = kakaoProfileDto.getKakaoAccount().ageRange;
     }

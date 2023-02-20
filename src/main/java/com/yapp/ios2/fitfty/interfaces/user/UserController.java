@@ -3,7 +3,6 @@ package com.yapp.ios2.fitfty.interfaces.user;
 import static com.yapp.ios2.fitfty.global.util.Constants.API_PREFIX;
 
 import com.yapp.ios2.fitfty.domain.user.UserCommand;
-import com.yapp.ios2.fitfty.domain.user.UserCommand.CustomPrivacy;
 import com.yapp.ios2.fitfty.domain.user.UserService;
 import com.yapp.ios2.fitfty.global.response.CommonResponse;
 import com.yapp.ios2.fitfty.interfaces.user.UserDto.CustomOption;
@@ -68,15 +67,15 @@ public class UserController {
         return CommonResponse.success(userService.retrieveProfile(null));
     }
 
+    @GetMapping("/profile/{nickname}")
+    public CommonResponse getProfile(@PathVariable String nickname) {
+        return CommonResponse.success(userService.retrieveProfile(nickname));
+    }
+
     @PutMapping("/profile")
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     public CommonResponse updateMyProfile(@RequestBody UserCommand.Profile command) {
         return CommonResponse.success(userService.updateProfile(command));
-    }
-
-    @GetMapping("/profile/{nickname}")
-    public CommonResponse getProfile(@PathVariable String nickname) {
-        return CommonResponse.success(userService.retrieveProfile(nickname));
     }
 
     @PutMapping("/style")
