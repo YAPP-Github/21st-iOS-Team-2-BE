@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 public class UserDto {
+    public static final String defaultProfileImageUrl = "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg";
     @Data
     public static class KakaoOAuthTokenDto {
         private String access_token;
