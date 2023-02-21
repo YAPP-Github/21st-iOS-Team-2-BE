@@ -67,6 +67,7 @@ public class BoardServiceImpl implements BoardService {
         String userToken = userService.getCurrentUserToken();
         var board = boardReader.getBoard(boardToken);
         boardStore.deleteBoard(board);
+        userService.deleteBookmark(userMapper.toBookmarkCommand(userToken, boardToken));
         userService.deleteUserFeed(userMapper.toUserFeedCommand(userToken, boardToken));
     }
 
