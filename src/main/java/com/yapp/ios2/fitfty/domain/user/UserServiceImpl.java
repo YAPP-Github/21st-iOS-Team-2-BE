@@ -166,6 +166,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteAllExistingBookmark(String boardToken) {
+        userStore.deleteAllBookmark(boardToken);
+    }
+
+    @Override
     @Transactional
     public List<String> getUserFeed(String userToken) {
         List<Feed> feed = userReader.findFeedByUserToken(userToken);

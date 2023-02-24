@@ -24,6 +24,7 @@ public interface UserService {
     UserInfo.ImageInfo addBookmark(UserCommand.Bookmark bookmark);
 
     void deleteBookmark(UserCommand.Bookmark bookmark);
+    void deleteAllExistingBookmark(String boardToken);
 
     List<String> getUserFeed(String userToken);
 

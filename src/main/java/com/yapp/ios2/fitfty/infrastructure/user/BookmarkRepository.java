@@ -10,4 +10,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     List<Bookmark> findByUserToken(String userToken);
 
     Optional<Bookmark> findFirstByUserTokenAndBoardToken(String userToken, String boardToken);
+
+    List<Bookmark> findAllByBoardToken(String boardToken);
 }
