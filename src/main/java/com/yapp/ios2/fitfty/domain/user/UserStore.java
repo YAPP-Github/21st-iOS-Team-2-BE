@@ -13,4 +13,6 @@ public interface UserStore {
     void deleteBookmarkByUserTokenAndBoardToken(String userToken, String pictureToken);
 
     void delete(User user);
+
+    void deleteAllBookmark(String bookmark);
 }

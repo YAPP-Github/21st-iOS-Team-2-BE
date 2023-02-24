@@ -63,4 +63,10 @@ public class UserStoreImpl implements UserStore {
     public void delete(User user) {
         userRepository.delete(user);
     }
+
+    @Override
+    public void deleteAllBookmark(String boardToken) {
+        var bookmarks = bookmarkRepository.findAllByBoardToken(boardToken);
+        bookmarkRepository.deleteAll(bookmarks);
+    }
 }
