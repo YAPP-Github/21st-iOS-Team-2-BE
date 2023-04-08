@@ -59,11 +59,9 @@ public class SecurityConfig {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers(PathRequest.toH2Console())
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-
+//                .requestMatchers(PathRequest.toH2Console()).permitAll()
+//                .anyRequest()
+//                .authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
 

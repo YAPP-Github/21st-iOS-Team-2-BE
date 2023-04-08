@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @ControllerAdvice
@@ -151,5 +152,11 @@ public class CommonControllerAdvice {
         String eventId = MDC.get(CommonHttpRequestInterceptor.HEADER_REQUEST_UUID_KEY);
         log.error("eventId = {} ", eventId, e);
         return CommonResponse.fail(e.getMessage(), ErrorCode.CURRENT_CONTEXT_ERROR.getErrorMsg());
+    }
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public CommonResponse noHandlerFoundHandle(NoHandlerFoundException exception) {
+        return CommonResponse.fail(ErrorCode.URL_NOT_FOUND.getErrorMsg(), ErrorCode.URL_NOT_FOUND.name());
     }
 }
